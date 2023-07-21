@@ -1,0 +1,21 @@
+[package]
+name = "jinya-cosmo"
+version = "1.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+uuid = { version = "1.4.0", features = ["js", "v4"] }
+stylist = { version = "0.12.1", features = ["yew", "yew_use_style"] }
+
+yew = { workspace = true }
+yew-router = { workspace = true }
+yew-hooks = { workspace = true }
+yew-feather = { workspace = true }
+web-sys = { workspace = true }
+getrandom = { workspace = true }
+rand = { workspace = true }
+log = { workspace = true }
+gloo = { workspace = true }
+wasm-bindgen = { workspace = true }
