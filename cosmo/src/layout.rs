@@ -81,7 +81,7 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
     let primary_color = props.primary_color.to_string();
     let primary_color_dark = props.primary_color_dark.to_string();
 
-    let mut link = gloo::utils::document().create_element("link").expect("Link should be creatable").dyn_into::<HtmlLinkElement>().expect("Should convert");
+    let link = gloo::utils::document().create_element("link").expect("Link should be creatable").dyn_into::<HtmlLinkElement>().expect("Should convert");
     link.set_href("https://fonts.jinya.de/css2?family=Lato:ital,wght@0,100%3B1,100%3B0,300%3B1,300%3B0,400%3B1,400%3B0,700%3B1,700%3B0,900%3B1,900");
     link.set_rel("stylesheet");
     link.set_type("text/css");
@@ -226,13 +226,21 @@ background: linear-gradient(to top, var(--gradient-bottom-color) 0%, var(--gradi
     let top_bar_item_right_style = use_style!(r#"
 margin-left: 16px;
     "#);
+    let profile_picture_style = use_style!(r#"
+display: block;
+width: 64px;
+height: 64px;
+background: var(--primary-color);
+grid-column: profilepicture;
+object-fit: cover;
+    "#);
 
     html!(
         <div class={top_bar_style}>
             <CosmoTopBarMenu>
                 {for props.children.iter()}
             </CosmoTopBarMenu>
-            <div class="cosmo-profile-picture"></div>
+            <div class={profile_picture_style}></div>
             {if props.has_right_item {
                 let on_click = props.right_item_on_click.clone();
 

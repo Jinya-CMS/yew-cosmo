@@ -1,23 +1,9 @@
 use stylist::yew::{styled_component, use_style};
-use web_sys::Element;
 use yew::prelude::*;
 use yew::virtual_dom::VNode;
 use yew_hooks::use_unmount;
+
 use crate::button::CosmoButton;
-
-#[hook]
-pub fn use_modal() -> Element {
-    let element = gloo::utils::document().create_element("div").expect("Failed to create div");
-    gloo::utils::body().append_child(&element).expect("Failed to append child");
-    element.class_list().add_1("cosmo-modal__container").expect("Should be able to add class");
-
-    {
-        let element = element.clone();
-        use_unmount(move || element.remove());
-    }
-
-    element
-}
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct CosmoModalProps {
@@ -25,11 +11,16 @@ pub struct CosmoModalProps {
     pub children: Children,
     pub buttons: VNode,
     pub title: AttrValue,
+    #[prop_or(false)]
+    pub is_form: bool,
+    #[prop_or_default]
+    pub on_form_submit: Option<Callback<()>>,
 }
 
 #[styled_component(CosmoModal)]
 pub fn modal(props: &CosmoModalProps) -> Html {
-    let modal_host = use_modal();
+    let modal_id = use_state_eq(|| uuid::Uuid::new_v4().to_string());
+
     let modal_style = use_style!(r#"
 border: 1px solid var(--primary-color);
 background: linear-gradient(to top, var(--white) 0%, var(--white) 80%, var(--gradient-top-color) 100%);
@@ -74,18 +65,53 @@ gap: 16px;
 }
     "#);
 
-    create_portal(
+    let modal_content = html!(
+        <>
+            <h1 class={modal_title_style}>{props.title.clone()}</h1>
+            <div class={modal_content_style}>
+                {for props.children.iter()}
+            </div>
+            <div class={modal_button_bar_style}>
+                {props.buttons.clone()}
+            </div>
+        </>
+    );
+
+    let on_submit = props.on_form_submit.clone().map(move |on_submit| Callback::from(move |evt: SubmitEvent| {
+        evt.prevent_default();
+        on_submit.emit(());
+    }));
+    let modal = if !props.is_form {
         html!(
             <div class={modal_style}>
-                <h1 class={modal_title_style}>{props.title.clone()}</h1>
-                <div class={modal_content_style}>
-                    {for props.children.iter()}
-                </div>
-                <div class={modal_button_bar_style}>
-                    {props.buttons.clone()}
-                </div>
+                {modal_content}
             </div>
-        ),
+        )
+    } else {
+        html!(
+            <form class={modal_style} onsubmit={on_submit.unwrap()}>
+                {modal_content}
+            </form>
+        )
+    };
+
+
+    let modal_host = if let Some(modal_host) = gloo::utils::document().get_element_by_id((*modal_id).clone().as_str()) {
+        modal_host
+    } else {
+        let modal_host = gloo::utils::document().create_element("div").expect("Failed to create div");
+        modal_host.class_list().add_1("cosmo-modal__container").expect("Should be able to add class");
+        modal_host.set_id((*modal_id).clone().as_str());
+        gloo::utils::body().append_child(&modal_host).expect("Failed to append child");
+        modal_host
+    };
+    {
+        let modal_host = modal_host.clone();
+        use_unmount(move || modal_host.remove());
+    }
+
+    create_portal(
+        modal,
         modal_host,
     )
 }
@@ -104,6 +130,33 @@ pub fn alert(props: &CosmoAlertProps) -> Html {
 
     html!(
         <CosmoModal title={props.title.clone()} buttons={html!(<CosmoButton on_click={move |_| on_close.emit(())} label={props.close_label.clone()} />)}>
+            {props.message.clone()}
+        </CosmoModal>
+    )
+}
+
+#[derive(Properties, PartialEq, Clone)]
+pub struct CosmoConfirmProps {
+    pub title: AttrValue,
+    pub message: AttrValue,
+    pub confirm_label: AttrValue,
+    pub decline_label: AttrValue,
+    pub on_confirm: Callback<()>,
+    pub on_decline: Callback<()>,
+}
+
+#[styled_component(CosmoConfirm)]
+pub fn confirm(props: &CosmoConfirmProps) -> Html {
+    let on_confirm = props.on_confirm.clone();
+    let on_decline = props.on_decline.clone();
+
+    html!(
+        <CosmoModal title={props.title.clone()} buttons={html!(
+            <>
+                <CosmoButton on_click={move |_| on_decline.emit(())} label={props.decline_label.clone()} />
+                <CosmoButton on_click={move |_| on_confirm.emit(())} label={props.confirm_label.clone()} />
+            </>
+        )}>
             {props.message.clone()}
         </CosmoModal>
     )
