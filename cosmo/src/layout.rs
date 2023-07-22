@@ -88,6 +88,13 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
 
     gloo::utils::head().append_child(&link).expect("Should append link");
 
+    let link = gloo::utils::document().create_element("link").expect("Link should be creatable").dyn_into::<HtmlLinkElement>().expect("Should convert");
+    link.set_href("https://fonts.jinya.de/css2?family=Source Code Pro");
+    link.set_rel("stylesheet");
+    link.set_type("text/css");
+
+    gloo::utils::head().append_child(&link).expect("Should append link");
+
     global_style!(r#"
 :root {
     --control-border-color: #CCCCCC;
@@ -235,21 +242,16 @@ grid-column: profilepicture;
 object-fit: cover;
     "#);
 
+    let on_click = props.right_item_on_click.clone();
     html!(
         <div class={top_bar_style}>
             <CosmoTopBarMenu>
                 {for props.children.iter()}
             </CosmoTopBarMenu>
             <div class={profile_picture_style}></div>
-            {if props.has_right_item {
-                let on_click = props.right_item_on_click.clone();
-
-                html!(
-                    <a class={classes!(top_bar_item_style, top_bar_item_right_style)} onclick={move |_| on_click.emit(())}>{props.right_item_label.clone()}</a>
-                )
-            } else {
-                html!()
-            }}
+            if props.has_right_item {
+                <a class={classes!(top_bar_item_style, top_bar_item_right_style)} onclick={move |_| on_click.emit(())}>{props.right_item_label.clone()}</a>
+            }
         </div>
     )
 }

@@ -65,36 +65,15 @@ gap: 16px;
 }
     "#);
 
-    let modal_content = html!(
-        <>
-            <h1 class={modal_title_style}>{props.title.clone()}</h1>
-            <div class={modal_content_style}>
-                {for props.children.iter()}
-            </div>
-            <div class={modal_button_bar_style}>
-                {props.buttons.clone()}
-            </div>
-        </>
-    );
-
     let on_submit = props.on_form_submit.clone().map(move |on_submit| Callback::from(move |evt: SubmitEvent| {
         evt.prevent_default();
         on_submit.emit(());
     }));
-    let modal = if !props.is_form {
-        html!(
-            <div class={modal_style}>
-                {modal_content}
-            </div>
-        )
+    let tag = if props.is_form {
+        "form"
     } else {
-        html!(
-            <form class={modal_style} onsubmit={on_submit.unwrap()}>
-                {modal_content}
-            </form>
-        )
+        "div"
     };
-
 
     let modal_host = if let Some(modal_host) = gloo::utils::document().get_element_by_id((*modal_id).clone().as_str()) {
         modal_host
@@ -111,7 +90,17 @@ gap: 16px;
     }
 
     create_portal(
-        modal,
+        html!(
+            <@{tag} class={modal_style} onsubmit={on_submit}>
+                <h1 class={modal_title_style}>{props.title.clone()}</h1>
+                <div class={modal_content_style}>
+                    {for props.children.iter()}
+                </div>
+                <div class={modal_button_bar_style}>
+                    {props.buttons.clone()}
+                </div>
+            </@>
+        ),
         modal_host,
     )
 }
@@ -126,10 +115,10 @@ pub struct CosmoAlertProps {
 
 #[styled_component(CosmoAlert)]
 pub fn alert(props: &CosmoAlertProps) -> Html {
-    let on_close = props.on_close.clone();
+    let on_close = use_callback(|_, on_close| on_close.emit(()), props.on_close.clone());
 
     html!(
-        <CosmoModal title={props.title.clone()} buttons={html!(<CosmoButton on_click={move |_| on_close.emit(())} label={props.close_label.clone()} />)}>
+        <CosmoModal title={props.title.clone()} buttons={html!(<CosmoButton on_click={on_close} label={props.close_label.clone()} />)}>
             {props.message.clone()}
         </CosmoModal>
     )
@@ -147,14 +136,14 @@ pub struct CosmoConfirmProps {
 
 #[styled_component(CosmoConfirm)]
 pub fn confirm(props: &CosmoConfirmProps) -> Html {
-    let on_confirm = props.on_confirm.clone();
-    let on_decline = props.on_decline.clone();
+    let on_confirm = use_callback(|_, callback| callback.emit(()), props.on_confirm.clone());
+    let on_decline = use_callback(|_, callback| callback.emit(()), props.on_decline.clone());
 
     html!(
         <CosmoModal title={props.title.clone()} buttons={html!(
             <>
-                <CosmoButton on_click={move |_| on_decline.emit(())} label={props.decline_label.clone()} />
-                <CosmoButton on_click={move |_| on_confirm.emit(())} label={props.confirm_label.clone()} />
+                <CosmoButton on_click={on_decline} label={props.decline_label.clone()} />
+                <CosmoButton on_click={on_confirm} label={props.confirm_label.clone()} />
             </>
         )}>
             {props.message.clone()}

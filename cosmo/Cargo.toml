@@ -19,3 +19,4 @@ rand = { workspace = true }
 log = { workspace = true }
 gloo = { workspace = true }
 wasm-bindgen = { workspace = true }
+color-art = { workspace = true }

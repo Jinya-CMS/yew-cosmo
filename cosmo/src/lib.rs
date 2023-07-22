@@ -7,6 +7,7 @@ pub mod prelude {
     pub use crate::menu::*;
     pub use crate::modal::*;
     pub use crate::toolbar::*;
+    pub use crate::typography::*;
 }
 
 mod modal;
@@ -17,4 +18,5 @@ mod form;
 mod list;
 mod toolbar;
 mod button;
+mod typography;
 
