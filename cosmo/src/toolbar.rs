@@ -4,7 +4,7 @@ use yew::prelude::*;
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoToolbarProps {
     #[prop_or_default]
-    pub children: Children,
+    pub children: ChildrenWithProps<CosmoToolbarGroup>,
 }
 
 #[styled_component(CosmoToolbar)]

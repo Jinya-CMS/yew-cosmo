@@ -110,6 +110,7 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
     --gradient-top-color: #EDEDEE;
     --gradient-bottom-color: var(--white);
     --modal-backdrop: #FFFFFF4D;
+    --table-stripe-color: #EEEEEE;
 
     --font-weight-bold: bold;
     --font-weight-normal: normal;
@@ -132,6 +133,7 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
         --gradient-top-color: #121212;
         --gradient-bottom-color: var(--white);
         --modal-backdrop: rgba(0, 0, 0, 0.3);
+        --table-stripe-color: #1c1b1b;
     }
 
     .cosmo--light-theme {
@@ -148,6 +150,8 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
         --gradient-top-color: #EDEDEE;
         --gradient-bottom-color: var(--white);
         --modal-backdrop: #FFFFFF4D;
+        --table-stripe-color: #EEEEEE;
+
         background: var(--white);
         color: var(--black);
     }
@@ -167,6 +171,7 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
     --gradient-top-color: #121212;
     --gradient-bottom-color: var(--white);
     --modal-backdrop: rgba(0, 0, 0, 0.3);
+    --table-stripe-color: #1c1b1b;
     background: var(--white);
     color: var(--black);
 }

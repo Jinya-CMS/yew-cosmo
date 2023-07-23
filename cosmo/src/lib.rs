@@ -6,6 +6,7 @@ pub mod prelude {
     pub use crate::loader::*;
     pub use crate::menu::*;
     pub use crate::modal::*;
+    pub use crate::table::*;
     pub use crate::toolbar::*;
     pub use crate::typography::*;
 }
@@ -19,4 +20,5 @@ mod list;
 mod toolbar;
 mod button;
 mod typography;
+mod table;
 

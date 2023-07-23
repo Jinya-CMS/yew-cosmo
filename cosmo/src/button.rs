@@ -89,6 +89,8 @@ pub struct CosmoButtonProps {
     pub is_submit: bool,
     #[prop_or(false)]
     pub is_full_width: bool,
+    #[prop_or(true)]
+    pub enabled: bool,
 }
 
 #[hook]
@@ -160,7 +162,7 @@ pub fn button(props: &CosmoButtonProps) -> Html {
     let on_click = props.on_click.clone().map(|on_click| Callback::from(move |_| on_click.emit(())));
 
     html!(
-        <button type={button_type} onclick={on_click} class={style}>{props.label.clone()}</button>
+        <button disabled={!props.enabled} type={button_type} onclick={on_click} class={style}>{props.label.clone()}</button>
     )
 }
 
@@ -170,6 +172,8 @@ pub struct CosmoButtonLinkProps<Route> where Route: Routable + 'static {
     pub to: Route,
     #[prop_or(false)]
     pub is_full_width: bool,
+    #[prop_or(true)]
+    pub enabled: bool,
 }
 
 #[function_component(CosmoButtonLink)]
@@ -177,7 +181,7 @@ pub fn button_link<Route>(props: &CosmoButtonLinkProps<Route>) -> Html where Rou
     let style = use_cosmo_button_style(props.is_full_width);
 
     html!(
-        <Link<Route> to={props.to.clone()} classes={style}>{props.label.clone()}</Link<Route>>
+        <Link<Route> disabled={!props.enabled} to={props.to.clone()} classes={style}>{props.label.clone()}</Link<Route>>
     )
 }
 
