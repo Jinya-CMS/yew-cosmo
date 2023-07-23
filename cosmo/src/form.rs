@@ -1,5 +1,6 @@
+use chrono::{NaiveDateTime, Utc};
 use stylist::yew::{styled_component, use_style};
-use web_sys::{HtmlInputElement, HtmlTextAreaElement};
+use web_sys::{HtmlInputElement, HtmlSelectElement, HtmlTextAreaElement};
 use yew::prelude::*;
 
 use crate::prelude::*;
@@ -57,6 +58,41 @@ color: var(--black);
     "#);
 
     (classes!(label_style), classes!(input_style))
+}
+
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoDateTimePickerProps {
+    pub on_input: Callback<NaiveDateTime>,
+    pub value: NaiveDateTime,
+    pub label: AttrValue,
+    #[prop_or(false)]
+    pub required: bool,
+    #[prop_or(false)]
+    pub readonly: bool,
+    #[prop_or_default]
+    pub min: Option<NaiveDateTime>,
+    #[prop_or_default]
+    pub max: Option<NaiveDateTime>,
+    #[prop_or_default]
+    pub id: Option<AttrValue>,
+}
+
+#[styled_component(CosmoDateTimePicker)]
+pub fn datepicker(props: &CosmoDateTimePickerProps) -> Html {
+    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(NaiveDateTime::parse_from_str(evt.target_unchecked_into::<HtmlInputElement>().value().as_str(), "%FT%T").unwrap_or(Utc::now().naive_utc())), props.clone());
+
+    let (label_style, input_style) = use_input_styling();
+    let min = props.min.map(|min| min.clone().format("%FT%T").to_string());
+    let max = props.max.map(|max| max.clone().format("%FT%T").to_string());
+
+    html!(
+        <>
+            <label class={label_style} for={id.clone()}>{props.label.clone()}</label>
+            <input min={min} max={max} type="datetime-local" class={input_style} readonly={props.readonly} id={id.clone()} required={props.required} value={props.value.clone().format("%FT%T").to_string()} oninput={oninput} />
+        </>
+    )
 }
 
 
@@ -235,6 +271,70 @@ position: relative;
     )
 }
 
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoDropdownProps {
+    pub on_select: Callback<Option<AttrValue>>,
+    #[prop_or_default]
+    pub value: Option<AttrValue>,
+    pub label: AttrValue,
+    #[prop_or(false)]
+    pub required: bool,
+    #[prop_or(false)]
+    pub readonly: bool,
+    #[prop_or_default]
+    pub id: Option<AttrValue>,
+    pub items: Vec<(Option<AttrValue>, AttrValue)>,
+}
+
+#[styled_component(CosmoDropdown)]
+pub fn dropdown(props: &CosmoDropdownProps) -> Html {
+    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let onchange = use_callback(|evt: Event, props| {
+        let val = evt.target_unchecked_into::<HtmlSelectElement>().value();
+        if val == "None".to_string() {
+            props.on_select.emit(None)
+        } else {
+            props.on_select.emit(Some(AttrValue::from(val)))
+        }
+    }, props.clone());
+
+    let (label_style, _input_style) = use_input_styling();
+    let select_style = use_style!(r#"
+min-width: 240px;
+font-size: 16px;
+border: 1px solid var(--control-border-color);
+background: var(--white);
+padding: 4px 32px 4px 8px;
+height: 28px;
+appearance: none;
+color: var(--black);
+position: relative;
+--background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
+background-image: var(--background);
+background-repeat: no-repeat;
+background-position-x: right;
+background-position-y: center;
+
+@media screen and (prefers-color-scheme: dark) {
+    --background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojY2NjY2NjO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
+}
+
+&:focus {
+    border: 1px solid var(--primary-color);
+    outline: none;
+    box-shadow: none;
+}
+    "#);
+
+    html!(
+        <>
+            <label class={label_style} for={id.clone()}>{props.label.clone()}</label>
+            <select class={select_style} readonly={props.readonly} id={id.clone()} required={props.required} onchange={onchange}>
+                {for props.items.iter().map(|(id, label)| html!(<option key={if let Some(id) = id { id.to_string() } else { uuid::Uuid::new_v4().to_string() }} selected={props.value.clone() == id.clone()} value={id.clone()}>{label.clone()}</option>))}
+            </select>
+        </>
+    )
+}
 
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoFormProps {

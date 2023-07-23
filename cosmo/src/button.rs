@@ -80,19 +80,6 @@ cursor: pointer;
 }
 
 
-#[derive(PartialEq, Clone, Properties)]
-pub struct CosmoButtonProps {
-    pub label: AttrValue,
-    #[prop_or_default]
-    pub on_click: Option<Callback<()>>,
-    #[prop_or(false)]
-    pub is_submit: bool,
-    #[prop_or(false)]
-    pub is_full_width: bool,
-    #[prop_or(true)]
-    pub enabled: bool,
-}
-
 #[hook]
 fn use_cosmo_button_style(is_full_width: bool) -> Classes {
     let button_style = use_style!(r#"
@@ -152,6 +139,19 @@ margin-top: auto;
     }
 
     classes!(button_style, full_width_style, "cosmo-button")
+}
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoButtonProps {
+    pub label: AttrValue,
+    #[prop_or_default]
+    pub on_click: Option<Callback<()>>,
+    #[prop_or(false)]
+    pub is_submit: bool,
+    #[prop_or(false)]
+    pub is_full_width: bool,
+    #[prop_or(true)]
+    pub enabled: bool,
 }
 
 #[function_component(CosmoButton)]

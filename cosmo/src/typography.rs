@@ -20,6 +20,44 @@ font-family: "Source Code Pro", monospace;
     )
 }
 
+#[derive(PartialEq, Clone)]
+pub enum CosmoHeaderLevel {
+    H1,
+    H2,
+    H3,
+    H4,
+    H5,
+    H6,
+}
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoHeaderProps {
+    pub header: AttrValue,
+    #[prop_or(CosmoHeaderLevel::H1)]
+    pub level: CosmoHeaderLevel,
+}
+
+#[styled_component(CosmoHeader)]
+pub fn header(props: &CosmoHeaderProps) -> Html {
+    let (font_size, tag) = match props.level {
+        CosmoHeaderLevel::H1 => ("32px", "h1"),
+        CosmoHeaderLevel::H2 => ("28px", "h2"),
+        CosmoHeaderLevel::H3 => ("24px", "h3"),
+        CosmoHeaderLevel::H4 => ("22px", "h4"),
+        CosmoHeaderLevel::H5 => ("20px", "h5"),
+        CosmoHeaderLevel::H6 => ("16px", "h6"),
+    };
+
+    let style = use_style!(r#"
+font-weight: var(--font-weight-light);
+font-size: ${font_size};
+    "#, font_size = font_size);
+
+    html!(
+        <@{tag} class={style}>{props.header.clone()}</@>
+    )
+}
+
 
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoPreProps {
