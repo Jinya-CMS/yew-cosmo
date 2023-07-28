@@ -93,3 +93,14 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
+/dist/apple-touch-icon-ab61be212edceb4e.png
+/dist/background.webp
+/dist/background-dark.webp
+/dist/favicon-6a2e1a8e9db51792.ico
+/dist/favicon-16x16-51f5ee50988f820a.png
+/dist/favicon-32x32-cf0485eb8cae56fe.png
+/dist/favicon-192x192-ea280d9525576d56.png
+/dist/favicon-512x512-3cabc30422cf4739.png
+/dist/index.html
+/dist/yew-cosmo-docs-211dc7e1a96df472.js
+/dist/yew-cosmo-docs-211dc7e1a96df472_bg.wasm

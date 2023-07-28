@@ -1,5 +1,6 @@
 use stylist::yew::{styled_component, use_style};
 use yew::prelude::*;
+#[cfg(feature = "with-yew-router")]
 use yew_router::prelude::*;
 
 use crate::prelude::*;
@@ -72,6 +73,7 @@ grid-row-gap: 16px;
 }
 
 
+#[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoMainMenuItemLinkProps<Route> where Route: Routable + 'static {
     pub label: AttrValue,
@@ -101,6 +103,7 @@ color: var(--menu-text-selected-color);
     classes!(item_style, active_style)
 }
 
+#[cfg(feature = "with-yew-router")]
 #[styled_component(CosmoMainMenuItemLink)]
 pub fn main_menu_item_link<Route>(props: &CosmoMainMenuItemLinkProps<Route>) -> Html where Route: Routable + 'static {
     let style = use_main_menu_item_style(props.is_active);
@@ -167,6 +170,7 @@ font-weight: var(--font-weight-bold);
     classes!(item_style, active_style)
 }
 
+#[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoSubMenuItemLinkProps<Route> where Route: Routable + 'static {
     pub label: AttrValue,
@@ -174,6 +178,7 @@ pub struct CosmoSubMenuItemLinkProps<Route> where Route: Routable + 'static {
     pub is_active: bool,
 }
 
+#[cfg(feature = "with-yew-router")]
 #[styled_component(CosmoSubMenuItemLink)]
 pub fn sub_menu_item_link<Route>(props: &CosmoSubMenuItemLinkProps<Route>) -> Html where Route: Routable + 'static {
     let style = use_sub_menu_item_style(props.is_active);

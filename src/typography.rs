@@ -1,6 +1,7 @@
 use stylist::Style;
 use stylist::yew::{styled_component, use_style};
 use yew::prelude::*;
+#[cfg(feature = "with-yew-router")]
 use yew_router::prelude::*;
 
 #[derive(PartialEq, Clone, Properties)]
@@ -83,6 +84,7 @@ color: var(--primary-color);
     "#)
 }
 
+#[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoAnchorLinkProps<Route> where Route: Routable + 'static {
     #[prop_or_default]
@@ -90,6 +92,7 @@ pub struct CosmoAnchorLinkProps<Route> where Route: Routable + 'static {
     pub to: Route,
 }
 
+#[cfg(feature = "with-yew-router")]
 #[styled_component(CosmoAnchorLink)]
 pub fn anchor_link<Route>(props: &CosmoAnchorLinkProps<Route>) -> Html where Route: Routable + 'static {
     let style = use_anchor_style();
@@ -121,5 +124,127 @@ pub fn anchor(props: &CosmoAnchorProps) -> Html {
 
     html!(
         <a href={props.href.clone()} onclick={on_click} class={style}>{for props.children.iter()}</a>
+    )
+}
+
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoParagraphProps {
+    #[prop_or_default]
+    pub children: Children,
+}
+
+#[styled_component(CosmoParagraph)]
+pub fn paragraph(props: &CosmoParagraphProps) -> Html {
+    let style = use_style!(r#"
+font-family: var(--font-family);
+font-size: 16px;
+    "#);
+
+    html!(
+        <p class={style}>{for props.children.iter()}</p>
+    )
+}
+
+
+#[styled_component(CosmoHr)]
+pub fn hr() -> Html {
+    let style = use_style!(r#"
+background: radial-gradient(circle, var(--primary-color) 0%, var(--white) 100%);
+height: 2px;
+border: 0;
+margin: 32px 0;
+    "#);
+
+    html!(
+        <hr class={style} />
+    )
+}
+
+
+#[styled_component(CosmoBr)]
+pub fn br() -> Html {
+    html!(
+        <br />
+    )
+}
+
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoStrongProps {
+    #[prop_or_default]
+    pub children: Children,
+}
+
+#[styled_component(CosmoStrong)]
+pub fn strong(props: &CosmoStrongProps) -> Html {
+    html!(
+        <strong>{for props.children.iter()}</strong>
+    )
+}
+
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoEmProps {
+    #[prop_or_default]
+    pub children: Children,
+}
+
+#[styled_component(CosmoEm)]
+pub fn strong(props: &CosmoEmProps) -> Html {
+    html!(
+        <em>{for props.children.iter()}</em>
+    )
+}
+
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoKeyValueListProps {
+    #[prop_or_default]
+    pub children: Children,
+}
+
+#[styled_component(CosmoKeyValueList)]
+pub fn key_value_list(props: &CosmoKeyValueListProps) -> Html {
+    let key_value_list_style = use_style!(r#"
+margin: 0;
+padding: 0;
+display: grid;
+    "#);
+
+    html!(
+        <dl class={key_value_list_style}>
+            {for props.children.iter()}
+        </dl>
+    )
+}
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoKeyValueListItemProps {
+    #[prop_or_default]
+    pub children: Children,
+    pub title: AttrValue,
+}
+
+#[styled_component(CosmoKeyValueListItem)]
+pub fn key_value_list(props: &CosmoKeyValueListItemProps) -> Html {
+    let key_value_list_key = use_style!(r#"
+font-weight: var(--font-weight-normal);
+margin: 0;
+padding: 0;
+    "#);
+    let key_value_list_value = use_style!(r#"
+font-weight: var(--font-weight-light);
+padding: 0;
+margin: 0 0 8px;
+    "#);
+
+    html!(
+        <>
+            <dt class={key_value_list_key}>{props.title.clone()}</dt>
+            <dd class={key_value_list_value}>
+                {for props.children.iter()}
+            </dd>
+        </>
     )
 }

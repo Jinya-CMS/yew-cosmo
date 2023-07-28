@@ -1,4 +1,5 @@
 pub mod prelude {
+    use yew::Classes;
     pub use crate::button::*;
     pub use crate::form::*;
     pub use crate::layout::*;
@@ -9,6 +10,30 @@ pub mod prelude {
     pub use crate::table::*;
     pub use crate::toolbar::*;
     pub use crate::typography::*;
+
+    #[derive(PartialEq, Clone, Default)]
+    pub enum CosmoTheme {
+        #[default]
+        Auto,
+        Light,
+        Dark
+    }
+
+    impl ToString for CosmoTheme {
+        fn to_string(&self) -> String {
+            match self {
+                CosmoTheme::Auto => "".to_string(),
+                CosmoTheme::Light => "cosmo--light-theme".to_string(),
+                CosmoTheme::Dark => "cosmo--dark-theme".to_string(),
+            }
+        }
+    }
+
+    impl From<CosmoTheme> for Classes {
+        fn from(value: CosmoTheme) -> Self {
+            value.to_string().into()
+        }
+    }
 }
 
 mod modal;

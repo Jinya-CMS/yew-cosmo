@@ -4,6 +4,7 @@ use yew::virtual_dom::VNode;
 use yew_hooks::use_unmount;
 
 use crate::button::CosmoButton;
+use crate::prelude::CosmoTheme;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct CosmoModalProps {
@@ -15,12 +16,31 @@ pub struct CosmoModalProps {
     pub is_form: bool,
     #[prop_or_default]
     pub on_form_submit: Option<Callback<()>>,
+    #[prop_or_default]
+    pub theme: CosmoTheme,
 }
 
 #[styled_component(CosmoModal)]
 pub fn modal(props: &CosmoModalProps) -> Html {
     let modal_id = use_state_eq(|| uuid::Uuid::new_v4().to_string());
 
+    let modal_container_style = use_style!(r#"
+display: flex;
+z-index: 999;
+position: fixed;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
+align-items: center;
+justify-content: center;
+width: inherit;
+min-width: 100%;
+height: inherit;
+min-height: 100%;
+border: 0;
+background-color: var(--modal-backdrop);
+    "#);
     let modal_style = use_style!(r#"
 border: 1px solid var(--primary-color);
 background: linear-gradient(to top, var(--white) 0%, var(--white) 80%, var(--gradient-top-color) 100%);
@@ -79,7 +99,6 @@ gap: 16px;
         modal_host
     } else {
         let modal_host = gloo::utils::document().create_element("div").expect("Failed to create div");
-        modal_host.class_list().add_1("cosmo-modal__container").expect("Should be able to add class");
         modal_host.set_id((*modal_id).clone().as_str());
         gloo::utils::body().append_child(&modal_host).expect("Failed to append child");
         modal_host
@@ -91,15 +110,17 @@ gap: 16px;
 
     create_portal(
         html!(
-            <@{tag} class={modal_style} onsubmit={on_submit}>
-                <h1 class={modal_title_style}>{props.title.clone()}</h1>
-                <div class={modal_content_style}>
-                    {for props.children.iter()}
-                </div>
-                <div class={modal_button_bar_style}>
-                    {props.buttons.clone()}
-                </div>
-            </@>
+            <dialog class={classes!(modal_container_style, props.theme.clone())} open={true}>
+                <@{tag} class={modal_style} onsubmit={on_submit}>
+                    <h1 class={modal_title_style}>{props.title.clone()}</h1>
+                    <div class={modal_content_style}>
+                        {for props.children.iter()}
+                    </div>
+                    <div class={modal_button_bar_style}>
+                        {props.buttons.clone()}
+                    </div>
+                </@>
+            </dialog>
         ),
         modal_host,
     )
@@ -111,6 +132,8 @@ pub struct CosmoAlertProps {
     pub message: AttrValue,
     pub close_label: AttrValue,
     pub on_close: Callback<()>,
+    #[prop_or_default]
+    pub theme: CosmoTheme,
 }
 
 #[styled_component(CosmoAlert)]
@@ -118,7 +141,7 @@ pub fn alert(props: &CosmoAlertProps) -> Html {
     let on_close = use_callback(|_, on_close| on_close.emit(()), props.on_close.clone());
 
     html!(
-        <CosmoModal title={props.title.clone()} buttons={html!(<CosmoButton on_click={on_close} label={props.close_label.clone()} />)}>
+        <CosmoModal theme={props.theme.clone()} title={props.title.clone()} buttons={html!(<CosmoButton on_click={on_close} label={props.close_label.clone()} />)}>
             {props.message.clone()}
         </CosmoModal>
     )
@@ -132,6 +155,8 @@ pub struct CosmoConfirmProps {
     pub decline_label: AttrValue,
     pub on_confirm: Callback<()>,
     pub on_decline: Callback<()>,
+    #[prop_or_default]
+    pub theme: CosmoTheme,
 }
 
 #[styled_component(CosmoConfirm)]
@@ -140,7 +165,7 @@ pub fn confirm(props: &CosmoConfirmProps) -> Html {
     let on_decline = use_callback(|_, callback| callback.emit(()), props.on_decline.clone());
 
     html!(
-        <CosmoModal title={props.title.clone()} buttons={html!(
+        <CosmoModal theme={props.theme.clone()} title={props.title.clone()} buttons={html!(
             <>
                 <CosmoButton on_click={on_decline} label={props.decline_label.clone()} />
                 <CosmoButton on_click={on_confirm} label={props.confirm_label.clone()} />

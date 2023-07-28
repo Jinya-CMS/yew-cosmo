@@ -1,0 +1,17 @@
+[package]
+name = "yew-cosmo-docs"
+version = "0.14.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+yew-cosmo = { path = ".." }
+
+yew = "0.20.0"
+yew-router = "0.17.0"
+yew-hooks = "0.2.0"
+yew-feather = "1.0.0"
+gloo = "0.9.0"
+bounce = { version = "0.7.0", features = ["helmet"] }
+stylist = { version = "0.12.1", features = ["yew", "yew_use_style"] }

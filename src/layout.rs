@@ -3,6 +3,7 @@ use stylist::yew::{styled_component, use_style};
 use wasm_bindgen::JsCast;
 use web_sys::HtmlLinkElement;
 use yew::prelude::*;
+#[cfg(feature = "with-yew-router")]
 use yew_router::prelude::*;
 
 use crate::prelude::*;
@@ -111,6 +112,7 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
     --gradient-bottom-color: var(--white);
     --modal-backdrop: #FFFFFF4D;
     --table-stripe-color: #EEEEEE;
+    --dropdown-background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
 
     --font-weight-bold: bold;
     --font-weight-normal: normal;
@@ -134,27 +136,29 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
         --gradient-bottom-color: var(--white);
         --modal-backdrop: rgba(0, 0, 0, 0.3);
         --table-stripe-color: #1c1b1b;
+        --dropdown-background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojY2NjY2NjO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
     }
+}
 
-    .cosmo--light-theme {
-        --primary-color: ${primary_color};
-        --control-border-color: #CCCCCC;
-        --white: #FFFFFF;
-        --black: #333333;
-        --menu-text-selected-color: var(--black);
-        --menu-text-color: #00000040;
-        --disabled-color: var(--menu-text-color);
-        --negative-color: #e2180d;
-        --positive-color: #146621;
-        --code-color: #182B70;
-        --gradient-top-color: #EDEDEE;
-        --gradient-bottom-color: var(--white);
-        --modal-backdrop: #FFFFFF4D;
-        --table-stripe-color: #EEEEEE;
+.cosmo--light-theme {
+    --primary-color: ${primary_color};
+    --control-border-color: #CCCCCC;
+    --white: #FFFFFF;
+    --black: #333333;
+    --menu-text-selected-color: var(--black);
+    --menu-text-color: #00000040;
+    --disabled-color: var(--menu-text-color);
+    --negative-color: #e2180d;
+    --positive-color: #146621;
+    --code-color: #182B70;
+    --gradient-top-color: #EDEDEE;
+    --gradient-bottom-color: var(--white);
+    --modal-backdrop: #FFFFFF4D;
+    --table-stripe-color: #EEEEEE;
+    --dropdown-background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
 
-        background: var(--white);
-        color: var(--black);
-    }
+    background: var(--white);
+    color: var(--black);
 }
 
 .cosmo--dark-theme {
@@ -172,23 +176,9 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
     --gradient-bottom-color: var(--white);
     --modal-backdrop: rgba(0, 0, 0, 0.3);
     --table-stripe-color: #1c1b1b;
+    --dropdown-background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojY2NjY2NjO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
     background: var(--white);
     color: var(--black);
-}
-
-.cosmo-modal__container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--modal-backdrop);
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
 }
 
 body {
@@ -264,6 +254,8 @@ object-fit: cover;
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoTopBarItemProps {
     pub label: AttrValue,
+    #[prop_or_default]
+    pub on_click: Callback<()>,
 }
 
 #[hook]
@@ -299,17 +291,21 @@ margin-right: 16px;
 pub fn top_bar_item(props: &CosmoTopBarItemProps) -> Html {
     let style = use_top_bar_item_style();
 
+    let on_click = use_callback(|_: MouseEvent, on_click| on_click.emit(()), props.on_click.clone());
+
     html!(
-        <span class={style}>{props.label.clone()}</span>
+        <a class={style} onclick={on_click}>{props.label.clone()}</a>
     )
 }
 
+#[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoTopBarItemLinkProps<Route> where Route: Routable + 'static {
     pub label: AttrValue,
     pub to: Route,
 }
 
+#[cfg(feature = "with-yew-router")]
 #[styled_component(CosmoTopBarItemLink)]
 pub fn top_bar_item<Route>(props: &CosmoTopBarItemLinkProps<Route>) -> Html where Route: Routable + 'static {
     let style = use_top_bar_item_style();

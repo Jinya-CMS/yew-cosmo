@@ -1,11 +1,22 @@
 use stylist::Style;
 use stylist::yew::{styled_component, use_style};
 use yew::prelude::*;
+#[cfg(feature = "with-yew-router")]
 use yew_router::history::{BrowserHistory, History};
+#[cfg(feature = "with-yew-router")]
 use yew_router::prelude::*;
 
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoBackButtonProps {
+    #[cfg(not(feature = "with-yew-router"))]
+    pub on_click: Callback<()>,
+    #[cfg(not(feature = "with-yew-router"))]
+    #[prop_or_default]
+    pub is_enabled: bool,
+}
+
 #[styled_component(CosmoBackButton)]
-pub fn back_button() -> Html {
+pub fn back_button(props: &CosmoBackButtonProps) -> Html {
     let back_button_style = use_style!(r#"
 grid-column: backbutton;
 border: 4px solid var(--control-border-color);
@@ -63,20 +74,30 @@ cursor: pointer;
 }
     "#);
 
-    let navigator = use_navigator();
+    #[cfg(feature = "with-yew-router")]
+        let navigator = use_navigator();
 
-    let disabled_state = use_state_eq(|| navigator.is_none() || BrowserHistory::default().is_empty());
+    #[cfg(feature = "with-yew-router")]
+        let disabled_state = use_state_eq(|| navigator.is_none() || BrowserHistory::default().is_empty());
 
-    let on_click = use_callback(|_: MouseEvent, (navigator, disabled_state)| {
+    #[cfg(feature = "with-yew-router")]
+        let on_click = use_callback(|_: MouseEvent, (navigator, disabled_state)| {
         if let Some(navigator) = navigator {
             navigator.back();
             disabled_state.set(BrowserHistory::default().is_empty());
         }
     }, (navigator.clone(), disabled_state.clone()));
+    #[cfg(not(feature = "with-yew-router"))]
+        let on_click = use_callback(|_: MouseEvent, on_click| on_click.emit(()), props.on_click.clone());
 
-    html!(
+    #[cfg(feature = "with-yew-router")]
+    return html!(
         <button onclick={on_click} class={back_button_style} type="button" disabled={*disabled_state}></button>
-    )
+    );
+    #[cfg(not(feature = "with-yew-router"))]
+    return html!(
+        <button onclick={on_click} class={back_button_style} type="button" disabled={!props.is_enabled}></button>
+    );
 }
 
 
@@ -166,6 +187,7 @@ pub fn button(props: &CosmoButtonProps) -> Html {
     )
 }
 
+#[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoButtonLinkProps<Route> where Route: Routable + 'static {
     pub label: String,
@@ -176,6 +198,7 @@ pub struct CosmoButtonLinkProps<Route> where Route: Routable + 'static {
     pub enabled: bool,
 }
 
+#[cfg(feature = "with-yew-router")]
 #[function_component(CosmoButtonLink)]
 pub fn button_link<Route>(props: &CosmoButtonLinkProps<Route>) -> Html where Route: Routable + 'static {
     let style = use_cosmo_button_style(props.is_full_width);

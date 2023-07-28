@@ -1,5 +1,6 @@
 use stylist::yew::{styled_component, use_style};
 use yew::prelude::*;
+#[cfg(feature = "with-yew-router")]
 use yew_router::prelude::*;
 
 use crate::button::CosmoButton;
@@ -120,6 +121,7 @@ pub fn master_detail_list_item(props: &CosmoMasterDetailListItemProps) -> Html {
     )
 }
 
+#[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoMasterDetailListItemLinkProps<Route> where Route: Routable + 'static {
     pub label: AttrValue,
@@ -128,63 +130,12 @@ pub struct CosmoMasterDetailListItemLinkProps<Route> where Route: Routable + 'st
     pub is_active: bool,
 }
 
+#[cfg(feature = "with-yew-router")]
 #[styled_component(CosmoMasterDetailListItemLink)]
 pub fn master_detail_list_item_link<Route>(props: &CosmoMasterDetailListItemLinkProps<Route>) -> Html where Route: Routable + 'static {
     let style = use_master_detail_list_item_style(props.is_active);
 
     html!(
         <Link<Route> to={props.to.clone()} classes={style}>{props.label.clone()}</Link<Route>>
-    )
-}
-
-
-#[derive(PartialEq, Clone, Properties)]
-pub struct CosmoKeyValueListProps {
-    #[prop_or_default]
-    pub children: Children,
-}
-
-#[styled_component(CosmoKeyValueList)]
-pub fn key_value_list(props: &CosmoKeyValueListProps) -> Html {
-    let key_value_list_style = use_style!(r#"
-margin: 0;
-padding: 0;
-display: grid;
-    "#);
-
-    html!(
-        <dl class={key_value_list_style}>
-            {for props.children.iter()}
-        </dl>
-    )
-}
-
-#[derive(PartialEq, Clone, Properties)]
-pub struct CosmoKeyValueListItemProps {
-    #[prop_or_default]
-    pub children: Children,
-    pub title: AttrValue,
-}
-
-#[styled_component(CosmoKeyValueListItem)]
-pub fn key_value_list(props: &CosmoKeyValueListItemProps) -> Html {
-    let key_value_list_key = use_style!(r#"
-font-weight: var(--font-weight-normal);
-margin: 0;
-padding: 0;
-    "#);
-    let key_value_list_value = use_style!(r#"
-font-weight: var(--font-weight-light);
-padding: 0;
-margin: 0 0 8px;
-    "#);
-
-    html!(
-        <>
-            <dt class={key_value_list_key}>{props.title.clone()}</dt>
-            <dd class={key_value_list_value}>
-                {for props.children.iter()}
-            </dd>
-        </>
     )
 }
