@@ -5,11 +5,12 @@ use yew_router::prelude::*;
 
 use yew_cosmo::prelude::*;
 
+use crate::pages::controls::html::HtmlControls;
 use crate::pages::cosmo::about::AboutCosmo;
 use crate::pages::cosmo::customize::Customize;
 use crate::pages::cosmo::theme::Theme;
 use crate::pages::cosmo::typography::Typography;
-use crate::routing::{CosmoRoute, DocsRoute};
+use crate::routing::{ControlsRoute, CosmoRoute, DocsRoute};
 
 fn format_title(s: AttrValue) -> AttrValue {
     if s.is_empty() {
@@ -19,12 +20,12 @@ fn format_title(s: AttrValue) -> AttrValue {
     }
 }
 
-fn render_about_cosmo_sub_menu_entry(label: AttrValue, to: CosmoRoute) -> impl Fn(CosmoRoute) -> Html {
+fn render_sub_menu_entry<Route>(label: impl ToString, to: Route) -> impl Fn(Route) -> Html where Route: Routable + 'static {
     move |route| {
         let is_active = route.eq(&to.clone());
 
         html!(
-            <CosmoSubMenuItemLink<CosmoRoute> to={to.clone()} label={label.clone()} is_active={is_active} />
+            <CosmoSubMenuItemLink<Route> to={to.clone()} label={label.to_string()} is_active={is_active} />
         )
     }
 }
@@ -34,22 +35,29 @@ fn switch_sub_menu(route: DocsRoute) -> Html {
         DocsRoute::Home | DocsRoute::CosmoRoot | DocsRoute::Cosmo => {
             html!(
                 <CosmoSubMenuBar>
-                    <Switch<CosmoRoute> render={render_about_cosmo_sub_menu_entry(AttrValue::from("About Cosmo"), CosmoRoute::About)} />
-                    <Switch<CosmoRoute> render={render_about_cosmo_sub_menu_entry(AttrValue::from("Typography"), CosmoRoute::Typography)} />
-                    <Switch<CosmoRoute> render={render_about_cosmo_sub_menu_entry(AttrValue::from("Theme"), CosmoRoute::Theme)} />
-                    <Switch<CosmoRoute> render={render_about_cosmo_sub_menu_entry(AttrValue::from("Customize"), CosmoRoute::Customize)} />
+                    <Switch<CosmoRoute> render={render_sub_menu_entry("About Cosmo", CosmoRoute::About)} />
+                    <Switch<CosmoRoute> render={render_sub_menu_entry("Typography", CosmoRoute::Typography)} />
+                    <Switch<CosmoRoute> render={render_sub_menu_entry("Theme", CosmoRoute::Theme)} />
+                    <Switch<CosmoRoute> render={render_sub_menu_entry("Customize", CosmoRoute::Customize)} />
+                </CosmoSubMenuBar>
+            )
+        }
+        DocsRoute::Controls | DocsRoute::ControlsRoot => {
+            html!(
+                <CosmoSubMenuBar>
+                    <Switch<ControlsRoute> render={render_sub_menu_entry("HTML Controls", ControlsRoute::Html)} />
                 </CosmoSubMenuBar>
             )
         }
     }
 }
 
-fn render_cosmo_main_menu_entry() -> impl Fn(DocsRoute) -> Html {
+fn render_main_menu_entry<Route>(label: impl ToString, to: Route, active: Route) -> impl Fn(Route) -> Html where Route: Routable + 'static {
     move |route| {
-        let is_active = matches!(route, DocsRoute::Home | DocsRoute::CosmoRoot | DocsRoute::Cosmo);
+        let is_active = route.eq(&active.clone());
 
         html!(
-            <CosmoMainMenuItemLink<DocsRoute> to={DocsRoute::CosmoRoot} label="Cosmo" is_active={is_active} />
+            <CosmoMainMenuItemLink<Route> to={to.clone()} label={label.to_string()} is_active={is_active} />
         )
     }
 }
@@ -91,11 +99,26 @@ fn switch_cosmo(route: CosmoRoute) -> Html {
     }
 }
 
+fn switch_controls(route: ControlsRoute) -> Html {
+    match route {
+        ControlsRoute::Html => html!(
+            <>
+                <Helmet>
+                    <title>{"HTML Controls"}</title>
+                </Helmet>
+                <HtmlControls />
+            </>
+        ),
+    }
+}
+
 fn switch_app(route: DocsRoute) -> Html {
     match route {
         DocsRoute::Home => { html!(<Redirect<DocsRoute> to={DocsRoute::CosmoRoot} />) }
         DocsRoute::CosmoRoot => { html!(<Redirect<CosmoRoute> to={CosmoRoute::About} />) }
         DocsRoute::Cosmo => { html!(<Switch<CosmoRoute> render={switch_cosmo} />) }
+        DocsRoute::ControlsRoot => { html!(<Redirect<ControlsRoute> to={ControlsRoute::Html} />) }
+        DocsRoute::Controls => { html!(<Switch<ControlsRoute> render={switch_controls} />) }
     }
 }
 
@@ -113,7 +136,8 @@ pub fn app() -> Html {
                     </CosmoTopBar>
                     <CosmoMenuBar>
                         <CosmoMainMenu>
-                            <Switch<DocsRoute> render={render_cosmo_main_menu_entry()} />
+                            <Switch<DocsRoute> render={render_main_menu_entry("Cosmo", DocsRoute::CosmoRoot, DocsRoute::Cosmo)} />
+                            <Switch<DocsRoute> render={render_main_menu_entry("Controls", DocsRoute::ControlsRoot, DocsRoute::Controls)} />
                         </CosmoMainMenu>
                         <Switch<DocsRoute> render={switch_sub_menu} />
                     </CosmoMenuBar>

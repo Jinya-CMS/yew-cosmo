@@ -100,7 +100,6 @@ cursor: pointer;
     );
 }
 
-
 #[hook]
 fn use_cosmo_button_style(is_full_width: bool) -> Classes {
     let button_style = use_style!(r#"
@@ -231,5 +230,90 @@ gap: 16px;
         <div class={button_container_style}>
             {for props.children.iter()}
         </div>
+    )
+}
+
+#[cfg(feature = "with-icons")]
+#[derive(PartialEq, Clone)]
+pub enum CosmoCircleButtonSize {
+    Small,
+    Medium,
+    Large,
+}
+
+#[cfg(feature = "with-icons")]
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoCircleButtonProps {
+    pub icon: yew_icons::IconId,
+    pub title: AttrValue,
+    #[prop_or_default]
+    pub on_click: Option<Callback<()>>,
+    #[prop_or(true)]
+    pub enabled: bool,
+    #[prop_or(CosmoCircleButtonSize::Medium)]
+    pub size: CosmoCircleButtonSize,
+}
+
+#[cfg(feature = "with-icons")]
+#[function_component(CosmoCircleButton)]
+pub fn circle_button(props: &CosmoCircleButtonProps) -> Html {
+    let size = match props.size {
+        CosmoCircleButtonSize::Small => "24px",
+        CosmoCircleButtonSize::Medium => "32px",
+        CosmoCircleButtonSize::Large => "48px",
+    };
+    let icon_size = match props.size {
+        CosmoCircleButtonSize::Small => "16px",
+        CosmoCircleButtonSize::Medium => "24px",
+        CosmoCircleButtonSize::Large => "32px",
+    };
+    let button_style = use_style!(r#"
+border-radius: 100%;
+border: 2px solid var(--control-border-color);
+height: ${size};
+width: ${size};
+background: var(--white);
+color: var(--primary-color);
+cursor: pointer;
+text-decoration: none;
+font-weight: normal;
+display: inline-flex;
+justify-content: center;
+align-items: center;
+
+&:disabled {
+    cursor: not-allowed;
+    background: var(--white);
+    color: var(--disabled-color);
+}
+
+&:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    outline: none;
+    box-shadow: none;
+    border-color: var(--primary-color);
+}
+
+&:disabled:hover {
+    background: var(--white);
+    color: var(--control-border-color);
+    outline: none;
+    box-shadow: none;
+}
+
+&:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: none;
+}
+    "#, size = size);
+
+    let on_click = use_callback(|_: MouseEvent, on_click| if let Some(on_click) = on_click { on_click.emit(()) }, props.on_click.clone());
+
+    html!(
+        <button class={button_style} title={props.title.clone()} onclick={on_click}>
+            <yew_icons::Icon icon_id={props.icon} width={icon_size.clone()} height={icon_size.clone()} />
+        </button>
     )
 }

@@ -5,7 +5,6 @@ edition = "2021"
 authors = ["Imanuel Ulbricht"]
 homepage = "https://cosmo.jinya.dev/yew"
 license = "MIT"
-license-file = "LICENSE"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -15,7 +14,7 @@ stylist = { version = "0.12", features = ["yew", "yew_use_style"] }
 yew = "0.20"
 yew-router = { version = "0.17", optional = true }
 yew-hooks = "0.2"
-yew-feather = "1.0"
+yew_icons = { version = "0.7", optional = true }
 web-sys = { version = "0.3", features = ["HtmlSelectElement", "Element"] }
 getrandom = "0.2"
 rand = "0.8"
@@ -24,6 +23,8 @@ gloo = "0.9"
 wasm-bindgen = "0.2"
 color-art = "0.3"
 chrono = "0.4"
+num-traits = "0.2"
+derive_more = "0.99"
 
 [workspace]
 members = [
@@ -31,5 +32,11 @@ members = [
 ]
 
 [features]
-default = ["with-yew-router"]
+default = ["with-yew-router", "with-icons", "with-lucide-icons"]
 with-yew-router = ["dep:yew-router"]
+with-icons = ["dep:yew_icons"]
+with-bootstrap-icons = ["with-icons", "yew_icons?/bootstrap"]
+with-lucide-icons = ["with-icons", "yew_icons?/lucide"]
+with-font-awesome-icons = ["with-icons", "yew_icons?/font_awesome_regular", "yew_icons?/font_awesome_solid"]
+with-octicons-icons = ["with-icons", "yew_icons?/octicons"]
+with-heroicons-icons = ["with-icons", "yew_icons?/heroicons_outline", "yew_icons?/heroicons_solid", "yew_icons?/heroicons_mini_solid"]

@@ -1,66 +1,169 @@
-use yew::prelude::*;
 use stylist::yew::{styled_component, use_style};
+use yew::prelude::*;
 
-#[styled_component(CosmoLoader)]
-pub fn loader() -> Html {
+#[styled_component(CosmoProgressRing)]
+pub fn progress_ring() -> Html {
     let loader_container_style = use_style!(r#"
-        display: flex;
-        height: 100%;
-        width: 100%;
-        justify-content: center;
-        align-items: center;
+display: flex;
+height: 100%;
+width: 100%;
+justify-content: center;
+align-items: center;
     "#);
-    let loader_style = use_style!(r#"
-        color: var(--primary-color);
-        font-size: 90px;
-        text-indent: -9999em;
-        overflow: hidden;
-        width: 1em;
-        height: 1em;
-        border-radius: 50%;
-        margin: 72px auto;
-        position: relative;
-        transform: translateZ(0);
-        animation: load6 1.7s infinite ease, round 1.7s infinite ease;
+    let loader_dot_container_style = use_style!(r#"
+width: 128px;
+height: 128px;
+position: relative;
+    "#);
+    let loader_dot_style = use_style!(r#"
+width: 128px;
+height: 128px;
+animation: dwl-dot-spin 5s infinite linear both;
+animation-delay: calc(var(--i) * 1s / 8 * -1);
+rotate: calc(var(--i) * 60deg / 7);
+position: absolute;
 
-        @keyframes load6 {
-            0% {
-                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
-            }
-            5%,
-            95% {
-                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
-            }
-            10%,
-            59% {
-                box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
-            }
-            20% {
-                box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em;
-            }
-            38% {
-                box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em;
-            }
-            100% {
-                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
-            }
-        }
+&::before {
+    content: "";
+    display: block;
+    width: 12px;
+    height: 12px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    bottom: 0;
+    left: 50%;
+}
 
-        @keyframes round {
-            0% {
-                -webkit-transform: rotate(0deg);
-                transform: rotate(0deg);
-            }
-            100% {
-                -webkit-transform: rotate(360deg);
-                transform: rotate(360deg);
-            }
-        }
+@keyframes dwl-dot-spin {
+    0% {
+        transform: rotate(0deg);
+        animation-timing-function: cubic-bezier(0.390, 0.575, 0.565, 1.000);
+        opacity: 1;
+    }
+
+    2% {
+        transform: rotate(20deg);
+        animation-timing-function: linear;
+        opacity: 1;
+    }
+
+    30% {
+        transform: rotate(180deg);
+        animation-timing-function: cubic-bezier(0.445, 0.050, 0.550, 0.950);
+        opacity: 1;
+    }
+
+    41% {
+        transform: rotate(380deg);
+        animation-timing-function: linear;
+        opacity: 1;
+    }
+
+    69% {
+        transform: rotate(520deg);
+        animation-timing-function: cubic-bezier(0.445, 0.050, 0.550, 0.950);
+        opacity: 1;
+    }
+
+    76% {
+        opacity: 1;
+    }
+
+    76.1% {
+        opacity: 0;
+    }
+
+    80% {
+        transform: rotate(720deg);
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
     "#);
 
     html!(
         <div class={loader_container_style}>
-            <div class={loader_style}></div>
+            <div class={loader_dot_container_style}>
+                <div style="--i: 0;" class={loader_dot_style.clone()}></div>
+                <div style="--i: 1;" class={loader_dot_style.clone()}></div>
+                <div style="--i: 2;" class={loader_dot_style.clone()}></div>
+                <div style="--i: 3;" class={loader_dot_style.clone()}></div>
+                <div style="--i: 4;" class={loader_dot_style.clone()}></div>
+                <div style="--i: 5;" class={loader_dot_style.clone()}></div>
+            </div>
         </div>
     )
+}
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoProgressBarProps {
+    #[prop_or(false)]
+    pub is_indeterminate: bool,
+    #[prop_or(0)]
+    pub value: i32,
+    #[prop_or(100)]
+    pub max: u32,
+}
+
+#[styled_component(CosmoProgressBar)]
+pub fn progress_bar(props: &CosmoProgressBarProps) -> Html {
+    let progress_style = use_style!(r#"
+display: inline-block;
+vertical-align: baseline;
+appearance: none;
+width: 380px;
+height: 8px;
+overflow: hidden;
+border: 0;
+background-color: var(--control-border-color);
+color: var(--primary-color);
+border-radius: 0;
+
+&::-webkit-progress-bar {
+    background: transparent;
+}
+
+&[value]::-webkit-progress-value,
+::-moz-progress-bar {
+    background-color: var(--primary-color);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    &:indeterminate {
+        background: var(--control-border-color) linear-gradient(to right, var(--primary-color) 30%, var(--control-border-color) 30%) top left/150% 150% no-repeat;
+        animation: progressIndeterminate 1s linear infinite;
+    }
+
+    &:indeterminate[value]::-webkit-progress-value {
+        background-color: transparent;
+    }
+
+    &:indeterminate::-moz-progress-bar {
+        background-color: transparent;
+    }
+}
+
+@keyframes progressIndeterminate {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+    "#);
+
+    if !props.is_indeterminate {
+        html!(
+            <progress class={progress_style} value={props.value.to_string()} max={props.max.to_string()}></progress>
+        )
+    } else {
+        html!(
+            <progress class={progress_style}></progress>
+        )
+    }
 }

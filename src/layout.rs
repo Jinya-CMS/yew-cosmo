@@ -97,6 +97,41 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
     gloo::utils::head().append_child(&link).expect("Should append link");
 
     global_style!(r#"
+/* firefox scroll bars */
+* {
+	scrollbar-width: normal;
+	scrollbar-color: var(--primary-color) transparent;
+}
+
+/* webkit scrollbars */
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	box-shadow: inset 0 0 0 6px var(--primary-color);
+	border: 2px solid transparent;
+	border-radius: 5px !important;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+	box-shadow: inset 0 0 0 6px var(--primary-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	box-shadow: inset 0 0 0 6px var(--primary-color);
+}
+
+::-webkit-scrollbar-corner {
+	background: transparent;
+}
+
+::selection {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
 :root {
     --control-border-color: #CCCCCC;
     --primary-color: ${primary_color};

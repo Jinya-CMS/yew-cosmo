@@ -9,6 +9,10 @@ pub enum DocsRoute {
     CosmoRoot,
     #[at("/cosmo/*")]
     Cosmo,
+    #[at("/controls")]
+    ControlsRoot,
+    #[at("/controls/*")]
+    Controls,
 }
 
 #[derive(Routable, Clone, PartialEq)]
@@ -21,4 +25,10 @@ pub enum CosmoRoute {
     Theme,
     #[at("/cosmo/customize")]
     Customize,
+}
+
+#[derive(Routable, Clone, PartialEq)]
+pub enum ControlsRoute {
+    #[at("/controls/html")]
+    Html,
 }

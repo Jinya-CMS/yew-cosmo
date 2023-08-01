@@ -5,7 +5,7 @@ use yew::prelude::*;
 pub struct CosmoTableProps {
     pub headers: Vec<AttrValue>,
     #[prop_or_default]
-    pub children: Children,
+    pub children: ChildrenWithProps<CosmoTableRow>,
 }
 
 #[styled_component(CosmoTable)]
@@ -13,9 +13,13 @@ pub fn table(props: &CosmoTableProps) -> Html {
     let table_style = use_style!(r#"
 border-collapse: collapse;
 
+thead tr {
+    border-bottom: 2px solid var(--primary-color);
+}
+
 thead tr th {
     font-weight: var(--font-weight-bold);
-    padding: 0 8px 8px;
+    padding: 0 8px 4px;
     text-transform: capitalize;
 }
 
@@ -47,7 +51,7 @@ tr:nth-child(2n-1) td {
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoTableRowProps {
     #[prop_or_default]
-    pub children: Children,
+    pub children: ChildrenWithProps<CosmoTableCell>,
 }
 
 #[styled_component(CosmoTableRow)]

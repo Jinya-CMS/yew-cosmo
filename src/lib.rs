@@ -1,5 +1,6 @@
 pub mod prelude {
     use yew::Classes;
+
     pub use crate::button::*;
     pub use crate::form::*;
     pub use crate::layout::*;
@@ -11,12 +12,23 @@ pub mod prelude {
     pub use crate::toolbar::*;
     pub use crate::typography::*;
 
+    pub use chrono::DateTime;
+    pub use chrono::NaiveTime;
+    pub use chrono::Local;
+    pub use chrono::NaiveDate;
+
+    pub use color_art::Color;
+    pub use color_art::color;
+
+    #[cfg(feature = "with-icons")]
+    pub use yew_icons::IconId;
+
     #[derive(PartialEq, Clone, Default)]
     pub enum CosmoTheme {
         #[default]
         Auto,
         Light,
-        Dark
+        Dark,
     }
 
     impl ToString for CosmoTheme {
