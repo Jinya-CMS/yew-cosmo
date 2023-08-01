@@ -10,3 +10,9 @@ public_url = "/"
 
 [watch]
 watch = ["src", "docs"]
+
+[clean]
+cargo = true
+
+[serve]
+port = 8070

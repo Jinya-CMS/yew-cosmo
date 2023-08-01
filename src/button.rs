@@ -16,7 +16,7 @@ pub struct CosmoBackButtonProps {
 }
 
 #[styled_component(CosmoBackButton)]
-pub fn back_button(props: &CosmoBackButtonProps) -> Html {
+pub fn back_button(_props: &CosmoBackButtonProps) -> Html {
     let back_button_style = use_style!(r#"
 grid-column: backbutton;
 border: 4px solid var(--control-border-color);
@@ -88,7 +88,7 @@ cursor: pointer;
         }
     }, (navigator.clone(), disabled_state.clone()));
     #[cfg(not(feature = "with-yew-router"))]
-        let on_click = use_callback(|_: MouseEvent, on_click| on_click.emit(()), props.on_click.clone());
+        let on_click = use_callback(|_: MouseEvent, on_click| on_click.emit(()), _props.on_click.clone());
 
     #[cfg(feature = "with-yew-router")]
     return html!(
@@ -96,7 +96,7 @@ cursor: pointer;
     );
     #[cfg(not(feature = "with-yew-router"))]
     return html!(
-        <button onclick={on_click} class={back_button_style} type="button" disabled={!props.is_enabled}></button>
+        <button onclick={on_click} class={back_button_style} type="button" disabled={!_props.is_enabled}></button>
     );
 }
 
