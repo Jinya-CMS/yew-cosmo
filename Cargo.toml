@@ -3,7 +3,7 @@ name = "yew-cosmo"
 version = "0.14.0"
 edition = "2021"
 authors = ["Imanuel Ulbricht"]
-homepage = "https://cosmo.jinya.dev/yew"
+homepage = "https://cosmo-yew.jinya.dev/"
 license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
