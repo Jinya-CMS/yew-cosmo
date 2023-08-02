@@ -35,4 +35,6 @@ pub enum ControlsRoute {
     SideList,
     #[at("/controls/tab-control")]
     TabControl,
+    #[at("/controls/toolbar")]
+    Toolbar,
 }

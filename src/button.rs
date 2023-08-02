@@ -124,7 +124,7 @@ font-weight: normal;
 
 &:disabled + .cosmo-button,
 &:disabled + .cosmo-button:disabled,
-.cosmo-button + .cosmo-button {
++ .cosmo-button {
     border-left-width: 0;
 }
 
