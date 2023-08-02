@@ -79,7 +79,7 @@ pub enum CosmoInputWidth {
     Medium,
     Large,
     #[default]
-    Full
+    Full,
 }
 
 impl ToString for CosmoInputWidth {

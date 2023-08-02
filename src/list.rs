@@ -1,15 +1,13 @@
 use stylist::yew::{styled_component, use_style};
 use yew::prelude::*;
-#[cfg(feature = "with-yew-router")]
-use yew_router::prelude::*;
+use yew::virtual_dom::VChild;
 
 use crate::button::CosmoButton;
 
 #[derive(PartialEq, Clone, Properties)]
-pub struct CosmoMasterDetailListProps {
+pub struct CosmoSideListProps {
     #[prop_or_default]
-    pub children: Children,
-    pub items: Children,
+    pub children: ChildrenWithProps<CosmoSideListItem>,
     #[prop_or(false)]
     pub has_add_button: bool,
     #[prop_or_default]
@@ -18,8 +16,8 @@ pub struct CosmoMasterDetailListProps {
     pub add_button_on_click: Callback<()>,
 }
 
-#[styled_component(CosmoMasterDetailList)]
-pub fn master_detail_list(props: &CosmoMasterDetailListProps) -> Html {
+#[styled_component(CosmoSideList)]
+pub fn side_list(props: &CosmoSideListProps) -> Html {
     let list_style = use_style!(r#"
 display: grid;
 grid-template-columns: [items-list] 212px 16px [content] 1fr;
@@ -41,36 +39,6 @@ height: 100%;
 overflow-y: auto;
     "#);
 
-    html!(
-        <div class={list_style}>
-            <nav class={list_items_style}>
-                {for props.items.iter()}
-                {if props.has_add_button {
-                    let on_click = props.add_button_on_click.clone();
-
-                    html!(<CosmoButton is_full_width={true} on_click={move |_| on_click.emit(())} label={props.add_button_label.clone()} />)
-                } else {
-                    html!()
-                }}
-            </nav>
-            <div class={list_content_style}>
-                {for props.children.iter()}
-            </div>
-        </div>
-    )
-}
-
-#[derive(PartialEq, Clone, Properties)]
-pub struct CosmoMasterDetailListItemProps {
-    pub label: AttrValue,
-    #[prop_or_default]
-    pub on_click: Option<Callback<()>>,
-    #[prop_or(false)]
-    pub is_active: bool,
-}
-
-#[hook]
-fn use_master_detail_list_item_style(is_active: bool) -> Classes {
     let item_style = use_style!(r#"
 color: var(--black);
 padding: 4px 8px;
@@ -87,7 +55,7 @@ text-decoration: none;
     background: var(--control-border-color);
 }
     "#);
-    let mut item_active_style = Some(use_style!(r#"
+    let item_active_style = use_style!(r#"
 background: var(--primary-color);
 color: var(--white);
 font-weight: var(--font-weight-bold);
@@ -103,39 +71,74 @@ font-weight: var(--font-weight-bold);
     background: var(--white);
     color: var(--primary-color);
 }
-    "#));
-    if !is_active {
-        item_active_style = None;
-    }
+    "#);
 
-    classes!(item_style, item_active_style)
-}
-
-#[styled_component(CosmoMasterDetailListItem)]
-pub fn master_detail_list_item(props: &CosmoMasterDetailListItemProps) -> Html {
-    let on_click = props.on_click.clone().map(|on_click| Callback::from(move |_| on_click.emit(())));
-    let style = use_master_detail_list_item_style(props.is_active);
+    let selected_item_state = use_state_eq(|| if props.children.len() > 0 { Some(0) } else { None });
 
     html!(
-        <a class={style} onclick={on_click}>{props.label.clone()}</a>
+        <div class={list_style}>
+            <nav class={list_items_style}>
+                {for props.children.iter().enumerate().map(|(idx, child)| {
+                    let label = child.props.label.clone();
+                    let selected_item_state = selected_item_state.clone();
+                    let item_active_style = item_active_style.clone();
+                    let item_style = item_style.clone();
+                    let on_click = {
+                        let selected_item_state = selected_item_state.clone();
+
+                        Callback::from(move |_| {
+                            selected_item_state.set(Some(idx));
+                        })
+                    };
+                    let classes = if *selected_item_state == Some(idx) {
+                        classes!(item_style, item_active_style)
+                    } else {
+                        classes!(item_style)
+                    };
+
+                    html!(
+                        <a class={classes} onclick={on_click}>{label.clone()}</a>
+                    )
+                })}
+                {if props.has_add_button {
+                    let on_click = props.add_button_on_click.clone();
+
+                    html!(<CosmoButton is_full_width={true} on_click={move |_| on_click.emit(())} label={props.add_button_label.clone()} />)
+                } else {
+                    html!()
+                }}
+            </nav>
+            <div class={list_content_style}>
+                {if let Some(selected_item) = (*selected_item_state).clone() {
+                    if let Some((_, item)) = props.children.iter().enumerate().nth(selected_item).clone() {
+                        item.into()
+                    } else {
+                        html!()
+                    }
+                } else {
+                    html!()
+                }}
+            </div>
+        </div>
     )
 }
 
-#[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
-pub struct CosmoMasterDetailListItemLinkProps<Route> where Route: Routable + 'static {
+pub struct CosmoSideListItemProps {
     pub label: AttrValue,
-    pub to: Route,
-    #[prop_or(false)]
-    pub is_active: bool,
+    #[prop_or_default]
+    pub children: Children,
 }
 
-#[cfg(feature = "with-yew-router")]
-#[styled_component(CosmoMasterDetailListItemLink)]
-pub fn master_detail_list_item_link<Route>(props: &CosmoMasterDetailListItemLinkProps<Route>) -> Html where Route: Routable + 'static {
-    let style = use_master_detail_list_item_style(props.is_active);
-
+#[function_component(CosmoSideListItem)]
+pub fn side_list_item(props: &CosmoSideListItemProps) -> Html {
     html!(
-        <Link<Route> to={props.to.clone()} classes={style}>{props.label.clone()}</Link<Route>>
+        {for props.children.iter()}
     )
+}
+
+impl CosmoSideListItem {
+    pub fn new(props: CosmoSideListItemProps) -> VChild<Self> {
+        VChild::new(props, None)
+    }
 }

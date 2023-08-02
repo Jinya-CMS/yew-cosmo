@@ -6,6 +6,8 @@ use yew_router::prelude::*;
 use yew_cosmo::prelude::*;
 
 use crate::pages::controls::html::HtmlControls;
+use crate::pages::controls::side_list::SideList;
+use crate::pages::controls::tab_control::TabControl;
 use crate::pages::cosmo::about::AboutCosmo;
 use crate::pages::cosmo::customize::Customize;
 use crate::pages::cosmo::theme::Theme;
@@ -46,6 +48,8 @@ fn switch_sub_menu(route: DocsRoute) -> Html {
             html!(
                 <CosmoSubMenuBar>
                     <Switch<ControlsRoute> render={render_sub_menu_entry("HTML Controls", ControlsRoute::Html)} />
+                    <Switch<ControlsRoute> render={render_sub_menu_entry("Side List Control", ControlsRoute::SideList)} />
+                    <Switch<ControlsRoute> render={render_sub_menu_entry("Tab Control", ControlsRoute::TabControl)} />
                 </CosmoSubMenuBar>
             )
         }
@@ -107,6 +111,22 @@ fn switch_controls(route: ControlsRoute) -> Html {
                     <title>{"HTML Controls"}</title>
                 </Helmet>
                 <HtmlControls />
+            </>
+        ),
+        ControlsRoute::SideList => html!(
+            <>
+                <Helmet>
+                    <title>{"Side List Control"}</title>
+                </Helmet>
+                <SideList />
+            </>
+        ),
+        ControlsRoute::TabControl => html!(
+            <>
+                <Helmet>
+                    <title>{"Tab Control"}</title>
+                </Helmet>
+                <TabControl />
             </>
         ),
     }

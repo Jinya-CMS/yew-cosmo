@@ -31,4 +31,8 @@ pub enum CosmoRoute {
 pub enum ControlsRoute {
     #[at("/controls/html")]
     Html,
+    #[at("/controls/side-list")]
+    SideList,
+    #[at("/controls/tab-control")]
+    TabControl,
 }

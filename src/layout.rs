@@ -11,6 +11,8 @@ use crate::prelude::*;
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoTitleProps {
     pub title: AttrValue,
+    #[prop_or_default]
+    pub subtitle: Option<AttrValue>,
 }
 
 #[styled_component(CosmoTitle)]
@@ -27,10 +29,19 @@ font-size: 36px;
     padding-left: 16px;
     box-sizing: border-box;
 }
+
+small {
+    margin-left: 16px;
+}
     "#);
 
     html!(
-        <h1 class={classes!(title_style, "cosmo-title")}>{props.title.clone()}</h1>
+        <h1 class={classes!(title_style, "cosmo-title")}>
+            {props.title.clone()}
+            if let Some(subtitle) = props.subtitle.clone() {
+                <small>{subtitle}</small>
+            }
+        </h1>
     )
 }
 

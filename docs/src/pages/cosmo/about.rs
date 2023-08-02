@@ -1,4 +1,5 @@
 use yew::prelude::*;
+
 use yew_cosmo::prelude::*;
 
 #[function_component(AboutCosmo)]

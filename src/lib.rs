@@ -1,5 +1,13 @@
 pub mod prelude {
+    pub use chrono::DateTime;
+    pub use chrono::Local;
+    pub use chrono::NaiveDate;
+    pub use chrono::NaiveTime;
+    pub use color_art::Color;
+    pub use color_art::color;
     use yew::Classes;
+    #[cfg(feature = "with-icons")]
+    pub use yew_icons::IconId;
 
     pub use crate::button::*;
     pub use crate::form::*;
@@ -8,20 +16,10 @@ pub mod prelude {
     pub use crate::loader::*;
     pub use crate::menu::*;
     pub use crate::modal::*;
+    pub use crate::tab::*;
     pub use crate::table::*;
     pub use crate::toolbar::*;
     pub use crate::typography::*;
-
-    pub use chrono::DateTime;
-    pub use chrono::NaiveTime;
-    pub use chrono::Local;
-    pub use chrono::NaiveDate;
-
-    pub use color_art::Color;
-    pub use color_art::color;
-
-    #[cfg(feature = "with-icons")]
-    pub use yew_icons::IconId;
 
     #[derive(PartialEq, Clone, Default)]
     pub enum CosmoTheme {
@@ -58,4 +56,5 @@ mod toolbar;
 mod button;
 mod typography;
 mod table;
+mod tab;
 
