@@ -4,8 +4,8 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 
 use yew_cosmo::prelude::*;
-use crate::pages::controls::dialog::Dialog;
 
+use crate::pages::controls::dialog::Dialog;
 use crate::pages::controls::html::HtmlControls;
 use crate::pages::controls::side_list::SideList;
 use crate::pages::controls::tab_control::TabControl;
@@ -14,7 +14,9 @@ use crate::pages::cosmo::about::AboutCosmo;
 use crate::pages::cosmo::customize::Customize;
 use crate::pages::cosmo::theme::Theme;
 use crate::pages::cosmo::typography::Typography;
-use crate::routing::{ControlsRoute, CosmoRoute, DocsRoute};
+use crate::pages::layout::base::BaseLayout;
+use crate::pages::layout::showcase::Showcase;
+use crate::routing::{ControlsRoute, CosmoRoute, DocsRoute, LayoutRoute};
 
 fn format_title(s: AttrValue) -> AttrValue {
     if s.is_empty() {
@@ -54,6 +56,14 @@ fn switch_sub_menu(route: DocsRoute) -> Html {
                     <Switch<ControlsRoute> render={render_sub_menu_entry("Tab Control", ControlsRoute::TabControl)} />
                     <Switch<ControlsRoute> render={render_sub_menu_entry("Toolbar", ControlsRoute::Toolbar)} />
                     <Switch<ControlsRoute> render={render_sub_menu_entry("Dialogs", ControlsRoute::Dialog)} />
+                </CosmoSubMenuBar>
+            )
+        }
+        DocsRoute::Layout | DocsRoute::LayoutRoot => {
+            html!(
+                <CosmoSubMenuBar>
+                    <Switch<LayoutRoute> render={render_sub_menu_entry("Base layout and menu", LayoutRoute::Base)} />
+                    <Switch<LayoutRoute> render={render_sub_menu_entry("Layout outline", LayoutRoute::Showcase)} />
                 </CosmoSubMenuBar>
             )
         }
@@ -152,6 +162,27 @@ fn switch_controls(route: ControlsRoute) -> Html {
     }
 }
 
+fn switch_layout(route: LayoutRoute) -> Html {
+    match route {
+        LayoutRoute::Base => html!(
+            <>
+                <Helmet>
+                    <title>{"Base layout and menu"}</title>
+                </Helmet>
+                <BaseLayout />
+            </>
+        ),
+        LayoutRoute::Showcase => html!(
+            <>
+                <Helmet>
+                    <title>{"Layout showcase"}</title>
+                </Helmet>
+                <Showcase />
+            </>
+        ),
+    }
+}
+
 fn switch_app(route: DocsRoute) -> Html {
     match route {
         DocsRoute::Home => { html!(<Redirect<DocsRoute> to={DocsRoute::CosmoRoot} />) }
@@ -159,6 +190,27 @@ fn switch_app(route: DocsRoute) -> Html {
         DocsRoute::Cosmo => { html!(<Switch<CosmoRoute> render={switch_cosmo} />) }
         DocsRoute::ControlsRoot => { html!(<Redirect<ControlsRoute> to={ControlsRoute::Html} />) }
         DocsRoute::Controls => { html!(<Switch<ControlsRoute> render={switch_controls} />) }
+        DocsRoute::LayoutRoot => { html!(<Redirect<LayoutRoute> to={LayoutRoute::Base} />) }
+        DocsRoute::Layout => { html!(<Switch<LayoutRoute> render={switch_layout} />) }
+    }
+}
+
+fn switch_bottom_bar(route: DocsRoute) -> Html {
+    match route {
+        DocsRoute::Layout | DocsRoute::LayoutRoot => {
+            html!(
+                <CosmoBottomBar progress_state={CosmoBottomBarProgressState::Indeterminate} progress_bottom_label="Bottom label" progress_top_label="Top label">
+                    <CosmoBottomBarLeftItem>
+                        <CosmoButton label="I am a button on the left" />
+                        <CosmoStrong>{"Hello World!"}</CosmoStrong>
+                    </CosmoBottomBarLeftItem>
+                    <CosmoBottomBarRightItem>
+                        <CosmoCircleButton title="I am a right button" icon={IconId::LucideLeaf} />
+                    </CosmoBottomBarRightItem>
+                </CosmoBottomBar>
+            )
+        }
+        _ => { html!() }
     }
 }
 
@@ -170,20 +222,22 @@ pub fn app() -> Html {
                 <CosmoPageLayout>
                     <HelmetBridge default_title="Cosmo Yew" format_title={format_title} />
                     <CosmoTopBar has_right_item={true} right_item_label="Logout">
-                        <CosmoTopBarItem label="Topbar item 1" />
-                        <CosmoTopBarItem label="Topbar item 2" />
-                        <CosmoTopBarItem label="Topbar item 3" />
+                        <CosmoTopBarItemExternal href="https://github.com/Jinya-CMS/cosmo-css" label="Github" />
+                        <CosmoTopBarItemExternal href="https://gitlab.imanuel.dev/jinya-cms/cosmo-css" label="GitLab" />
+                        <CosmoTopBarItemExternal href="https://crates.io/crates/yew-cosmo" label="Crate" />
                     </CosmoTopBar>
                     <CosmoMenuBar>
                         <CosmoMainMenu>
                             <Switch<DocsRoute> render={render_main_menu_entry("Cosmo", DocsRoute::CosmoRoot, DocsRoute::Cosmo)} />
                             <Switch<DocsRoute> render={render_main_menu_entry("Controls", DocsRoute::ControlsRoot, DocsRoute::Controls)} />
+                            <Switch<DocsRoute> render={render_main_menu_entry("Layout", DocsRoute::LayoutRoot, DocsRoute::Layout)} />
                         </CosmoMainMenu>
                         <Switch<DocsRoute> render={switch_sub_menu} />
                     </CosmoMenuBar>
                     <CosmoPageBody>
                         <Switch<DocsRoute> render={switch_app} />
                     </CosmoPageBody>
+                    <Switch<DocsRoute> render={switch_bottom_bar} />
                 </CosmoPageLayout>
             </BounceRoot>
         </BrowserRouter>

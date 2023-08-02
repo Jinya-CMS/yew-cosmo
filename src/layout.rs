@@ -2,7 +2,9 @@ use stylist::{global_style, Style};
 use stylist::yew::{styled_component, use_style};
 use wasm_bindgen::JsCast;
 use web_sys::HtmlLinkElement;
+use yew::html::ChildrenRenderer;
 use yew::prelude::*;
+use yew::virtual_dom::VChild;
 #[cfg(feature = "with-yew-router")]
 use yew_router::prelude::*;
 
@@ -297,13 +299,6 @@ object-fit: cover;
     )
 }
 
-#[derive(PartialEq, Clone, Properties)]
-pub struct CosmoTopBarItemProps {
-    pub label: AttrValue,
-    #[prop_or_default]
-    pub on_click: Callback<()>,
-}
-
 #[hook]
 fn use_top_bar_item_style() -> Style {
     use_style!(r#"
@@ -333,6 +328,13 @@ margin-right: 16px;
     "#)
 }
 
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoTopBarItemProps {
+    pub label: AttrValue,
+    #[prop_or_default]
+    pub on_click: Callback<()>,
+}
+
 #[styled_component(CosmoTopBarItem)]
 pub fn top_bar_item(props: &CosmoTopBarItemProps) -> Html {
     let style = use_top_bar_item_style();
@@ -341,6 +343,21 @@ pub fn top_bar_item(props: &CosmoTopBarItemProps) -> Html {
 
     html!(
         <a class={style} onclick={on_click}>{props.label.clone()}</a>
+    )
+}
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoTopBarItemExternalProps {
+    pub label: AttrValue,
+    pub href: AttrValue,
+}
+
+#[styled_component(CosmoTopBarItemExternal)]
+pub fn top_bar_item_external(props: &CosmoTopBarItemExternalProps) -> Html {
+    let style = use_top_bar_item_style();
+
+    html!(
+        <a class={style} href={props.href.clone()} target="_blank">{props.label.clone()}</a>
     )
 }
 
@@ -358,5 +375,144 @@ pub fn top_bar_item<Route>(props: &CosmoTopBarItemLinkProps<Route>) -> Html wher
 
     html!(
         <Link<Route> to={props.to.clone()} classes={style}>{props.label.clone()}</Link<Route>>
+    )
+}
+
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoBottomBarItemProps {
+    #[prop_or_default]
+    pub children: Children,
+}
+
+#[function_component(CosmoBottomBarLeftItem)]
+pub fn bottom_bar_left_item(props: &CosmoBottomBarItemProps) -> Html {
+    html!({for props.children.iter()})
+}
+
+#[function_component(CosmoBottomBarRightItem)]
+pub fn bottom_bar_right_item(props: &CosmoBottomBarItemProps) -> Html {
+    html!({for props.children.iter()})
+}
+
+#[derive(Clone, derive_more::From, PartialEq)]
+pub enum CosmoBottomBarChildren {
+    CosmoBottomBarLeftItem(VChild<CosmoBottomBarLeftItem>),
+    CosmoBottomBarRightItem(VChild<CosmoBottomBarRightItem>),
+}
+
+impl Into<Html> for CosmoBottomBarChildren {
+    fn into(self) -> Html {
+        match self {
+            CosmoBottomBarChildren::CosmoBottomBarLeftItem(child) => child.into(),
+            CosmoBottomBarChildren::CosmoBottomBarRightItem(child) => child.into(),
+        }
+    }
+}
+
+impl CosmoBottomBarChildren {
+    pub(crate) fn is_left(&self) -> bool {
+        if let CosmoBottomBarChildren::CosmoBottomBarLeftItem(_) = self {
+            true
+        } else {
+            false
+        }
+    }
+
+    pub(crate) fn is_right(&self) -> bool {
+        if let CosmoBottomBarChildren::CosmoBottomBarRightItem(_) = self {
+            true
+        } else {
+            false
+        }
+    }
+}
+
+#[derive(PartialEq, Clone, Default)]
+pub enum CosmoBottomBarProgressState {
+    #[default]
+    Hidden,
+    Visible,
+    Indeterminate,
+}
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoBottomBarProps {
+    #[prop_or_default]
+    pub children: ChildrenRenderer<CosmoBottomBarChildren>,
+    #[prop_or_default]
+    pub progress_top_label: AttrValue,
+    #[prop_or_default]
+    pub progress_bottom_label: AttrValue,
+    #[prop_or_default]
+    pub progress_state: CosmoBottomBarProgressState,
+    #[prop_or_default]
+    pub progress_value: usize,
+    #[prop_or_default]
+    pub progress_max: usize,
+}
+
+#[styled_component(CosmoBottomBar)]
+pub fn bottom_bar(props: &CosmoBottomBarProps) -> Html {
+    let bottom_bar_style = use_style!(r#"
+grid-row: bottom-bar;
+align-items: center;
+display: grid;
+grid-template-columns: [left] 1fr [center] 1fr [right] 1fr;
+gap: 1rem;
+padding-left: 164px;
+padding-right: 164px;
+"#);
+
+    let bottom_bar_item_left = use_style!(r#"
+grid-column: left;
+justify-self: left;
+display: flex;
+gap: 16px;
+align-items: center;
+    "#);
+    let bottom_bar_item_center = use_style!(r#"
+grid-column: center;
+justify-self: center;
+display: grid;
+justify-items: center;
+    "#);
+    let bottom_bar_item_right = use_style!(r#"
+grid-column: right;
+justify-self: right;
+display: flex;
+gap: 16px;
+align-items: center;
+    "#);
+    let progress_bar_top_label = use_style!(r#"
+font-size: 16px;
+color: var(--black);
+display: block;
+    "#);
+    let progress_bar_bottom_label = use_style!(r#"
+font-size: 13px;
+color: var(--black);
+display: block;
+    "#);
+
+    let left = props.children.iter().filter(|item| item.is_left()).next();
+    let right = props.children.iter().filter(|item| item.is_right()).next();
+
+    html!(
+        <div class={bottom_bar_style}>
+            <div class={bottom_bar_item_left}>
+                {left.clone()}
+            </div>
+            if matches!(props.progress_state, CosmoBottomBarProgressState::Visible | CosmoBottomBarProgressState::Indeterminate) {
+                <div class={bottom_bar_item_center}>
+                    <span class={progress_bar_top_label}>{props.progress_top_label.clone()}</span>
+                    <CosmoProgressBar is_indeterminate={props.progress_state == CosmoBottomBarProgressState::Indeterminate} value={props.progress_value} max={props.progress_max} />
+                    <span class={progress_bar_bottom_label}>{props.progress_bottom_label.clone()}</span>
+                </div>
+            }
+            <div class={bottom_bar_item_right}>
+                {right.clone()}
+            </div>
+        </div>
     )
 }

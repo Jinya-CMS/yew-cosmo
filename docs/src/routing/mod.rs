@@ -13,6 +13,10 @@ pub enum DocsRoute {
     ControlsRoot,
     #[at("/controls/*")]
     Controls,
+    #[at("/layout")]
+    LayoutRoot,
+    #[at("/layout/*")]
+    Layout,
 }
 
 #[derive(Routable, Clone, PartialEq)]
@@ -39,4 +43,12 @@ pub enum ControlsRoute {
     Toolbar,
     #[at("/controls/dialog")]
     Dialog,
+}
+
+#[derive(Routable, Clone, PartialEq)]
+pub enum LayoutRoute {
+    #[at("/layout/base")]
+    Base,
+    #[at("/layout/showcase")]
+    Showcase,
 }

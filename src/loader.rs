@@ -104,9 +104,9 @@ pub struct CosmoProgressBarProps {
     #[prop_or(false)]
     pub is_indeterminate: bool,
     #[prop_or(0)]
-    pub value: i32,
+    pub value: usize,
     #[prop_or(100)]
-    pub max: u32,
+    pub max: usize,
 }
 
 #[styled_component(CosmoProgressBar)]
