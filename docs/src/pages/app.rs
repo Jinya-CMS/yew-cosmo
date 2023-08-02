@@ -4,6 +4,7 @@ use yew::prelude::*;
 use yew_router::prelude::*;
 
 use yew_cosmo::prelude::*;
+use crate::pages::controls::dialog::Dialog;
 
 use crate::pages::controls::html::HtmlControls;
 use crate::pages::controls::side_list::SideList;
@@ -52,6 +53,7 @@ fn switch_sub_menu(route: DocsRoute) -> Html {
                     <Switch<ControlsRoute> render={render_sub_menu_entry("Side List Control", ControlsRoute::SideList)} />
                     <Switch<ControlsRoute> render={render_sub_menu_entry("Tab Control", ControlsRoute::TabControl)} />
                     <Switch<ControlsRoute> render={render_sub_menu_entry("Toolbar", ControlsRoute::Toolbar)} />
+                    <Switch<ControlsRoute> render={render_sub_menu_entry("Dialogs", ControlsRoute::Dialog)} />
                 </CosmoSubMenuBar>
             )
         }
@@ -137,6 +139,14 @@ fn switch_controls(route: ControlsRoute) -> Html {
                     <title>{"Toolbar"}</title>
                 </Helmet>
                 <Toolbar />
+            </>
+        ),
+        ControlsRoute::Dialog => html!(
+            <>
+                <Helmet>
+                    <title>{"Dialogs"}</title>
+                </Helmet>
+                <Dialog />
             </>
         ),
     }

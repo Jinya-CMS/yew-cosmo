@@ -37,4 +37,6 @@ pub enum ControlsRoute {
     TabControl,
     #[at("/controls/toolbar")]
     Toolbar,
+    #[at("/controls/dialog")]
+    Dialog,
 }
