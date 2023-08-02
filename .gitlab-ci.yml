@@ -2,7 +2,7 @@
   before_script:
     - apk add musl-dev
     - rustup target add wasm32-unknown-unknown
-    - cargo install --lock trunk
+    - cargo install --path trunk
     - cargo install
 
 stages:
