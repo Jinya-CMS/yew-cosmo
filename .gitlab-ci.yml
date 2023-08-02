@@ -5,6 +5,11 @@
     - cargo install --lock trunk
     - cargo install
 
+stages:
+  - lint
+  - build
+  - deploy
+
 lint:
   extends:
     - .install-dependencies
