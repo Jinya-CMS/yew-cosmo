@@ -7,6 +7,7 @@ use yew_cosmo::prelude::*;
 
 use crate::pages::controls::dialog::Dialog;
 use crate::pages::controls::html::HtmlControls;
+use crate::pages::controls::message::Message;
 use crate::pages::controls::side_list::SideList;
 use crate::pages::controls::tab_control::TabControl;
 use crate::pages::controls::toolbar::Toolbar;
@@ -52,6 +53,7 @@ fn switch_sub_menu(route: DocsRoute) -> Html {
             html!(
                 <CosmoSubMenuBar>
                     <Switch<ControlsRoute> render={render_sub_menu_entry("HTML Controls", ControlsRoute::Html)} />
+                    <Switch<ControlsRoute> render={render_sub_menu_entry("Message", ControlsRoute::Message)} />
                     <Switch<ControlsRoute> render={render_sub_menu_entry("Side List Control", ControlsRoute::SideList)} />
                     <Switch<ControlsRoute> render={render_sub_menu_entry("Tab Control", ControlsRoute::TabControl)} />
                     <Switch<ControlsRoute> render={render_sub_menu_entry("Toolbar", ControlsRoute::Toolbar)} />
@@ -125,6 +127,14 @@ fn switch_controls(route: ControlsRoute) -> Html {
                     <title>{"HTML Controls"}</title>
                 </Helmet>
                 <HtmlControls />
+            </>
+        ),
+        ControlsRoute::Message => html!(
+            <>
+                <Helmet>
+                    <title>{"Message"}</title>
+                </Helmet>
+                <Message />
             </>
         ),
         ControlsRoute::SideList => html!(
@@ -225,6 +235,7 @@ pub fn app() -> Html {
                         <CosmoTopBarItemExternal href="https://github.com/Jinya-CMS/cosmo-css" label="Github" />
                         <CosmoTopBarItemExternal href="https://gitlab.imanuel.dev/jinya-cms/cosmo-css" label="GitLab" />
                         <CosmoTopBarItemExternal href="https://crates.io/crates/yew-cosmo" label="Crate" />
+                        <CosmoTopBarItemLink<DocsRoute> to={DocsRoute::CosmoRoot} label="Cosmo" />
                     </CosmoTopBar>
                     <CosmoMenuBar>
                         <CosmoMainMenu>

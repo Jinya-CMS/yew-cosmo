@@ -146,87 +146,108 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
 }
 
 :root {
-    --control-border-color: #CCCCCC;
-    --primary-color: ${primary_color};
-    --white: #FFFFFF;
-    --black: #333333;
-    --menu-text-selected-color: var(--black);
-    --menu-text-color: #00000040;
-    --disabled-color: var(--menu-text-color);
-    --negative-color: #e2180d;
-    --positive-color: #146621;
-    --code-color: #182B70;
-    --gradient-top-color: #EDEDEE;
-    --gradient-bottom-color: var(--white);
-    --modal-backdrop: #FFFFFF4D;
-    --table-stripe-color: #EEEEEE;
-    --dropdown-background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
+	--control-border-color: #cccccc;
+	--primary-color: ${primary_color};
+	--white: #ffffff;
+	--black: #333333;
+	--menu-text-selected-color: var(--black);
+	--menu-text-color: #00000040;
+	--disabled-color: var(--menu-text-color);
+	--negative-color: #e2180d;
+	--negative-light-color: #f8bab8;
+	--positive-color: #146621;
+	--positive-light-color: #cdecd3;
+	--information-color: #182b70;
+	--information-light-color: #dde3f8;
+	--warning-color: #dfa700;
+	--warning-light-color: #ffedb8;
+	--code-color: #182b70;
+	--gradient-top-color: #ededee;
+	--gradient-bottom-color: var(--white);
+	--modal-backdrop: #ffffff4d;
+	--table-stripe-color: #1c1b1b;
 
-    --font-weight-bold: bold;
-    --font-weight-normal: normal;
-    --font-weight-light: 300;
-    --font-family: Lato, sans-serif;
+	--font-weight-bold: bold;
+	--font-weight-normal: normal;
+	--font-weight-light: 300;
+	--font-family: Lato, sans-serif;
 }
 
 @media screen and (prefers-color-scheme: dark) {
-    :root {
-        --primary-color: ${primary_color_dark};
-        --control-border-color: #333333;
-        --white: #000000;
-        --black: #cccccc;
-        --menu-text-selected-color: var(--black);
-        --menu-text-color: #ffffff40;
-        --disabled-color: var(--menu-text-color);
-        --negative-color: #e2180d;
-        --positive-color: #146621;
-        --code-color: #1e368f;
-        --gradient-top-color: #121212;
-        --gradient-bottom-color: var(--white);
-        --modal-backdrop: rgba(0, 0, 0, 0.3);
-        --table-stripe-color: #1c1b1b;
-        --dropdown-background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojY2NjY2NjO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
-    }
+	:root {
+		--control-border-color: #333333;
+		--primary-color: ${primary_color_dark};
+		--white: #000000;
+		--black: #cccccc;
+		--menu-text-selected-color: var(--black);
+		--menu-text-color: #ffffff40;
+		--disabled-color: var(--menu-text-color);
+		--negative-color: #290403;
+		--negative-light-color: #600a06;
+		--positive-color: #041406;
+		--positive-light-color: #0a3511;
+		--information-color: #070c20;
+		--information-light-color: #0e1840;
+        --warning-color: #7d5e00;
+        --warning-light-color: #564000;
+		--code-color: #1e368f;
+		--gradient-top-color: #121212;
+		--gradient-bottom-color: var(--white);
+		--modal-backdrop: rgba(0, 0, 0, 0.3);
+		--table-stripe-color: #eeeeee;
+	}
 }
 
 .cosmo--light-theme {
-    --primary-color: ${primary_color};
-    --control-border-color: #CCCCCC;
-    --white: #FFFFFF;
-    --black: #333333;
-    --menu-text-selected-color: var(--black);
-    --menu-text-color: #00000040;
-    --disabled-color: var(--menu-text-color);
-    --negative-color: #e2180d;
-    --positive-color: #146621;
-    --code-color: #182B70;
-    --gradient-top-color: #EDEDEE;
-    --gradient-bottom-color: var(--white);
-    --modal-backdrop: #FFFFFF4D;
-    --table-stripe-color: #EEEEEE;
-    --dropdown-background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
+	--control-border-color: #cccccc;
+	--primary-color: ${primary_color};
+	--white: #ffffff;
+	--black: #333333;
+	--menu-text-selected-color: var(--black);
+	--menu-text-color: #00000040;
+	--disabled-color: var(--menu-text-color);
+	--negative-color: #e2180d;
+	--negative-light-color: #f8bab8;
+	--positive-color: #146621;
+	--positive-light-color: #cdecd3;
+	--information-color: #182b70;
+	--information-light-color: #dde3f8;
+	--warning-color: #dfa700;
+	--warning-light-color: #ffedb8;
+	--code-color: #182b70;
+	--gradient-top-color: #ededee;
+	--gradient-bottom-color: var(--white);
+	--modal-backdrop: #ffffff4d;
+	--table-stripe-color: #1c1b1b;
 
-    background: var(--white);
-    color: var(--black);
+	background: var(--white);
+	color: var(--black);
 }
 
 .cosmo--dark-theme {
-    --primary-color: ${primary_color_dark};
-    --control-border-color: #333333;
-    --white: #000000;
-    --black: #cccccc;
-    --menu-text-selected-color: var(--black);
-    --menu-text-color: #ffffff40;
-    --disabled-color: var(--menu-text-color);
-    --negative-color: #e2180d;
-    --positive-color: #146621;
-    --code-color: #1e368f;
-    --gradient-top-color: #121212;
-    --gradient-bottom-color: var(--white);
-    --modal-backdrop: rgba(0, 0, 0, 0.3);
-    --table-stripe-color: #1c1b1b;
-    --dropdown-background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojY2NjY2NjO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
-    background: var(--white);
-    color: var(--black);
+	--control-border-color: #333333;
+	--primary-color: ${primary_color_dark};
+	--white: #000000;
+	--black: #cccccc;
+	--menu-text-selected-color: var(--black);
+	--menu-text-color: #ffffff40;
+	--disabled-color: var(--menu-text-color);
+	--negative-color: #290403;
+	--negative-light-color: #600a06;
+	--positive-color: #041406;
+	--positive-light-color: #0a3511;
+	--information-color: #070c20;
+	--information-light-color: #0e1840;
+	--warning-color: #7d5e00;
+	--warning-light-color: #564000;
+	--code-color: #1e368f;
+	--gradient-top-color: #121212;
+	--gradient-bottom-color: var(--white);
+	--modal-backdrop: rgba(0, 0, 0, 0.3);
+	--table-stripe-color: #eeeeee;
+
+	background: var(--white);
+	color: var(--black);
 }
 
 body {
