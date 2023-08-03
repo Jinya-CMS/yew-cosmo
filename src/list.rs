@@ -1,4 +1,5 @@
 use stylist::yew::{styled_component, use_style};
+use yew::html::ChildrenRenderer;
 use yew::prelude::*;
 use yew::virtual_dom::VChild;
 
@@ -140,5 +141,12 @@ pub fn side_list_item(props: &CosmoSideListItemProps) -> Html {
 impl CosmoSideListItem {
     pub fn new(props: CosmoSideListItemProps) -> VChild<Self> {
         VChild::new(props, None)
+    }
+
+    pub fn from_label_and_children(label: AttrValue, children: Html) -> VChild<Self> {
+        VChild::new(CosmoSideListItemProps {
+            label,
+            children: ChildrenRenderer::new(vec![children]),
+        }, None)
     }
 }

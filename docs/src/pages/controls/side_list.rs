@@ -1,4 +1,3 @@
-use yew::html::ChildrenRenderer;
 use yew::prelude::*;
 
 use yew_cosmo::prelude::*;
@@ -47,17 +46,19 @@ pub fn side_list() -> Html {
         <CosmoTitle title="Code sample" />
     </CosmoSideListItem>
     {for (*additional_items_state).iter().map(|idx|
-        CosmoSideListItem::new(CosmoSideListItemProps {
-            children: ChildrenRenderer::new(vec![html!(<CosmoTitle title={format!("Hello World!")} subtitle={format!("From the additional page {idx}")} />)]),
-            label: AttrValue::from(format!("Additional page {idx}"))
-        }))}
+        CosmoSideListItem::from_label_and_children(
+            AttrValue::from(format!("Additional page {idx}")),
+            html!(<CosmoTitle title={format!("Hello World!")} subtitle={format!("From the additional page {idx}")} />)
+        )
+    )}
 </CosmoSideList>"#}</CosmoDocsPre>
             </CosmoSideListItem>
             {for (*additional_items_state).iter().map(|idx|
-                CosmoSideListItem::new(CosmoSideListItemProps {
-                    children: ChildrenRenderer::new(vec![html!(<CosmoTitle title={format!("Hello World!")} subtitle={format!("From the additional page {idx}")} />)]),
-                    label: AttrValue::from(format!("Additional page {idx}"))
-                }))}
+                CosmoSideListItem::from_label_and_children(
+                    AttrValue::from(format!("Additional page {idx}")),
+                    html!(<CosmoTitle title={format!("Hello World!")} subtitle={format!("From the additional page {idx}")} />)
+                )
+            )}
         </CosmoSideList>
     )
 }
