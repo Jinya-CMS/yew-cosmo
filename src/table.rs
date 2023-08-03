@@ -1,5 +1,6 @@
 use stylist::yew::{styled_component, use_style};
 use yew::prelude::*;
+use yew::virtual_dom::{Key, VChild};
 
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoTableProps {
@@ -54,7 +55,7 @@ pub struct CosmoTableRowProps {
     pub children: ChildrenWithProps<CosmoTableCell>,
 }
 
-#[styled_component(CosmoTableRow)]
+#[function_component(CosmoTableRow)]
 pub fn table_row(props: &CosmoTableRowProps) -> Html {
     html!(
         <tr>
@@ -63,17 +64,29 @@ pub fn table_row(props: &CosmoTableRowProps) -> Html {
     )
 }
 
+impl CosmoTableRow {
+    pub fn new(props: CosmoTableRowProps, key: Option<Key>) -> VChild<Self> {
+        VChild::new(props, key)
+    }
+}
+
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoTableCellProps {
     #[prop_or_default]
     pub children: Children,
 }
 
-#[styled_component(CosmoTableCell)]
+#[function_component(CosmoTableCell)]
 pub fn table_cell(props: &CosmoTableCellProps) -> Html {
     html!(
         <td>
             {for props.children.iter()}
         </td>
     )
+}
+
+impl CosmoTableCell {
+    pub fn new(props: CosmoTableCellProps, key: Option<Key>) -> VChild<Self> {
+        VChild::new(props, key)
+    }
 }

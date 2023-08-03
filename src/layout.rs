@@ -165,7 +165,7 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
 	--gradient-top-color: #ededee;
 	--gradient-bottom-color: var(--white);
 	--modal-backdrop: #ffffff4d;
-	--table-stripe-color: #1c1b1b;
+	--table-stripe-color: #eeeeee;
 
 	--font-weight-bold: bold;
 	--font-weight-normal: normal;
@@ -194,7 +194,7 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
 		--gradient-top-color: #121212;
 		--gradient-bottom-color: var(--white);
 		--modal-backdrop: rgba(0, 0, 0, 0.3);
-		--table-stripe-color: #eeeeee;
+		--table-stripe-color: #1c1b1b;
 	}
 }
 
@@ -218,7 +218,7 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
 	--gradient-top-color: #ededee;
 	--gradient-bottom-color: var(--white);
 	--modal-backdrop: #ffffff4d;
-	--table-stripe-color: #1c1b1b;
+	--table-stripe-color: #eeeeee;
 
 	background: var(--white);
 	color: var(--black);
@@ -244,7 +244,7 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
 	--gradient-top-color: #121212;
 	--gradient-bottom-color: var(--white);
 	--modal-backdrop: rgba(0, 0, 0, 0.3);
-	--table-stripe-color: #eeeeee;
+	--table-stripe-color: #1c1b1b;
 
 	background: var(--white);
 	color: var(--black);
