@@ -1,4 +1,5 @@
 use stylist::yew::{styled_component, use_style};
+use yew::html::ChildrenRenderer;
 use yew::prelude::*;
 use yew::virtual_dom::{Key, VChild};
 
@@ -68,6 +69,12 @@ impl CosmoTableRow {
     pub fn new(props: CosmoTableRowProps, key: Option<Key>) -> VChild<Self> {
         VChild::new(props, key)
     }
+
+    pub fn from_table_cells(cells: Vec<VChild<CosmoTableCell>>, key: Option<Key>) -> VChild<Self> {
+        VChild::new(CosmoTableRowProps {
+            children: ChildrenRenderer::new(cells)
+        }, key)
+    }
 }
 
 #[derive(PartialEq, Clone, Properties)]
@@ -88,5 +95,11 @@ pub fn table_cell(props: &CosmoTableCellProps) -> Html {
 impl CosmoTableCell {
     pub fn new(props: CosmoTableCellProps, key: Option<Key>) -> VChild<Self> {
         VChild::new(props, key)
+    }
+
+    pub fn from_html(content: Html, key: Option<Key>) -> VChild<Self> {
+        VChild::new(CosmoTableCellProps {
+            children: ChildrenRenderer::new(vec![content])
+        }, key)
     }
 }
