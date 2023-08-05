@@ -29,6 +29,7 @@ pages:
   stage: deploy
   script:
     - trunk build --release --dist="public"
+    - echo "/* /index.html 200" > public/_redirects
   artifacts:
     paths:
       - public
