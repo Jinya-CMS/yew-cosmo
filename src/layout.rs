@@ -1,7 +1,7 @@
-use stylist::{global_style, Style};
+use bounce::BounceRoot;
+use bounce::helmet::Helmet;
+use stylist::{GlobalStyle, Style};
 use stylist::yew::{styled_component, use_style};
-use wasm_bindgen::JsCast;
-use web_sys::HtmlLinkElement;
 use yew::html::ChildrenRenderer;
 use yew::prelude::*;
 use yew::virtual_dom::VChild;
@@ -95,21 +95,7 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
     let primary_color = props.primary_color.to_string();
     let primary_color_dark = props.primary_color_dark.to_string();
 
-    let link = gloo::utils::document().create_element("link").expect("Link should be creatable").dyn_into::<HtmlLinkElement>().expect("Should convert");
-    link.set_href("https://fonts.jinya.de/css2?family=Lato:ital,wght@0,100%3B1,100%3B0,300%3B1,300%3B0,400%3B1,400%3B0,700%3B1,700%3B0,900%3B1,900");
-    link.set_rel("stylesheet");
-    link.set_type("text/css");
-
-    gloo::utils::head().append_child(&link).expect("Should append link");
-
-    let link = gloo::utils::document().create_element("link").expect("Link should be creatable").dyn_into::<HtmlLinkElement>().expect("Should convert");
-    link.set_href("https://fonts.jinya.de/css2?family=Source Code Pro");
-    link.set_rel("stylesheet");
-    link.set_type("text/css");
-
-    gloo::utils::head().append_child(&link).expect("Should append link");
-
-    global_style!(r#"
+    let style = GlobalStyle::new(css!(r#"
 /* firefox scroll bars */
 * {
 	scrollbar-width: normal;
@@ -265,7 +251,10 @@ body {
     background: var(--white);
     color: var(--black);
 }
-    "#, primary_color = primary_color, primary_color_dark = primary_color_dark).expect("Should insert global styles");
+    "#,
+    primary_color = primary_color,
+    primary_color_dark = primary_color_dark,
+    )).expect("Should insert global styles");
 
     let page_layout_style = use_style!(r#"
 display: grid;
@@ -273,9 +262,18 @@ grid-template-rows: [top-menu] 64px [main-menu] 80px [top-spacing] 32px [content
     "#);
 
     html!(
-        <div class={page_layout_style}>
-            {for props.children.iter()}
-        </div>
+        <BounceRoot>
+            <Helmet>
+                <link href="https://fonts.jinya.de/css2?family=Lato:ital,wght@0,100%3B1,100%3B0,300%3B1,300%3B0,400%3B1,400%3B0,700%3B1,700%3B0,900%3B1,900" rel="stylesheet" type="text/css" />
+                <link href="https://fonts.jinya.de/css2?family=Source Code Pro" rel="stylesheet" type="text/css" />
+                <style>
+                    {style.get_style_str()}
+                </style>
+            </Helmet>
+            <div class={page_layout_style}>
+                {for props.children.iter()}
+            </div>
+        </BounceRoot>
     )
 }
 
@@ -430,6 +428,7 @@ pub enum CosmoBottomBarChildren {
     CosmoBottomBarRightItem(VChild<CosmoBottomBarRightItem>),
 }
 
+#[allow(clippy::from_over_into)]
 impl Into<Html> for CosmoBottomBarChildren {
     fn into(self) -> Html {
         match self {
@@ -441,19 +440,11 @@ impl Into<Html> for CosmoBottomBarChildren {
 
 impl CosmoBottomBarChildren {
     pub(crate) fn is_left(&self) -> bool {
-        if let CosmoBottomBarChildren::CosmoBottomBarLeftItem(_) = self {
-            true
-        } else {
-            false
-        }
+        matches!(self, CosmoBottomBarChildren::CosmoBottomBarLeftItem(_))
     }
 
     pub(crate) fn is_right(&self) -> bool {
-        if let CosmoBottomBarChildren::CosmoBottomBarRightItem(_) = self {
-            true
-        } else {
-            false
-        }
+        matches!(self, CosmoBottomBarChildren::CosmoBottomBarRightItem(_))
     }
 }
 
@@ -524,8 +515,8 @@ color: var(--black);
 display: block;
     "#);
 
-    let left = props.children.iter().filter(|item| item.is_left()).next();
-    let right = props.children.iter().filter(|item| item.is_right()).next();
+    let left = props.children.iter().find(|item| item.is_left());
+    let right = props.children.iter().find(|item| item.is_right());
 
     html!(
         <div class={bottom_bar_style}>

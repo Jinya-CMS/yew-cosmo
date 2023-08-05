@@ -1,6 +1,6 @@
 [package]
 name = "yew-cosmo"
-version = "0.15.7"
+version = "0.15.8"
 edition = "2021"
 authors = ["Imanuel Ulbricht"]
 homepage = "https://cosmo-yew.jinya.dev/"
@@ -26,6 +26,7 @@ color-art = "0.3"
 chrono = "0.4"
 num-traits = "0.2"
 derive_more = "0.99"
+bounce = { version = "0.7", features = ["helmet"] }
 
 [workspace]
 members = [

@@ -313,7 +313,7 @@ align-items: center;
 
     html!(
         <button class={button_style} title={props.title.clone()} onclick={on_click}>
-            <yew_icons::Icon icon_id={props.icon} width={icon_size.clone()} height={icon_size.clone()} />
+            <yew_icons::Icon icon_id={props.icon} width={icon_size} height={icon_size} />
         </button>
     )
 }

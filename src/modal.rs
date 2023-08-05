@@ -172,9 +172,9 @@ impl ToString for CosmoAlertType {
     }
 }
 
-impl Into<AttrValue> for CosmoAlertType {
-    fn into(self) -> AttrValue {
-        self.to_string().into()
+impl From<CosmoAlertType> for AttrValue {
+    fn from(value: CosmoAlertType) -> Self {
+        value.to_string().into()
     }
 }
 

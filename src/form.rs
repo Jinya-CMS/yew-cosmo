@@ -1,6 +1,5 @@
 use chrono::{DateTime, Local, NaiveDate, NaiveDateTime, NaiveTime, TimeZone};
 use color_art::Color;
-use num_traits::Num;
 use stylist::yew::{styled_component, use_style};
 use web_sys::{File, HtmlInputElement, HtmlSelectElement, HtmlTextAreaElement};
 use yew::html::ChildrenRenderer;
@@ -28,6 +27,7 @@ pub enum CosmoInputGroupChildren {
     CosmoFilePicker(VChild<CosmoFilePicker>),
 }
 
+#[allow(clippy::from_over_into)]
 impl Into<Html> for CosmoInputGroupChildren {
     fn into(self) -> Html {
         match self {
@@ -408,7 +408,7 @@ pub struct CosmoNumberBoxProps {
 #[styled_component(CosmoNumberBox)]
 pub fn number_box(props: &CosmoNumberBoxProps) -> Html {
     let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
-    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(i64::from_str_radix(evt.target_unchecked_into::<HtmlInputElement>().value().as_str(), 10).unwrap_or(props.value.clone())), props.clone());
+    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlInputElement>().value().as_str().parse::<i64>().unwrap_or(props.value)), props.clone());
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
     html!(
@@ -439,7 +439,7 @@ pub struct CosmoDecimalBoxProps {
 #[styled_component(CosmoDecimalBox)]
 pub fn decimal_box(props: &CosmoDecimalBoxProps) -> Html {
     let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
-    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(f64::from_str_radix(evt.target_unchecked_into::<HtmlInputElement>().value().as_str(), 10).unwrap_or(props.value.clone())), props.clone());
+    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlInputElement>().value().as_str().parse::<f64>().unwrap_or(props.value)), props.clone());
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
     let decimal_places = format!("0.{}1", (0..props.decimal_places - 1).map(|_| "0").collect::<Vec<&str>>().join(""));
@@ -693,7 +693,7 @@ pub fn dropdown(props: &CosmoDropdownProps) -> Html {
     let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
     let onchange = use_callback(|evt: Event, props| {
         let val = evt.target_unchecked_into::<HtmlSelectElement>().value();
-        if val == "None".to_string() {
+        if val == *"None" {
             props.on_select.emit(None)
         } else {
             props.on_select.emit(Some(AttrValue::from(val)))
@@ -810,8 +810,8 @@ position: relative;
                     let radio_style = radio_style.clone();
                     let radio_label_style = radio_label_style.clone();
                     let on_change = onchange.clone();
-                    let readonly = props.readonly.clone();
-                    let required = props.required.clone();
+                    let readonly = props.readonly;
+                    let required = props.required;
                     let checked = props.value.clone() == option.clone();
 
                     html!(
@@ -900,7 +900,7 @@ width: ${width};
     "#, width = props.width.to_string());
 
     let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
-    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(i64::from_str_radix(evt.target_unchecked_into::<HtmlInputElement>().value().as_str(), 10).unwrap_or(props.value)), props.clone());
+    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlInputElement>().value().as_str().parse::<i64>().unwrap_or(props.value)), props.clone());
 
     let (label_style, _input_style) = use_input_styling(CosmoInputWidth::Full);
 

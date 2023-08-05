@@ -78,7 +78,7 @@ font-weight: var(--font-weight-bold);
 }
     "#);
 
-    let selected_item_state = use_state_eq(|| if props.children.len() > 0 { Some(0) } else { None });
+    let selected_item_state = use_state_eq(|| if !props.children.is_empty() { Some(0) } else { None });
     let selected_idx = if let Some(selected_idx) = props.selected_index {
         selected_idx
     } else {
