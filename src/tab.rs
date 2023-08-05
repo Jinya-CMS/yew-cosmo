@@ -20,6 +20,10 @@ impl Into<Html> for CosmoTabControlChildren {
 pub struct CosmoTabControlProps {
     #[prop_or_default]
     pub children: ChildrenRenderer<CosmoTabControlChildren>,
+    #[prop_or_default]
+    pub selected_index: Option<usize>,
+    #[prop_or_default]
+    pub on_select_item: Option<Callback<usize>>,
 }
 
 #[styled_component(CosmoTabControl)]
@@ -68,11 +72,20 @@ color: var(--black);
                     let on_click = {
                         let selected_item_state = selected_item_state.clone();
 
-                        Callback::from(move |_| {
-                            selected_item_state.set(Some(idx));
-                        })
+                        if let Some(on_select) = props.on_select_item.clone() {
+                            Callback::from(move|_| on_select.emit(idx))
+                        } else {
+                            Callback::from(move |_| {
+                                selected_item_state.set(Some(idx));
+                            })
+                        }
                     };
-                    let classes = if *selected_item_state == Some(idx) {
+                    let selected_idx = if let Some(selected_idx) = props.selected_index {
+                        selected_idx
+                    } else {
+                        (*selected_item_state).unwrap_or(0)
+                    };
+                    let classes = if selected_idx == idx {
                         classes!(item_style, item_active_style)
                     } else {
                         classes!(item_style)
@@ -84,15 +97,11 @@ color: var(--black);
                 })}
             </nav>
             <div class={tab_content_style}>
-                {if let Some(selected_item) = (*selected_item_state).clone() {
+                if let Some(selected_item) = (*selected_item_state).clone() {
                     if let Some((_, item)) = props.children.iter().enumerate().nth(selected_item).clone() {
-                        item.into()
-                    } else {
-                        html!()
+                        {item}
                     }
-                } else {
-                    html!()
-                }}
+                }
             </div>
         </div>
     )
