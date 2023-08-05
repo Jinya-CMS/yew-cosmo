@@ -59,6 +59,11 @@ color: var(--black);
     "#);
 
     let selected_item_state = use_state_eq(|| if props.children.len() > 0 { Some(0) } else { None });
+    let selected_idx = if let Some(selected_idx) = props.selected_index {
+        selected_idx
+    } else {
+        (*selected_item_state).unwrap_or(0)
+    };
 
     html!(
         <div class={tab_style}>
@@ -97,10 +102,8 @@ color: var(--black);
                 })}
             </nav>
             <div class={tab_content_style}>
-                if let Some(selected_item) = (*selected_item_state).clone() {
-                    if let Some((_, item)) = props.children.iter().enumerate().nth(selected_item).clone() {
-                        {item}
-                    }
+                if let Some((_, item)) = props.children.iter().enumerate().nth(selected_idx).clone() {
+                    {item}
                 }
             </div>
         </div>
