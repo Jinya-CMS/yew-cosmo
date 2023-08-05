@@ -18,6 +18,8 @@ pub struct CosmoModalProps {
     pub on_form_submit: Option<Callback<()>>,
     #[prop_or_default]
     pub theme: CosmoTheme,
+    #[prop_or_default]
+    pub classes: Classes,
 }
 
 #[styled_component(CosmoModal)]
@@ -110,7 +112,7 @@ gap: 16px;
 
     create_portal(
         html!(
-            <dialog class={classes!(modal_container_style, props.theme.clone())} open={true}>
+            <dialog class={classes!(modal_container_style, props.theme.clone(), props.classes.clone())} open={true}>
                 <@{tag} class={modal_style} onsubmit={on_submit}>
                     <h1 class={modal_title_style}>{props.title.clone()}</h1>
                     <div class={modal_content_style}>
@@ -126,6 +128,74 @@ gap: 16px;
     )
 }
 
+#[derive(PartialEq, Clone, Default)]
+pub enum CosmoAlertType {
+    #[default]
+    Primary,
+    Information,
+    Warning,
+    Positive,
+    Negative,
+}
+
+impl CosmoAlertType {
+    pub fn get_primary(&self) -> String {
+        match self {
+            CosmoAlertType::Primary => "var(--primary-color)",
+            CosmoAlertType::Information => "var(--information-color)",
+            CosmoAlertType::Warning => "var(--warning-color)",
+            CosmoAlertType::Positive => "var(--positive-color)",
+            CosmoAlertType::Negative => "var(--negative-color)",
+        }.to_string()
+    }
+
+    pub fn get_gradient(&self) -> String {
+        match self {
+            CosmoAlertType::Primary => "var(--gradient-top-color)",
+            CosmoAlertType::Information => "var(--information-light-color)",
+            CosmoAlertType::Warning => "var(--warning-light-color)",
+            CosmoAlertType::Positive => "var(--positive-light-color)",
+            CosmoAlertType::Negative => "var(--negative-light-color)",
+        }.to_string()
+    }
+}
+
+impl ToString for CosmoAlertType {
+    fn to_string(&self) -> String {
+        match self {
+            CosmoAlertType::Primary => "primary",
+            CosmoAlertType::Information => "information",
+            CosmoAlertType::Warning => "warning",
+            CosmoAlertType::Positive => "positive",
+            CosmoAlertType::Negative => "negative",
+        }.into()
+    }
+}
+
+impl Into<AttrValue> for CosmoAlertType {
+    fn into(self) -> AttrValue {
+        self.to_string().into()
+    }
+}
+
+impl From<String> for CosmoAlertType {
+    fn from(value: String) -> Self {
+        match value.as_str() {
+            "information" => Self::Information,
+            "warning" => Self::Warning,
+            "positive" => Self::Positive,
+            "negative" => Self::Negative,
+            _ => Self::Primary,
+        }
+    }
+}
+
+impl From<AttrValue> for CosmoAlertType {
+    fn from(value: AttrValue) -> Self {
+        Self::from(value.to_string())
+    }
+}
+
 #[derive(Properties, PartialEq, Clone)]
 pub struct CosmoAlertProps {
     pub title: AttrValue,
@@ -134,14 +204,28 @@ pub struct CosmoAlertProps {
     pub on_close: Callback<()>,
     #[prop_or_default]
     pub theme: CosmoTheme,
+    #[prop_or_default]
+    pub alert_type: CosmoAlertType,
 }
 
 #[styled_component(CosmoAlert)]
 pub fn alert(props: &CosmoAlertProps) -> Html {
     let on_close = use_callback(|_, on_close| on_close.emit(()), props.on_close.clone());
+    let style = use_style!(r#"
+--primary-color: ${modal_color};
+--gradient-top-color: ${modal_light_color};
+    "#,
+        modal_color = props.alert_type.get_primary(),
+        modal_light_color = props.alert_type.get_gradient()
+    );
+
+    let classes = match props.alert_type {
+        CosmoAlertType::Primary => classes!(),
+        _ => classes!(style)
+    };
 
     html!(
-        <CosmoModal theme={props.theme.clone()} title={props.title.clone()} buttons={html!(<CosmoButton on_click={on_close} label={props.close_label.clone()} />)}>
+        <CosmoModal classes={classes} theme={props.theme.clone()} title={props.title.clone()} buttons={html!(<CosmoButton on_click={on_close} label={props.close_label.clone()} />)}>
             {props.message.clone()}
         </CosmoModal>
     )

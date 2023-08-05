@@ -1,6 +1,6 @@
 [package]
 name = "yew-cosmo"
-version = "0.15.3"
+version = "0.15.4"
 edition = "2021"
 authors = ["Imanuel Ulbricht"]
 homepage = "https://cosmo-yew.jinya.dev/"

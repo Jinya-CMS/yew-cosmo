@@ -10,12 +10,15 @@ pub fn dialog() -> Html {
     let confirm_open_state = use_state_eq(|| false);
     let modal_open_state = use_state_eq(|| false);
 
+    let alert_type_state = use_state_eq(|| CosmoAlertType::Primary);
+
     let open_alert = use_callback(|_, state| state.set(true), alert_open_state.clone());
     let close_alert = use_callback(|_, state| state.set(false), alert_open_state.clone());
     let open_confirm = use_callback(|_, state| state.set(true), confirm_open_state.clone());
     let close_confirm = use_callback(|_, state| state.set(false), confirm_open_state.clone());
     let open_modal = use_callback(|_, state| state.set(true), modal_open_state.clone());
     let close_modal = use_callback(|_, state| state.set(false), modal_open_state.clone());
+    let on_alert_type_select = use_callback(|val: Option<AttrValue>, state| state.set(val.unwrap().into()), alert_type_state.clone());
 
     let textbox_state = use_state_eq(|| AttrValue::from("I like Cosmo"));
     let numberbox_state = use_state_eq(|| 25);
@@ -40,12 +43,21 @@ pub fn dialog() -> Html {
                         <CosmoButton label="Open form modal" on_click={open_modal} />
                     </CosmoToolbarGroup>
                     <CosmoToolbarGroup>
+                        <CosmoDropdown label="Alert type" value={(*alert_type_state).clone().to_string()} on_select={on_alert_type_select} items={vec![
+                            (Some(CosmoAlertType::Primary.into()), "Primary".into()),
+                            (Some(CosmoAlertType::Information.into()), "Information".into()),
+                            (Some(CosmoAlertType::Warning.into()), "Warning".into()),
+                            (Some(CosmoAlertType::Positive.into()), "Positive".into()),
+                            (Some(CosmoAlertType::Negative.into()), "Negative".into()),
+                        ]} />
+                    </CosmoToolbarGroup>
+                    <CosmoToolbarGroup>
                         <CosmoButton label="Open alert modal" on_click={open_alert} />
                         <CosmoButton label="Open confirm modal" on_click={open_confirm} />
                     </CosmoToolbarGroup>
                 </CosmoToolbar>
                 if *alert_open_state {
-                    <CosmoAlert close_label="Close" title="I am an Alert" message="I am just a small alert modal, you can close me." on_close={close_alert} />
+                    <CosmoAlert alert_type={(*alert_type_state).clone()} close_label="Close" title="I am an Alert" message="I am just a small alert modal, you can close me." on_close={close_alert} />
                 }
                 if *confirm_open_state {
                     <CosmoConfirm title="I am a confirm" message="I am a confirm modal, it is best to use me to ask the user for confirmation." confirm_label="Confirm" decline_label="Decline" on_confirm={close_confirm.clone()} on_decline={close_confirm} />
