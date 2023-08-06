@@ -10,23 +10,18 @@ description = "Yew Cosmo is an opinionated component library for yew based on th
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-uuid = { version = "1.4", features = ["js", "v4"] }
+bounce = { version = "0.7", features = ["helmet"] }
+chrono = "0.4"
+color-art = "0.3"
+derive_more = "0.99"
+gloo = "0.9"
 stylist = { version = "0.12", features = ["yew", "yew_use_style"] }
+uuid = { version = "1.4", features = ["js", "v4"] }
 yew = "0.20"
 yew-router = { version = "0.17", optional = true }
 yew-hooks = "0.2"
 yew_icons = { version = "0.7", optional = true }
 web-sys = { version = "0.3", features = ["HtmlSelectElement", "Element"] }
-getrandom = "0.2"
-rand = "0.8"
-log = "0.4"
-gloo = "0.9"
-wasm-bindgen = "0.2"
-color-art = "0.3"
-chrono = "0.4"
-num-traits = "0.2"
-derive_more = "0.99"
-bounce = { version = "0.7", features = ["helmet"] }
 
 [workspace]
 members = [

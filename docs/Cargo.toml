@@ -8,10 +8,7 @@ edition = "2021"
 [dependencies]
 yew-cosmo = { path = "..", features = ["with-icons"] }
 
-yew = "0.20.0"
-yew-router = "0.17.0"
-yew-hooks = "0.2.0"
-yew_icons = "0.7.2"
-gloo = "0.9.0"
 bounce = { version = "0.7.0", features = ["helmet"] }
 stylist = { version = "0.12.1", features = ["yew", "yew_use_style"] }
+yew = "0.20.0"
+yew-router = "0.17.0"
