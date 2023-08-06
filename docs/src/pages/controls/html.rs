@@ -10,7 +10,7 @@ pub fn html() -> Html {
     let textbox_state = use_state_eq(|| AttrValue::from("I like Cosmo"));
     let numberbox_state = use_state_eq(|| 25);
     let decimalbox_state = use_state_eq(|| 25.03);
-    let date_time_state = use_state_eq(|| Local::now());
+    let date_time_state = use_state_eq(Local::now);
     let date_state = use_state_eq(|| Local::now().date_naive());
     let time_state = use_state_eq(|| Local::now().time());
     let color_state = use_state_eq(|| color!(#514B57));
@@ -58,16 +58,16 @@ pub fn html() -> Html {
                 )}>
                     <CosmoFieldset title="Input controls">
                         <CosmoTextBox width={CosmoInputWidth::Small} value={(*textbox_state).clone()} on_input={on_textbox_input} label="Text input" />
-                        <CosmoNumberBox width={CosmoInputWidth::Medium} value={(*numberbox_state).clone()} on_input={on_numberbox_input} label="Numeric input" />
-                        <CosmoDecimalBox width={CosmoInputWidth::Large} value={(*decimalbox_state).clone()} on_input={on_decimalbox_input} label="Decimal input" />
-                        <CosmoSlider width={CosmoInputWidth::Full} max={100} value={(*slider_state).clone()} on_input={on_slider_input} label="Slider input" />
+                        <CosmoNumberBox width={CosmoInputWidth::Medium} value={*numberbox_state} on_input={on_numberbox_input} label="Numeric input" />
+                        <CosmoDecimalBox width={CosmoInputWidth::Large} value={*decimalbox_state} on_input={on_decimalbox_input} label="Decimal input" />
+                        <CosmoSlider width={CosmoInputWidth::Full} max={100} value={*slider_state} on_input={on_slider_input} label="Slider input" />
                         <CosmoTextArea width={CosmoInputWidth::Auto} value={(*textarea_state).clone()} on_input={on_textarea_input} label="Textarea input" />
                     </CosmoFieldset>
                     <CosmoFieldset title="Picker controls">
-                        <CosmoDateTimePicker value={(*date_time_state).clone()} on_input={on_date_time_input} label="Date Time picker" />
-                        <CosmoDatePicker value={(*date_state).clone()} on_input={on_date_input} label="Date picker" />
-                        <CosmoTimePicker value={(*time_state).clone()} on_input={on_time_input} label="Time picker" />
-                        <CosmoColorPicker value={(*color_state).clone()} on_input={on_color_input} label="Color picker" />
+                        <CosmoDateTimePicker value={*date_time_state} on_input={on_date_time_input} label="Date Time picker" />
+                        <CosmoDatePicker value={*date_state} on_input={on_date_input} label="Date picker" />
+                        <CosmoTimePicker value={*time_state} on_input={on_time_input} label="Time picker" />
+                        <CosmoColorPicker value={*color_state} on_input={on_color_input} label="Color picker" />
                         <CosmoFilePicker on_select={|_| {}} label="File picker" />
                     </CosmoFieldset>
                     <CosmoFieldset title="Option controls">

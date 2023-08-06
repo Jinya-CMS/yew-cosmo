@@ -9,7 +9,8 @@ fn with_size(size: usize) -> Vec<i32> {
     for i in 0..size {
         res.push((i + 1) as i32);
     }
-    return res;
+
+    res
 }
 
 #[function_component(SideList)]

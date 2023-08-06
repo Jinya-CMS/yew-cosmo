@@ -71,8 +71,8 @@ pub fn dialog() -> Html {
                     )}>
                         <CosmoInputGroup>
                             <CosmoTextBox value={(*textbox_state).clone()} on_input={on_textbox_input} label="Text input" />
-                            <CosmoNumberBox value={(*numberbox_state).clone()} on_input={on_numberbox_input} label="Numeric input" />
-                            <CosmoDecimalBox value={(*decimalbox_state).clone()} on_input={on_decimalbox_input} label="Decimal input" />
+                            <CosmoNumberBox value={*numberbox_state} on_input={on_numberbox_input} label="Numeric input" />
+                            <CosmoDecimalBox value={*decimalbox_state} on_input={on_decimalbox_input} label="Decimal input" />
                         </CosmoInputGroup>
                     </CosmoModal>
                 }
