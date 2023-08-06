@@ -21,7 +21,6 @@ deploy:
   image: quay.imanuel.dev/imanuel/trunk-docker-base-image:latest
   stage: deploy
   script:
-    - cargo build
     - cargo publish --token ${CARGO_REGISTRY_TOKEN}
   rules:
     - if: $CI_COMMIT_TAG
