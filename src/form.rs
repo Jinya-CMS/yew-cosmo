@@ -513,6 +513,13 @@ pub struct CosmoColorPickerProps {
     pub width: CosmoInputWidth,
 }
 
+fn rgb2hex(color: Color) -> String {
+    let r = color.red();
+    let g = color.green();
+    let b = color.blue();
+    format!("#{:02x}{:02x}{:02x}", r, g, b)
+}
+
 #[styled_component(CosmoColorPicker)]
 pub fn color_picker(props: &CosmoColorPickerProps) -> Html {
     let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
@@ -526,7 +533,7 @@ pub fn color_picker(props: &CosmoColorPickerProps) -> Html {
     html!(
         <>
             <label class={label_style} for={id.clone()}>{props.label.clone()}</label>
-            <input class={input_style} readonly={props.readonly} id={id.clone()} required={props.required} type="color" value={props.value.hex()} oninput={oninput} />
+            <input class={input_style} readonly={props.readonly} id={id.clone()} required={props.required} type="color" value={rgb2hex(props.value)} oninput={oninput} />
         </>
     )
 }

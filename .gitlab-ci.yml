@@ -7,8 +7,7 @@ lint:
   image: quay.imanuel.dev/imanuel/trunk-docker-base-image:latest
   stage: lint
   script:
-    - cargo clippy -p yew-cosmo --no-deps
-    - cargo clippy -p yew-cosmo-docs --no-deps
+    - cargo clippy -p yew-cosmo-docs
     - cargo check
 
 build:
