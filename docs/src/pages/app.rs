@@ -1,4 +1,3 @@
-use bounce::BounceRoot;
 use bounce::helmet::*;
 use yew::prelude::*;
 use yew_router::prelude::*;
@@ -228,29 +227,26 @@ fn switch_bottom_bar(route: DocsRoute) -> Html {
 pub fn app() -> Html {
     html!(
         <BrowserRouter>
-            <BounceRoot>
-                <CosmoPageLayout>
-                    <HelmetBridge default_title="Cosmo Yew" format_title={format_title} />
-                    <CosmoTopBar has_right_item={true} right_item_label="Logout">
-                        <CosmoTopBarItemExternal href="https://github.com/Jinya-CMS/cosmo-css" label="Github" />
-                        <CosmoTopBarItemExternal href="https://gitlab.imanuel.dev/jinya-cms/cosmo-css" label="GitLab" />
-                        <CosmoTopBarItemExternal href="https://crates.io/crates/yew-cosmo" label="Crate" />
-                        <CosmoTopBarItemLink<DocsRoute> to={DocsRoute::CosmoRoot} label="Cosmo" />
-                    </CosmoTopBar>
-                    <CosmoMenuBar>
-                        <CosmoMainMenu>
-                            <Switch<DocsRoute> render={render_main_menu_entry("Cosmo", DocsRoute::CosmoRoot, DocsRoute::Cosmo)} />
-                            <Switch<DocsRoute> render={render_main_menu_entry("Controls", DocsRoute::ControlsRoot, DocsRoute::Controls)} />
-                            <Switch<DocsRoute> render={render_main_menu_entry("Layout", DocsRoute::LayoutRoot, DocsRoute::Layout)} />
-                        </CosmoMainMenu>
-                        <Switch<DocsRoute> render={switch_sub_menu} />
-                    </CosmoMenuBar>
-                    <CosmoPageBody>
-                        <Switch<DocsRoute> render={switch_app} />
-                    </CosmoPageBody>
-                    <Switch<DocsRoute> render={switch_bottom_bar} />
-                </CosmoPageLayout>
-            </BounceRoot>
+            <CosmoPageLayout default_title="Cosmo Yew" format_title={format_title}>
+                <CosmoTopBar has_right_item={true} right_item_label="Logout">
+                    <CosmoTopBarItemExternal href="https://github.com/Jinya-CMS/cosmo-css" label="Github" />
+                    <CosmoTopBarItemExternal href="https://gitlab.imanuel.dev/jinya-cms/cosmo-css" label="GitLab" />
+                    <CosmoTopBarItemExternal href="https://crates.io/crates/yew-cosmo" label="Crate" />
+                    <CosmoTopBarItemLink<DocsRoute> to={DocsRoute::CosmoRoot} label="Cosmo" />
+                </CosmoTopBar>
+                <CosmoMenuBar>
+                    <CosmoMainMenu>
+                        <Switch<DocsRoute> render={render_main_menu_entry("Cosmo", DocsRoute::CosmoRoot, DocsRoute::Cosmo)} />
+                        <Switch<DocsRoute> render={render_main_menu_entry("Controls", DocsRoute::ControlsRoot, DocsRoute::Controls)} />
+                        <Switch<DocsRoute> render={render_main_menu_entry("Layout", DocsRoute::LayoutRoot, DocsRoute::Layout)} />
+                    </CosmoMainMenu>
+                    <Switch<DocsRoute> render={switch_sub_menu} />
+                </CosmoMenuBar>
+                <CosmoPageBody>
+                    <Switch<DocsRoute> render={switch_app} />
+                </CosmoPageBody>
+                <Switch<DocsRoute> render={switch_bottom_bar} />
+            </CosmoPageLayout>
         </BrowserRouter>
     )
 }

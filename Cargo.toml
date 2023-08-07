@@ -1,7 +1,7 @@
 [package]
 name = "yew-cosmo"
-version = "0.15.10"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
 authors = ["Imanuel Ulbricht"]
 homepage = "https://cosmo-yew.jinya.dev/"
 license = "MIT"
@@ -27,6 +27,10 @@ web-sys = { version = "0.3", features = ["HtmlSelectElement", "Element"] }
 members = [
     "docs"
 ]
+
+[workspace.package]
+version = "0.15.11"
+edition = "2021"
 
 [features]
 default = ["with-yew-router", "with-icons", "with-lucide-icons"]

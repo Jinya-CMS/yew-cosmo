@@ -1,5 +1,5 @@
 use bounce::BounceRoot;
-use bounce::helmet::Helmet;
+use bounce::helmet::{Helmet, HelmetBridge};
 use stylist::{GlobalStyle, Style};
 use stylist::yew::{styled_component, use_style};
 use yew::html::ChildrenRenderer;
@@ -79,6 +79,7 @@ height: calc(100vh - 64px - 32px - 80px - 28px - 68px);
     )
 }
 
+pub type CosmoPageLayoutFormatTitle = Callback<AttrValue, AttrValue>;
 
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoPageLayoutProps {
@@ -88,6 +89,10 @@ pub struct CosmoPageLayoutProps {
     pub primary_color: AttrValue,
     #[prop_or(AttrValue::from("#966554"))]
     pub primary_color_dark: AttrValue,
+    #[prop_or(Callback::from(|_| AttrValue::from("")))]
+    pub format_title: CosmoPageLayoutFormatTitle,
+    #[prop_or_default]
+    pub default_title: AttrValue,
 }
 
 #[styled_component(CosmoPageLayout)]
@@ -263,6 +268,7 @@ grid-template-rows: [top-menu] 64px [main-menu] 80px [top-spacing] 32px [content
 
     html!(
         <BounceRoot>
+            <HelmetBridge default_title={props.default_title.clone()} format_title={props.format_title.clone()} />
             <Helmet>
                 <link href="https://fonts.jinya.de/css2?family=Lato:ital,wght@0,100%3B1,100%3B0,300%3B1,300%3B0,400%3B1,400%3B0,700%3B1,700%3B0,900%3B1,900" rel="stylesheet" type="text/css" />
                 <link href="https://fonts.jinya.de/css2?family=Source Code Pro" rel="stylesheet" type="text/css" />
