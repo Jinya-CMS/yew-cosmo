@@ -4,20 +4,20 @@ stages:
   - deploy
 
 lint:
-  image: quay.imanuel.dev/imanuel/trunk-docker-base-image:latest
+  image: harbor.ulbricht.casa/imanuel/trunk-docker-base-image:latest
   stage: lint
   script:
     - cargo clippy -p yew-cosmo-docs
     - cargo check
 
 build:
-  image: quay.imanuel.dev/imanuel/trunk-docker-base-image:latest
+  image: harbor.ulbricht.casa/imanuel/trunk-docker-base-image:latest
   stage: build
   script:
     - trunk build --release
 
 deploy:
-  image: quay.imanuel.dev/imanuel/trunk-docker-base-image:latest
+  image: harbor.ulbricht.casa/imanuel/trunk-docker-base-image:latest
   stage: deploy
   script:
     - cargo publish --token ${CARGO_REGISTRY_TOKEN}
