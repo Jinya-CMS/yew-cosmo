@@ -226,9 +226,13 @@ pub fn alert(props: &CosmoAlertProps) -> Html {
         _ => classes!(style)
     };
 
+    let message_style = use_style!(r#"
+white-space: pre-wrap;
+    "#);
+
     html!(
         <CosmoModal classes={classes} theme={props.theme.clone()} title={props.title.clone()} buttons={html!(<CosmoButton on_click={on_close} label={props.close_label.clone()} />)}>
-            {props.message.clone()}
+            <div class={message_style}>{props.message.clone()}</div>
         </CosmoModal>
     )
 }
@@ -250,6 +254,10 @@ pub fn confirm(props: &CosmoConfirmProps) -> Html {
     let on_confirm = use_callback(|_, callback| callback.emit(()), props.on_confirm.clone());
     let on_decline = use_callback(|_, callback| callback.emit(()), props.on_decline.clone());
 
+    let message_style = use_style!(r#"
+white-space: pre-wrap;
+    "#);
+
     html!(
         <CosmoModal theme={props.theme.clone()} title={props.title.clone()} buttons={html!(
             <>
@@ -257,7 +265,7 @@ pub fn confirm(props: &CosmoConfirmProps) -> Html {
                 <CosmoButton on_click={on_confirm} label={props.confirm_label.clone()} />
             </>
         )}>
-            {props.message.clone()}
+            <div class={message_style}>{props.message.clone()}</div>
         </CosmoModal>
     )
 }
