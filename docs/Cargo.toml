@@ -8,7 +8,7 @@ edition.workspace = true
 [dependencies]
 yew-cosmo = { path = "..", features = ["with-icons"] }
 
-bounce = { version = "0.7.0", features = ["helmet"] }
-stylist = { version = "0.12.1", features = ["yew", "yew_use_style"] }
-yew = "0.20.0"
-yew-router = "0.17.0"
+bounce = { workspace = true }
+stylist = { workspace = true }
+yew = { workspace = true }
+yew-router = { workspace = true }
