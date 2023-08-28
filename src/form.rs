@@ -1,10 +1,11 @@
 use chrono::{DateTime, Local, NaiveDate, NaiveDateTime, NaiveTime, TimeZone};
 use color_art::Color;
 use stylist::yew::{styled_component, use_style};
-use web_sys::{File, HtmlInputElement, HtmlSelectElement, HtmlTextAreaElement};
+use web_sys::{File, HtmlElement, HtmlInputElement, HtmlSelectElement, HtmlTextAreaElement};
 use yew::html::ChildrenRenderer;
 use yew::prelude::*;
 use yew::virtual_dom::VChild;
+use yew_hooks::use_click_away;
 
 use crate::prelude::*;
 
@@ -25,6 +26,7 @@ pub enum CosmoInputGroupChildren {
     CosmoSwitch(VChild<CosmoSwitch>),
     CosmoTimePicker(VChild<CosmoTimePicker>),
     CosmoFilePicker(VChild<CosmoFilePicker>),
+    CosmoModernSelect(VChild<CosmoModernSelect>),
 }
 
 #[allow(clippy::from_over_into)]
@@ -46,6 +48,7 @@ impl Into<Html> for CosmoInputGroupChildren {
             CosmoInputGroupChildren::CosmoSwitch(child) => child.into(),
             CosmoInputGroupChildren::CosmoTimePicker(child) => child.into(),
             CosmoInputGroupChildren::CosmoFilePicker(child) => child.into(),
+            CosmoInputGroupChildren::CosmoModernSelect(child) => child.into(),
         }
     }
 }
@@ -742,6 +745,249 @@ option {
             <select class={select_style} disabled={props.readonly} id={id.clone()} required={props.required} onchange={onchange}>
                 {for props.items.iter().map(|(id, label)| html!(<option key={if let Some(id) = id { id.to_string() } else { uuid::Uuid::new_v4().to_string() }} selected={props.value.clone() == id.clone()} value={id.clone()}>{label.clone()}</option>))}
             </select>
+        </>
+    )
+}
+
+#[derive(PartialEq, Clone)]
+pub struct CosmoModernSelectItem {
+    pub label: AttrValue,
+    pub value: AttrValue,
+    pub selected: bool,
+}
+
+impl CosmoModernSelectItem {
+    pub fn new(label: impl Into<AttrValue>, value: impl Into<AttrValue>, selected: bool) -> Self {
+        Self {
+            label: label.into(),
+            value: value.into(),
+            selected,
+        }
+    }
+}
+
+#[derive(PartialEq, Clone, Properties)]
+pub struct CosmoModernSelectProps {
+    pub label: AttrValue,
+    pub on_select: Callback<AttrValue>,
+    #[prop_or_default]
+    pub on_deselect: Option<Callback<AttrValue>>,
+    #[prop_or_default]
+    pub on_filter: Option<Callback<AttrValue>>,
+    #[prop_or(false)]
+    pub required: bool,
+    #[prop_or(false)]
+    pub readonly: bool,
+    pub items: Vec<CosmoModernSelectItem>,
+    #[prop_or_default]
+    pub id: Option<AttrValue>,
+    #[prop_or_default]
+    pub width: CosmoInputWidth,
+}
+
+#[styled_component(CosmoModernSelect)]
+pub fn modern_select(props: &CosmoModernSelectProps) -> Html {
+    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+
+    let flyout_open_state = use_state_eq(|| false);
+    let flyout_up_state = use_state_eq(|| false);
+
+    let search_state = use_state_eq(|| AttrValue::from(""));
+
+    let is_multiple = props.on_deselect.is_some();
+
+    let select_node = use_node_ref();
+
+    let on_open_flyout = use_callback(|evt: MouseEvent, (flyout_open_state, flyout_up_state)| {
+        let is_up = if let Some(element) = evt.target_dyn_into::<HtmlElement>() {
+            gloo::utils::window().inner_height().expect("No window? Then this app won't work").as_f64().expect("This should be a number") - element.get_bounding_client_rect().bottom() < 100.0
+        } else {
+            false
+        };
+        flyout_up_state.set(is_up);
+        flyout_open_state.set(true);
+    }, (flyout_open_state.clone(), flyout_up_state.clone()));
+    let on_close_flyout = use_callback(|_, state| state.set(false), flyout_open_state.clone());
+    let on_deselect = use_callback(|item: AttrValue, on_deselect| {
+        if let Some(evt) = on_deselect.clone() { evt.emit(item) };
+    }, props.on_deselect.clone());
+    let on_select = use_callback(|item, (on_select, search_state, flyout_open_state, is_multiple)| {
+        search_state.set("".into());
+        flyout_open_state.set(*is_multiple);
+
+        on_select.emit(item);
+    }, (props.on_select.clone(), search_state.clone(), flyout_open_state.clone(), is_multiple));
+    let on_filter = use_callback(|evt: InputEvent, (on_filter, search_state)| {
+        let search = AttrValue::from(evt.target_unchecked_into::<HtmlInputElement>().value());
+        search_state.set(search.clone());
+
+        if let Some(on) = on_filter.clone() { on.emit(search) }
+    }, (props.on_filter.clone(), search_state.clone()));
+
+    let selected_items = props.items.iter().filter(|item| item.selected);
+    let available_items = props.items.iter().filter(|item| !is_multiple || !item.selected);
+
+    use_click_away(select_node.clone(), move |_: Event| {
+        on_close_flyout.emit(());
+    });
+
+    let (label_style, _) = use_input_styling(props.width.clone());
+    let input_style = use_style!(r#"
+min-width: ${width};
+min-height: 28px;
+padding: 4px 0 4px 8px;
+box-sizing: border-box;
+font-family: var(--font-family);
+font-size: 16px;
+border: 1px solid var(--control-border-color);
+background: var(--white);
+color: var(--black);
+width: 240px;
+display: flex;
+position: relative;
+
+&:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: var(--primary-color);
+}
+"#,
+    width = props.width.to_string());
+    let invalid_style = use_style!(r#"
+border-color: var(--negative-color);
+    "#);
+    let chip_style = use_style!(r#"
+flex: 0 1 auto;
+display: block;
+font-size: 12px;
+color: var(--primary-color);
+border: 1px solid var(--primary-color);
+position: relative;
+padding: 0 4px;
+white-space: nowrap;
+    "#);
+    let chip_close_style = use_style!(r#"
+cursor: pointer;
+text-decoration: none;
+margin-left: 2px;
+    "#);
+    let holder_style = use_style!(r#"
+font-size: 16px;
+color: var(--primary-color);
+background: var(--white);
+border: none;
+padding: 0;
+width: 100%;
+display: flex;
+align-items: center;
+flex-wrap: wrap;
+gap: 4px;
+justify-content: flex-start;
+    "#);
+    let search_style = use_style!(r#"
+flex: 1 1 auto;
+padding: 0;
+margin: 0;
+border: 0;
+font-size: 16px;
+color: var(--text-color);
+font-family: var(--font-family);
+background: none;
+outline: none;
+width: auto;
+background-image: var(--dropdown-background);
+background-repeat: no-repeat;
+background-position-x: right;
+background-position-y: center;
+    "#);
+    let flyout_style = use_style!(r#"
+position: absolute;
+display: flex;
+width: 100%;
+background: var(--white);
+border: 1px solid var(--control-border-color);
+left: -1px;
+top: 26px;
+max-height: 150px;
+overflow-y: auto;
+flex-flow: row wrap;
+    "#);
+    let flyout_up_style = use_style!(r#"
+top: 0;
+"#);
+    let flyout_item_style = use_style!(r#"
+flex: 0 0 100%;
+min-width: 100%;
+padding: 4px 8px;
+color: var(--text-color);
+font-family: var(--font-family);
+box-sizing: border-box;
+cursor: pointer;
+
+&:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
+    "#);
+
+    let classes = if props.required && selected_items.clone().count() == 0 {
+        classes!(input_style, invalid_style)
+    } else {
+        classes!(input_style)
+    };
+
+    let flyout_classes = if *flyout_up_state {
+        classes!(flyout_style, flyout_up_style)
+    } else {
+        classes!(flyout_style)
+    };
+
+    html!(
+        <>
+            <label for={id.clone()} class={label_style} onclick={on_open_flyout.clone()}>{props.label.clone()}</label>
+            <div ref={select_node} class={classes}>
+                <div disabled={props.readonly} class={holder_style} onclick={on_open_flyout.clone()}>
+                    {if is_multiple {
+                        html!(
+                            {for selected_items.clone().map(|item| {
+                                let on_deselect = on_deselect.clone();
+                                let deselect_item = item.clone();
+
+                                html!(
+                                    <div class={chip_style.clone()} key={item.value.to_string()}>
+                                        {item.label.clone()}
+                                        <a class={chip_close_style.clone()} onclick={move |_| on_deselect.emit(deselect_item.value.clone())}>{"×"}</a>
+                                    </div>
+                                )
+                            })}
+                        )
+                    } else {
+                        let selected_item = selected_items.clone().next();
+                        if let Some(item) = selected_item {
+                            html!(
+                                <div class={search_style.clone()}>{item.label.clone()}</div>
+                            )
+                        } else {
+                            html!()
+                        }
+                    }}
+                    if props.on_filter.is_some() {
+                        <span contenteditable="plaintext-only" id={id.clone()} class={search_style.clone()} oninput={on_filter}>{(*search_state).clone()}</span>
+                    }
+                </div>
+                if *flyout_open_state && !available_items.clone().count() > 0 {
+                    <div class={flyout_classes}>
+                        {for available_items.clone().map(|item| {
+                            let select_item = item.clone();
+                            let on_select = on_select.clone();
+
+                            html!(
+                                <span key={item.value.to_string()} onclick={move |_| on_select.emit(select_item.value.clone())} class={flyout_item_style.clone()}>{item.label.clone()}</span>
+                            )
+                        })}
+                    </div>
+                }
+            </div>
         </>
     )
 }

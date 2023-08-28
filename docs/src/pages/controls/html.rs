@@ -21,6 +21,8 @@ pub fn html() -> Html {
     let slider_state = use_state_eq(|| 45);
     let alert_open_state = use_state_eq(|| false);
     let textarea_state = use_state_eq(|| AttrValue::from("I like Cosmo"));
+    let modern_single_select_state = use_state_eq(|| AttrValue::from("1"));
+    let modern_multiple_select_state = use_state_eq(|| vec![String::from("1")]);
 
     let on_textbox_input = use_callback(|value: AttrValue, state| state.set(value), textbox_state.clone());
     let on_numberbox_input = use_callback(|value: i64, state| state.set(value), numberbox_state.clone());
@@ -35,6 +37,17 @@ pub fn html() -> Html {
     let on_dropdown_select = use_callback(|value: Option<AttrValue>, state| state.set(value), dropdown_state.clone());
     let on_slider_input = use_callback(|value: i64, state| state.set(value), slider_state.clone());
     let on_textarea_input = use_callback(|value: AttrValue, state| state.set(value), textarea_state.clone());
+    let on_modern_single_select_select = use_callback(|value: AttrValue, state| state.set(value), modern_single_select_state.clone());
+    let on_modern_multiple_select_select = use_callback(|value: AttrValue, state| {
+        let mut data = (**state).clone();
+        data.push(value.to_string());
+        state.set(data);
+    }, modern_multiple_select_state.clone());
+    let on_modern_multiple_select_deselect = use_callback(|value: AttrValue, state| {
+        let mut data = (**state).clone();
+        data.iter().position(move |val| value.to_string().eq(val)).map(|item| data.swap_remove(item));
+        state.set(data);
+    }, modern_multiple_select_state.clone());
 
     let on_form_submit = use_callback(|_: (), state| state.set(true), alert_open_state.clone());
     let on_alert_close = use_callback(|_: (), state| state.set(false), alert_open_state.clone());
@@ -75,6 +88,28 @@ pub fn html() -> Html {
                         <CosmoSwitch checked={*switch_state} on_check={on_switch_check} label="Switch" />
                         <CosmoRadios value={(*radios_state).clone()} on_change={on_radios_change} options={vec![(AttrValue::from("0"), AttrValue::from("Item 1")), (AttrValue::from("1"), AttrValue::from("Item 2")), (AttrValue::from("2"), AttrValue::from("Item 3"))]} label="Radio Buttons" />
                         <CosmoDropdown value={(*dropdown_state).clone()} on_select={on_dropdown_select} items={vec![(Some(AttrValue::from("0")), AttrValue::from("Item 1")), (Some(AttrValue::from("1")), AttrValue::from("Item 2")), (Some(AttrValue::from("2")), AttrValue::from("Item 3"))]} label="Dropdown" />
+                        <CosmoModernSelect on_select={on_modern_single_select_select} items={vec![
+                            CosmoModernSelectItem::new("Item 1", "1", (*modern_single_select_state).clone() == *"1"),
+                            CosmoModernSelectItem::new("Item 2", "2", (*modern_single_select_state).clone() == *"2"),
+                            CosmoModernSelectItem::new("Item 3", "3", (*modern_single_select_state).clone() == *"3"),
+                            CosmoModernSelectItem::new("Item 4", "4", (*modern_single_select_state).clone() == *"4"),
+                            CosmoModernSelectItem::new("Item 5", "5", (*modern_single_select_state).clone() == *"5"),
+                            CosmoModernSelectItem::new("Item 6", "6", (*modern_single_select_state).clone() == *"6"),
+                            CosmoModernSelectItem::new("Item 7", "7", (*modern_single_select_state).clone() == *"7"),
+                            CosmoModernSelectItem::new("Item 8", "8", (*modern_single_select_state).clone() == *"8"),
+                            CosmoModernSelectItem::new("Item 9", "9", (*modern_single_select_state).clone() == *"9"),
+                        ]} label="Modern single select" />
+                        <CosmoModernSelect on_select={on_modern_multiple_select_select} on_deselect={on_modern_multiple_select_deselect} items={vec![
+                            CosmoModernSelectItem::new("Item 1", "1", (*modern_multiple_select_state).clone().contains(&String::from("1"))),
+                            CosmoModernSelectItem::new("Item 2", "2", (*modern_multiple_select_state).clone().contains(&String::from("2"))),
+                            CosmoModernSelectItem::new("Item 3", "3", (*modern_multiple_select_state).clone().contains(&String::from("3"))),
+                            CosmoModernSelectItem::new("Item 4", "4", (*modern_multiple_select_state).clone().contains(&String::from("4"))),
+                            CosmoModernSelectItem::new("Item 5", "5", (*modern_multiple_select_state).clone().contains(&String::from("5"))),
+                            CosmoModernSelectItem::new("Item 6", "6", (*modern_multiple_select_state).clone().contains(&String::from("6"))),
+                            CosmoModernSelectItem::new("Item 7", "7", (*modern_multiple_select_state).clone().contains(&String::from("7"))),
+                            CosmoModernSelectItem::new("Item 8", "8", (*modern_multiple_select_state).clone().contains(&String::from("8"))),
+                            CosmoModernSelectItem::new("Item 9", "9", (*modern_multiple_select_state).clone().contains(&String::from("9"))),
+                        ]} label="Modern multiple select" />
                     </CosmoFieldset>
                 </CosmoForm>
             </CosmoDemo>
@@ -103,6 +138,28 @@ pub fn html() -> Html {
         <CosmoSwitch checked={*switch_state} on_check={on_switch_check} label="Switch" />
         <CosmoRadios value={(*radios_state).clone()} on_change={on_radios_change} options={vec![(AttrValue::from("0"), AttrValue::from("Item 1")), (AttrValue::from("1"), AttrValue::from("Item 2")), (AttrValue::from("2"), AttrValue::from("Item 3"))]} label="Radio Buttons" />
         <CosmoDropdown value={(*dropdown_state).clone()} on_select={on_dropdown_select} items={vec![(Some(AttrValue::from("0")), AttrValue::from("Item 1")), (Some(AttrValue::from("1")), AttrValue::from("Item 2")), (Some(AttrValue::from("2")), AttrValue::from("Item 3"))]} label="Dropdown" />
+        <CosmoModernSelect on_select={on_modern_single_select_select} items={vec![
+            CosmoModernSelectItem::new("Item 1", "1", (*modern_single_select_state).clone() == AttrValue::from("1")),
+            CosmoModernSelectItem::new("Item 2", "2", (*modern_single_select_state).clone() == AttrValue::from("2")),
+            CosmoModernSelectItem::new("Item 3", "3", (*modern_single_select_state).clone() == AttrValue::from("3")),
+            CosmoModernSelectItem::new("Item 4", "4", (*modern_single_select_state).clone() == AttrValue::from("4")),
+            CosmoModernSelectItem::new("Item 5", "5", (*modern_single_select_state).clone() == AttrValue::from("5")),
+            CosmoModernSelectItem::new("Item 6", "6", (*modern_single_select_state).clone() == AttrValue::from("6")),
+            CosmoModernSelectItem::new("Item 7", "7", (*modern_single_select_state).clone() == AttrValue::from("7")),
+            CosmoModernSelectItem::new("Item 8", "8", (*modern_single_select_state).clone() == AttrValue::from("8")),
+            CosmoModernSelectItem::new("Item 9", "9", (*modern_single_select_state).clone() == AttrValue::from("9")),
+        ]} label="Modern single select" />
+        <CosmoModernSelect on_select={on_modern_multiple_select_select} on_deselect={on_modern_multiple_select_deselect} items={vec![
+            CosmoModernSelectItem::new("Item 1", "1", (*modern_multiple_select_state).clone().contains(&String::from("1"))),
+            CosmoModernSelectItem::new("Item 2", "2", (*modern_multiple_select_state).clone().contains(&String::from("2"))),
+            CosmoModernSelectItem::new("Item 3", "3", (*modern_multiple_select_state).clone().contains(&String::from("3"))),
+            CosmoModernSelectItem::new("Item 4", "4", (*modern_multiple_select_state).clone().contains(&String::from("4"))),
+            CosmoModernSelectItem::new("Item 5", "5", (*modern_multiple_select_state).clone().contains(&String::from("5"))),
+            CosmoModernSelectItem::new("Item 6", "6", (*modern_multiple_select_state).clone().contains(&String::from("6"))),
+            CosmoModernSelectItem::new("Item 7", "7", (*modern_multiple_select_state).clone().contains(&String::from("7"))),
+            CosmoModernSelectItem::new("Item 8", "8", (*modern_multiple_select_state).clone().contains(&String::from("8"))),
+            CosmoModernSelectItem::new("Item 9", "9", (*modern_multiple_select_state).clone().contains(&String::from("9"))),
+        ]} label="Modern multiple select" />
     </CosmoFieldset>
 </CosmoForm>"#}</CosmoDocsPre>
             <CosmoHeader level={CosmoHeaderLevel::H2} header="Buttons" />

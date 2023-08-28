@@ -29,7 +29,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.15.15"
+version = "0.15.16"
 edition = "2021"
 
 [workspace.dependencies]
@@ -44,7 +44,7 @@ yew = "0.*"
 yew-router = { version = "0.*" }
 yew-hooks = "0.*"
 yew_icons = { version = "0.*" }
-web-sys = { version = "0.*", features = ["HtmlSelectElement", "Element"] }
+web-sys = { version = "0.*", features = ["HtmlSelectElement", "Element", "DomRect"] }
 
 [features]
 default = ["with-yew-router", "with-icons", "with-lucide-icons"]
