@@ -739,7 +739,7 @@ option {
     html!(
         <>
             <label class={label_style} for={id.clone()}>{props.label.clone()}</label>
-            <select class={select_style} readonly={props.readonly} id={id.clone()} required={props.required} onchange={onchange}>
+            <select class={select_style} disabled={props.readonly} id={id.clone()} required={props.required} onchange={onchange}>
                 {for props.items.iter().map(|(id, label)| html!(<option key={if let Some(id) = id { id.to_string() } else { uuid::Uuid::new_v4().to_string() }} selected={props.value.clone() == id.clone()} value={id.clone()}>{label.clone()}</option>))}
             </select>
         </>
