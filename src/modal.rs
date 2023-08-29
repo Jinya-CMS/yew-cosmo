@@ -81,12 +81,6 @@ justify-content: flex-end;
 width: 100%;
 margin-top: 10px;
 gap: 16px;
-
-> .cosmo-button + .cosmo-button,
-> .cosmo-button:disabled + .cosmo-button,
-> .cosmo-button:disabled + .cosmo-button:disabled {
-    border-left-width: 1px;
-}
     "#);
 
     let on_submit = props.on_form_submit.clone().map(move |on_submit| Callback::from(move |evt: SubmitEvent| {

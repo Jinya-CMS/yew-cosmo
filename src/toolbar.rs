@@ -32,6 +32,10 @@ pub fn toolbar(props: &CosmoToolbarGroupProps) -> Html {
     let toolbar_group_style = use_style!(r#"
 display: flex;
 align-items: center;
+
+.cosmo-button:not(:first-child) {
+    border-left-width: 0px;
+}
     "#);
 
     html!(

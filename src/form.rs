@@ -132,6 +132,13 @@ width: ${width};
     (classes!(label_style), classes!(input_style))
 }
 
+#[hook]
+fn use_id(id: Option<AttrValue>) -> AttrValue {
+    let id_state = use_state_eq(||id.unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string())));
+
+    (*id_state).clone()
+}
+
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoDateTimePickerProps {
     pub on_input: Callback<DateTime<Local>>,
@@ -153,7 +160,7 @@ pub struct CosmoDateTimePickerProps {
 
 #[styled_component(CosmoDateTimePicker)]
 pub fn date_time_picker(props: &CosmoDateTimePickerProps) -> Html {
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let oninput = use_callback(|evt: InputEvent, props| {
         let naive = NaiveDateTime::parse_from_str(evt.target_unchecked_into::<HtmlInputElement>().value().as_str(), "%FT%R");
 
@@ -196,7 +203,7 @@ pub struct CosmoDatePickerProps {
 
 #[styled_component(CosmoDatePicker)]
 pub fn date_picker(props: &CosmoDatePickerProps) -> Html {
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(NaiveDate::parse_from_str(evt.target_unchecked_into::<HtmlInputElement>().value().as_str(), "%F").unwrap_or(props.value)), props.clone());
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
@@ -232,7 +239,7 @@ pub struct CosmoTimePickerProps {
 
 #[styled_component(CosmoTimePicker)]
 pub fn time_picker(props: &CosmoTimePickerProps) -> Html {
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(NaiveTime::parse_from_str(evt.target_unchecked_into::<HtmlInputElement>().value().as_str(), "%R").unwrap_or(props.value)), props.clone());
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
@@ -290,7 +297,7 @@ pub struct CosmoTextBoxProps {
 
 #[styled_component(CosmoTextBox)]
 pub fn textbox(props: &CosmoTextBoxProps) -> Html {
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlInputElement>().value().into()), props.clone());
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
@@ -321,7 +328,7 @@ pub struct CosmoFilePickerProps {
 
 #[styled_component(CosmoFilePicker)]
 pub fn file_picker(props: &CosmoFilePickerProps) -> Html {
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let onchange = use_callback(|evt: Event, props| {
         if let Some(files) = evt.target_unchecked_into::<HtmlInputElement>().files() {
             if let Some(file) = files.get(0) {
@@ -410,7 +417,7 @@ pub struct CosmoNumberBoxProps {
 
 #[styled_component(CosmoNumberBox)]
 pub fn number_box(props: &CosmoNumberBoxProps) -> Html {
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlInputElement>().value().as_str().parse::<i64>().unwrap_or(props.value)), props.clone());
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
@@ -441,7 +448,7 @@ pub struct CosmoDecimalBoxProps {
 
 #[styled_component(CosmoDecimalBox)]
 pub fn decimal_box(props: &CosmoDecimalBoxProps) -> Html {
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlInputElement>().value().as_str().parse::<f64>().unwrap_or(props.value)), props.clone());
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
@@ -476,7 +483,7 @@ pub struct CosmoTextAreaProps {
 
 #[styled_component(CosmoTextArea)]
 pub fn textarea(props: &CosmoTextAreaProps) -> Html {
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlTextAreaElement>().value().into()), props.clone());
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
@@ -525,7 +532,7 @@ fn rgb2hex(color: Color) -> String {
 
 #[styled_component(CosmoColorPicker)]
 pub fn color_picker(props: &CosmoColorPickerProps) -> Html {
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let oninput = use_callback(|evt: InputEvent, on_input| {
         if let Ok(color) = Color::from_hex(evt.target_unchecked_into::<HtmlInputElement>().value().as_str()) {
             on_input.emit(color);
@@ -598,7 +605,7 @@ position: relative;
 }
     "#);
 
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let onclick = use_callback(|evt: MouseEvent, on_check_change| on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked()), props.on_check.clone());
 
     html!(
@@ -670,7 +677,7 @@ position: relative;
 }
     "#);
 
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let onclick = use_callback(|evt: MouseEvent, on_check_change| on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked()), props.on_check.clone());
 
     html!(
@@ -700,7 +707,7 @@ pub struct CosmoDropdownProps {
 
 #[styled_component(CosmoDropdown)]
 pub fn dropdown(props: &CosmoDropdownProps) -> Html {
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let onchange = use_callback(|evt: Event, props| {
         let val = evt.target_unchecked_into::<HtmlSelectElement>().value();
         if val == *"None" {
@@ -787,7 +794,7 @@ pub struct CosmoModernSelectProps {
 
 #[styled_component(CosmoModernSelect)]
 pub fn modern_select(props: &CosmoModernSelectProps) -> Html {
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
 
     let flyout_open_state = use_state_eq(|| false);
     let flyout_up_state = use_state_eq(|| false);
@@ -883,6 +890,10 @@ align-items: center;
 flex-wrap: wrap;
 gap: 4px;
 justify-content: flex-start;
+background-image: var(--dropdown-background);
+background-repeat: no-repeat;
+background-position-x: right;
+background-position-y: center;
     "#);
     let search_style = use_style!(r#"
 flex: 1 1 auto;
@@ -895,10 +906,6 @@ font-family: var(--font-family);
 background: none;
 outline: none;
 width: auto;
-background-image: var(--dropdown-background);
-background-repeat: no-repeat;
-background-position-x: right;
-background-position-y: center;
     "#);
     let flyout_style = use_style!(r#"
 position: absolute;
@@ -911,6 +918,7 @@ top: 26px;
 max-height: 150px;
 overflow-y: auto;
 flex-flow: row wrap;
+z-index: 1000;
     "#);
     let flyout_up_style = use_style!(r#"
 top: 0;
@@ -1152,7 +1160,7 @@ width: ${width};
 }
     "#, width = props.width.to_string());
 
-    let id = props.id.clone().unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string()));
+    let id = use_id(props.id.clone());
     let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlInputElement>().value().as_str().parse::<i64>().unwrap_or(props.value)), props.clone());
 
     let (label_style, _input_style) = use_input_styling(CosmoInputWidth::Full);

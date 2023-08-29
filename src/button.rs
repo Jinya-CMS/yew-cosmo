@@ -122,12 +122,6 @@ font-weight: normal;
     color: var(--disabled-color);
 }
 
-&:disabled + .cosmo-button,
-&:disabled + .cosmo-button:disabled,
-+ .cosmo-button {
-    border-left-width: 0;
-}
-
 &:hover {
     background: var(--primary-color);
     color: var(--white);
@@ -220,12 +214,6 @@ display: flex;
 justify-content: flex-end;
 margin-top: 10px;
 gap: 16px;
-
-> .cosmo-button + .cosmo-button
-> .cosmo-button:disabled + .cosmo-button,
-> .cosmo-button:disabled + .cosmo-button:disabled {
-    border-left-width: 1px;
-}
     "#);
 
     html!(
