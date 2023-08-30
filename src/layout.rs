@@ -294,6 +294,8 @@ pub struct CosmoTopBarProps {
     pub right_item_label: AttrValue,
     #[prop_or_default]
     pub right_item_on_click: Callback<()>,
+    #[prop_or_default]
+    pub profile_picture: Option<AttrValue>,
 }
 
 #[styled_component(CosmoTopBar)]
@@ -324,7 +326,11 @@ object-fit: cover;
             <CosmoTopBarMenu>
                 {for props.children.iter()}
             </CosmoTopBarMenu>
-            <div class={profile_picture_style}></div>
+            <div class={profile_picture_style.clone()}>
+                if let Some(profile_picture) = props.profile_picture.clone() {
+                    <img class={profile_picture_style} src={profile_picture} />
+                }
+            </div>
             if props.has_right_item {
                 <a class={classes!(top_bar_item_style, top_bar_item_right_style)} onclick={move |_| on_click.emit(())}>{props.right_item_label.clone()}</a>
             }
