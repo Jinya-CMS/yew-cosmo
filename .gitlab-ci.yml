@@ -8,7 +8,7 @@ lint:
   stage: lint
   script:
     - cargo clippy -p yew-cosmo-docs
-    - cargo check
+    - cargo check -p yew-cosmo-docs
 
 build:
   image: harbor.ulbricht.casa/imanuel/trunk-docker-base-image:latest

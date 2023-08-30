@@ -124,3 +124,16 @@ pub fn tab_item(props: &CosmoTabItemProps) -> Html {
         {for props.children.iter()}
     )
 }
+
+impl CosmoTabItem {
+    pub fn new(props: CosmoTabItemProps) -> VChild<Self> {
+        VChild::new(props, None)
+    }
+
+    pub fn from_label_and_children(label: AttrValue, children: Html) -> VChild<Self> {
+        VChild::new(CosmoTabItemProps {
+            label,
+            children: ChildrenRenderer::new(vec![children]),
+        }, None)
+    }
+}
