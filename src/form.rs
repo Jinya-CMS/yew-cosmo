@@ -901,7 +901,7 @@ padding: 0;
 margin: 0;
 border: 0;
 font-size: 16px;
-color: var(--text-color);
+color: var(--black);
 font-family: var(--font-family);
 background: none;
 outline: none;

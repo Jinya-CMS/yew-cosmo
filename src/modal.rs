@@ -42,6 +42,7 @@ height: inherit;
 min-height: 100%;
 border: 0;
 background-color: var(--modal-backdrop);
+color: var(--black);
     "#);
     let modal_style = use_style!(r#"
 border: 1px solid var(--primary-color);
