@@ -12,7 +12,8 @@ pub struct CosmoTableProps {
 
 #[styled_component(CosmoTable)]
 pub fn table(props: &CosmoTableProps) -> Html {
-    let table_style = use_style!(r#"
+    let table_style = use_style!(
+        r#"
 border-collapse: collapse;
 
 thead tr {
@@ -34,7 +35,8 @@ tbody tr td {
 tr:nth-child(2n-1) td {
     background: var(--table-stripe-color);
 }
-    "#);
+    "#
+    );
 
     html!(
         <table class={table_style}>
@@ -71,9 +73,12 @@ impl CosmoTableRow {
     }
 
     pub fn from_table_cells(cells: Vec<VChild<CosmoTableCell>>, key: Option<Key>) -> VChild<Self> {
-        VChild::new(CosmoTableRowProps {
-            children: ChildrenRenderer::new(cells)
-        }, key)
+        VChild::new(
+            CosmoTableRowProps {
+                children: ChildrenRenderer::new(cells),
+            },
+            key,
+        )
     }
 }
 
@@ -98,8 +103,11 @@ impl CosmoTableCell {
     }
 
     pub fn from_html(content: Html, key: Option<Key>) -> VChild<Self> {
-        VChild::new(CosmoTableCellProps {
-            children: ChildrenRenderer::new(vec![content])
-        }, key)
+        VChild::new(
+            CosmoTableCellProps {
+                children: ChildrenRenderer::new(vec![content]),
+            },
+            key,
+        )
     }
 }

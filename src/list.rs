@@ -23,12 +23,15 @@ pub struct CosmoSideListProps {
 
 #[styled_component(CosmoSideList)]
 pub fn side_list(props: &CosmoSideListProps) -> Html {
-    let list_style = use_style!(r#"
+    let list_style = use_style!(
+        r#"
 display: grid;
 grid-template-columns: [items-list] 212px 16px [content] 1fr;
 height: calc(100vh - 64px - 80px - 32px - 28px - 68px);
-    "#);
-    let list_items_style = use_style!(r#"
+    "#
+    );
+    let list_items_style = use_style!(
+        r#"
 grid-column: items-list;
 display: flex;
 flex-flow: column;
@@ -37,14 +40,18 @@ border-right: 1px solid var(--control-border-color);
 box-sizing: border-box;
 height: calc(100vh - 64px - 80px - 32px - 28px - 68px);
 overflow-y: auto;
-"#);
-    let list_content_style = use_style!(r#"
+"#
+    );
+    let list_content_style = use_style!(
+        r#"
 grid-column: content;
 height: 100%;
 overflow-y: auto;
-    "#);
+    "#
+    );
 
-    let item_style = use_style!(r#"
+    let item_style = use_style!(
+        r#"
 color: var(--black);
 padding: 4px 8px;
 overflow-x: hidden;
@@ -59,8 +66,10 @@ text-decoration: none;
 &:hover {
     background: var(--control-border-color);
 }
-    "#);
-    let item_active_style = use_style!(r#"
+    "#
+    );
+    let item_active_style = use_style!(
+        r#"
 background: var(--primary-color);
 color: var(--white);
 font-weight: var(--font-weight-bold);
@@ -76,9 +85,16 @@ font-weight: var(--font-weight-bold);
     background: var(--white);
     color: var(--primary-color);
 }
-    "#);
+    "#
+    );
 
-    let selected_item_state = use_state_eq(|| if !props.children.is_empty() { Some(0) } else { None });
+    let selected_item_state = use_state_eq(|| {
+        if !props.children.is_empty() {
+            Some(0)
+        } else {
+            None
+        }
+    });
     let selected_idx = if let Some(selected_idx) = props.selected_index {
         selected_idx
     } else {
@@ -151,9 +167,12 @@ impl CosmoSideListItem {
     }
 
     pub fn from_label_and_children(label: AttrValue, children: Html) -> VChild<Self> {
-        VChild::new(CosmoSideListItemProps {
-            label,
-            children: ChildrenRenderer::new(vec![children]),
-        }, None)
+        VChild::new(
+            CosmoSideListItemProps {
+                label,
+                children: ChildrenRenderer::new(vec![children]),
+            },
+            None,
+        )
     }
 }

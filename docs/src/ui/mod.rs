@@ -8,7 +8,8 @@ pub struct CosmoDemoProps {
 
 #[styled_component(CosmoDemo)]
 pub fn cosmo_demo(props: &CosmoDemoProps) -> Html {
-    let style = use_style!(r#"
+    let style = use_style!(
+        r#"
 border: 1px solid var(--primary-color);
 padding: 32px 16px 16px;
 position: relative;
@@ -22,8 +23,13 @@ margin: 16px 0;
 	left: 0;
 	top: 0;
 	padding: 4px 8px;
+
+    @media screen and (prefers-color-scheme: dark) {
+	    color: var(--black);
+    }
 }
-    "#);
+    "#
+    );
 
     html!(
         <div class={style}>{for props.children.iter()}</div>
@@ -37,7 +43,8 @@ pub struct CosmoDocsPreProps {
 
 #[styled_component(CosmoDocsPre)]
 pub fn cosmo_docs_pre(props: &CosmoDocsPreProps) -> Html {
-    let style = use_style!(r#"
+    let style = use_style!(
+        r#"
 border: 1px solid var(--primary-color);
 padding: 32px 16px 16px;
 position: relative;
@@ -56,7 +63,8 @@ box-sizing: border-box;
 	top: 0;
 	padding: 4px 8px;
 }
-    "#);
+    "#
+    );
 
     html!(
         <pre class={classes!(style, "cosmo--dark-theme")}>{for props.children.iter()}</pre>

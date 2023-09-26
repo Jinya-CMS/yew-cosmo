@@ -3,19 +3,24 @@ use yew::prelude::*;
 
 #[styled_component(CosmoProgressRing)]
 pub fn progress_ring() -> Html {
-    let loader_container_style = use_style!(r#"
+    let loader_container_style = use_style!(
+        r#"
 display: flex;
 height: 100%;
 width: 100%;
 justify-content: center;
 align-items: center;
-    "#);
-    let loader_dot_container_style = use_style!(r#"
+    "#
+    );
+    let loader_dot_container_style = use_style!(
+        r#"
 width: 128px;
 height: 128px;
 position: relative;
-    "#);
-    let loader_dot_style = use_style!(r#"
+    "#
+    );
+    let loader_dot_style = use_style!(
+        r#"
 width: 128px;
 height: 128px;
 animation: dwl-dot-spin 5s infinite linear both;
@@ -83,7 +88,8 @@ position: absolute;
         opacity: 0;
     }
 }
-    "#);
+    "#
+    );
 
     html!(
         <div class={loader_container_style}>
@@ -111,7 +117,8 @@ pub struct CosmoProgressBarProps {
 
 #[styled_component(CosmoProgressBar)]
 pub fn progress_bar(props: &CosmoProgressBarProps) -> Html {
-    let progress_style = use_style!(r#"
+    let progress_style = use_style!(
+        r#"
 display: inline-block;
 vertical-align: baseline;
 appearance: none;
@@ -155,7 +162,8 @@ border-radius: 0;
         background-position: -200% 0;
     }
 }
-    "#);
+    "#
+    );
 
     if !props.is_indeterminate {
         html!(

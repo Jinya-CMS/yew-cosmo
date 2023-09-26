@@ -61,12 +61,14 @@ pub struct CosmoInputGroupProps {
 
 #[styled_component(CosmoInputGroup)]
 pub fn input_group(props: &CosmoInputGroupProps) -> Html {
-    let group_style = use_style!(r#"
+    let group_style = use_style!(
+        r#"
 display: grid;
 align-items: center;
 grid-template-columns: [label] auto [input] 1fr;
 grid-row-gap: 10px;
-    "#);
+    "#
+    );
 
     html!(
         <div class={group_style}>
@@ -93,18 +95,22 @@ impl ToString for CosmoInputWidth {
             CosmoInputWidth::Medium => "480px",
             CosmoInputWidth::Large => "720px",
             CosmoInputWidth::Full => "100%",
-        }.to_string()
+        }
+        .to_string()
     }
 }
 
 #[hook]
 fn use_input_styling(width: CosmoInputWidth) -> (Classes, Classes) {
-    let label_style = use_style!(r#"
+    let label_style = use_style!(
+        r#"
 font-size: 16px;
 margin-right: 10px;
 min-width: 150px;
-    "#);
-    let input_style = use_style!(r#"
+    "#
+    );
+    let input_style = use_style!(
+        r#"
 min-width: 240px;
 height: 28px;
 padding: 4px 8px;
@@ -127,14 +133,16 @@ width: ${width};
     outline: none;
     box-shadow: none;
 }
-    "#, width = width.to_string());
+    "#,
+        width = width.to_string()
+    );
 
     (classes!(label_style), classes!(input_style))
 }
 
 #[hook]
 fn use_id(id: Option<AttrValue>) -> AttrValue {
-    let id_state = use_state_eq(||id.unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string())));
+    let id_state = use_state_eq(|| id.unwrap_or(AttrValue::from(uuid::Uuid::new_v4().to_string())));
 
     (*id_state).clone()
 }
@@ -161,14 +169,24 @@ pub struct CosmoDateTimePickerProps {
 #[styled_component(CosmoDateTimePicker)]
 pub fn date_time_picker(props: &CosmoDateTimePickerProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(|evt: InputEvent, props| {
-        let naive = NaiveDateTime::parse_from_str(evt.target_unchecked_into::<HtmlInputElement>().value().as_str(), "%FT%R");
+    let oninput = use_callback(
+        |evt: InputEvent, props| {
+            let naive = NaiveDateTime::parse_from_str(
+                evt.target_unchecked_into::<HtmlInputElement>()
+                    .value()
+                    .as_str(),
+                "%FT%R",
+            );
 
-        if let Ok(naive) = naive {
-            let local = Local {};
-            props.on_input.emit(local.from_local_datetime(&naive).unwrap())
-        }
-    }, props.clone());
+            if let Ok(naive) = naive {
+                let local = Local {};
+                props
+                    .on_input
+                    .emit(local.from_local_datetime(&naive).unwrap())
+            }
+        },
+        props.clone(),
+    );
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
     let min = props.min.map(|min| min.clone().format("%FT%R").to_string());
@@ -204,7 +222,20 @@ pub struct CosmoDatePickerProps {
 #[styled_component(CosmoDatePicker)]
 pub fn date_picker(props: &CosmoDatePickerProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(NaiveDate::parse_from_str(evt.target_unchecked_into::<HtmlInputElement>().value().as_str(), "%F").unwrap_or(props.value)), props.clone());
+    let oninput = use_callback(
+        |evt: InputEvent, props| {
+            props.on_input.emit(
+                NaiveDate::parse_from_str(
+                    evt.target_unchecked_into::<HtmlInputElement>()
+                        .value()
+                        .as_str(),
+                    "%F",
+                )
+                .unwrap_or(props.value),
+            )
+        },
+        props.clone(),
+    );
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
     let min = props.min.map(|min| min.clone().format("%F").to_string());
@@ -240,7 +271,20 @@ pub struct CosmoTimePickerProps {
 #[styled_component(CosmoTimePicker)]
 pub fn time_picker(props: &CosmoTimePickerProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(NaiveTime::parse_from_str(evt.target_unchecked_into::<HtmlInputElement>().value().as_str(), "%R").unwrap_or(props.value)), props.clone());
+    let oninput = use_callback(
+        |evt: InputEvent, props| {
+            props.on_input.emit(
+                NaiveTime::parse_from_str(
+                    evt.target_unchecked_into::<HtmlInputElement>()
+                        .value()
+                        .as_str(),
+                    "%R",
+                )
+                .unwrap_or(props.value),
+            )
+        },
+        props.clone(),
+    );
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
     let min = props.min.map(|min| min.clone().format("%R").to_string());
@@ -274,7 +318,8 @@ impl ToString for CosmoTextBoxType {
             CosmoTextBoxType::Tel => "tel",
             CosmoTextBoxType::Text => "text",
             CosmoTextBoxType::Url => "url",
-        }.to_string()
+        }
+        .to_string()
     }
 }
 
@@ -298,7 +343,16 @@ pub struct CosmoTextBoxProps {
 #[styled_component(CosmoTextBox)]
 pub fn textbox(props: &CosmoTextBoxProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlInputElement>().value().into()), props.clone());
+    let oninput = use_callback(
+        |evt: InputEvent, props| {
+            props.on_input.emit(
+                evt.target_unchecked_into::<HtmlInputElement>()
+                    .value()
+                    .into(),
+            )
+        },
+        props.clone(),
+    );
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
 
@@ -329,16 +383,20 @@ pub struct CosmoFilePickerProps {
 #[styled_component(CosmoFilePicker)]
 pub fn file_picker(props: &CosmoFilePickerProps) -> Html {
     let id = use_id(props.id.clone());
-    let onchange = use_callback(|evt: Event, props| {
-        if let Some(files) = evt.target_unchecked_into::<HtmlInputElement>().files() {
-            if let Some(file) = files.get(0) {
-                props.on_select.emit(file);
+    let onchange = use_callback(
+        |evt: Event, props| {
+            if let Some(files) = evt.target_unchecked_into::<HtmlInputElement>().files() {
+                if let Some(file) = files.get(0) {
+                    props.on_select.emit(file);
+                }
             }
-        }
-    }, props.clone());
+        },
+        props.clone(),
+    );
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
-    let file_picker_style = use_style!(r#"
+    let file_picker_style = use_style!(
+        r#"
 padding: 0;
 
 &::file-selector-button,
@@ -390,7 +448,8 @@ padding: 0;
     outline: none;
     box-shadow: none;
 }
-    "#);
+    "#
+    );
 
     html!(
         <>
@@ -418,7 +477,18 @@ pub struct CosmoNumberBoxProps {
 #[styled_component(CosmoNumberBox)]
 pub fn number_box(props: &CosmoNumberBoxProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlInputElement>().value().as_str().parse::<i64>().unwrap_or(props.value)), props.clone());
+    let oninput = use_callback(
+        |evt: InputEvent, props| {
+            props.on_input.emit(
+                evt.target_unchecked_into::<HtmlInputElement>()
+                    .value()
+                    .as_str()
+                    .parse::<i64>()
+                    .unwrap_or(props.value),
+            )
+        },
+        props.clone(),
+    );
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
     html!(
@@ -449,10 +519,27 @@ pub struct CosmoDecimalBoxProps {
 #[styled_component(CosmoDecimalBox)]
 pub fn decimal_box(props: &CosmoDecimalBoxProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlInputElement>().value().as_str().parse::<f64>().unwrap_or(props.value)), props.clone());
+    let oninput = use_callback(
+        |evt: InputEvent, props| {
+            props.on_input.emit(
+                evt.target_unchecked_into::<HtmlInputElement>()
+                    .value()
+                    .as_str()
+                    .parse::<f64>()
+                    .unwrap_or(props.value),
+            )
+        },
+        props.clone(),
+    );
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
-    let decimal_places = format!("0.{}1", (0..props.decimal_places - 1).map(|_| "0").collect::<Vec<&str>>().join(""));
+    let decimal_places = format!(
+        "0.{}1",
+        (0..props.decimal_places - 1)
+            .map(|_| "0")
+            .collect::<Vec<&str>>()
+            .join("")
+    );
 
     html!(
         <>
@@ -484,18 +571,33 @@ pub struct CosmoTextAreaProps {
 #[styled_component(CosmoTextArea)]
 pub fn textarea(props: &CosmoTextAreaProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlTextAreaElement>().value().into()), props.clone());
+    let oninput = use_callback(
+        |evt: InputEvent, props| {
+            props.on_input.emit(
+                evt.target_unchecked_into::<HtmlTextAreaElement>()
+                    .value()
+                    .into(),
+            )
+        },
+        props.clone(),
+    );
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
-    let textarea_label_style = use_style!(r#"
+    let textarea_label_style = use_style!(
+        r#"
 align-self: baseline;
-    "#);
-    let textarea_style = use_style!(r#"
+    "#
+    );
+    let textarea_style = use_style!(
+        r#"
 height: unset;
-    "#);
-    let mut textarea_monospace_style = Some(use_style!(r#"
+    "#
+    );
+    let mut textarea_monospace_style = Some(use_style!(
+        r#"
 font-family: "Source Code Pro", monospace;
-    "#));
+    "#
+    ));
     if !props.is_monospace {
         textarea_monospace_style = None;
     }
@@ -533,11 +635,18 @@ fn rgb2hex(color: Color) -> String {
 #[styled_component(CosmoColorPicker)]
 pub fn color_picker(props: &CosmoColorPickerProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(|evt: InputEvent, on_input| {
-        if let Ok(color) = Color::from_hex(evt.target_unchecked_into::<HtmlInputElement>().value().as_str()) {
-            on_input.emit(color);
-        }
-    }, props.on_input.clone());
+    let oninput = use_callback(
+        |evt: InputEvent, on_input| {
+            if let Ok(color) = Color::from_hex(
+                evt.target_unchecked_into::<HtmlInputElement>()
+                    .value()
+                    .as_str(),
+            ) {
+                on_input.emit(color);
+            }
+        },
+        props.on_input.clone(),
+    );
 
     let (label_style, input_style) = use_input_styling(props.width.clone());
     html!(
@@ -563,13 +672,16 @@ pub struct CosmoCheckboxProps {
 
 #[function_component(CosmoCheckbox)]
 pub fn checkbox(props: &CosmoCheckboxProps) -> Html {
-    let group_style = use_style!(r#"
+    let group_style = use_style!(
+        r#"
 display: grid;
 grid-template-columns: auto 1fr;
 grid-template-rows: auto auto;
 grid-column: 2/3;
-    "#);
-    let checkbox_style = use_style!(r#"
+    "#
+    );
+    let checkbox_style = use_style!(
+        r#"
 appearance: none;
 margin: 0;
 
@@ -590,8 +702,10 @@ margin: 0;
     background: var(--primary-color);
     color: var(--white);
 }
-    "#);
-    let label_style = use_style!(r#"
+    "#
+    );
+    let label_style = use_style!(
+        r#"
 display: flex;
 position: relative;
 
@@ -603,10 +717,16 @@ position: relative;
     width: 16px;
     margin-right: 8px;
 }
-    "#);
+    "#
+    );
 
     let id = use_id(props.id.clone());
-    let onclick = use_callback(|evt: MouseEvent, on_check_change| on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked()), props.on_check.clone());
+    let onclick = use_callback(
+        |evt: MouseEvent, on_check_change| {
+            on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked())
+        },
+        props.on_check.clone(),
+    );
 
     html!(
         <div class={group_style}>
@@ -631,13 +751,16 @@ pub struct CosmoSwitchProps {
 
 #[function_component(CosmoSwitch)]
 pub fn switch(props: &CosmoSwitchProps) -> Html {
-    let group_style = use_style!(r#"
+    let group_style = use_style!(
+        r#"
 display: grid;
 grid-template-columns: auto 1fr;
 grid-template-rows: auto auto;
 grid-column: 2/3;
-    "#);
-    let switch_style = use_style!(r#"
+    "#
+    );
+    let switch_style = use_style!(
+        r#"
 appearance: none;
 margin: 0;
 
@@ -649,8 +772,10 @@ margin: 0;
 &:checked + label::before {
     background: var(--primary-color);
 }
-    "#);
-    let label_style = use_style!(r#"
+    "#
+    );
+    let label_style = use_style!(
+        r#"
 display: flex;
 position: relative;
 
@@ -675,10 +800,16 @@ position: relative;
     width: 32px;
     margin-right: 8px;
 }
-    "#);
+    "#
+    );
 
     let id = use_id(props.id.clone());
-    let onclick = use_callback(|evt: MouseEvent, on_check_change| on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked()), props.on_check.clone());
+    let onclick = use_callback(
+        |evt: MouseEvent, on_check_change| {
+            on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked())
+        },
+        props.on_check.clone(),
+    );
 
     html!(
         <div class={group_style}>
@@ -708,17 +839,21 @@ pub struct CosmoDropdownProps {
 #[styled_component(CosmoDropdown)]
 pub fn dropdown(props: &CosmoDropdownProps) -> Html {
     let id = use_id(props.id.clone());
-    let onchange = use_callback(|evt: Event, props| {
-        let val = evt.target_unchecked_into::<HtmlSelectElement>().value();
-        if val == *"None" {
-            props.on_select.emit(None)
-        } else {
-            props.on_select.emit(Some(AttrValue::from(val)))
-        }
-    }, props.clone());
+    let onchange = use_callback(
+        |evt: Event, props| {
+            let val = evt.target_unchecked_into::<HtmlSelectElement>().value();
+            if val == *"None" {
+                props.on_select.emit(None)
+            } else {
+                props.on_select.emit(Some(AttrValue::from(val)))
+            }
+        },
+        props.clone(),
+    );
 
     let (label_style, _input_style) = use_input_styling(props.width.clone());
-    let select_style = use_style!(r#"
+    let select_style = use_style!(
+        r#"
 min-width: 240px;
 font-size: 16px;
 border: 1px solid var(--control-border-color);
@@ -744,7 +879,9 @@ width: ${width};
 option {
     font-family: var(--font-family);
 }
-    "#, width = props.width.to_string());
+    "#,
+        width = props.width.to_string()
+    );
 
     html!(
         <>
@@ -805,41 +942,72 @@ pub fn modern_select(props: &CosmoModernSelectProps) -> Html {
 
     let select_node = use_node_ref();
 
-    let on_open_flyout = use_callback(|evt: MouseEvent, (flyout_open_state, flyout_up_state)| {
-        let is_up = if let Some(element) = evt.target_dyn_into::<HtmlElement>() {
-            gloo::utils::window().inner_height().expect("No window? Then this app won't work").as_f64().expect("This should be a number") - element.get_bounding_client_rect().bottom() < 100.0
-        } else {
-            false
-        };
-        flyout_up_state.set(is_up);
-        flyout_open_state.set(true);
-    }, (flyout_open_state.clone(), flyout_up_state.clone()));
+    let on_open_flyout = use_callback(
+        |evt: MouseEvent, (flyout_open_state, flyout_up_state)| {
+            let is_up = if let Some(element) = evt.target_dyn_into::<HtmlElement>() {
+                gloo::utils::window()
+                    .inner_height()
+                    .expect("No window? Then this app won't work")
+                    .as_f64()
+                    .expect("This should be a number")
+                    - element.get_bounding_client_rect().bottom()
+                    < 100.0
+            } else {
+                false
+            };
+            flyout_up_state.set(is_up);
+            flyout_open_state.set(true);
+        },
+        (flyout_open_state.clone(), flyout_up_state.clone()),
+    );
     let on_close_flyout = use_callback(|_, state| state.set(false), flyout_open_state.clone());
-    let on_deselect = use_callback(|item: AttrValue, on_deselect| {
-        if let Some(evt) = on_deselect.clone() { evt.emit(item) };
-    }, props.on_deselect.clone());
-    let on_select = use_callback(|item, (on_select, search_state, flyout_open_state, is_multiple)| {
-        search_state.set("".into());
-        flyout_open_state.set(*is_multiple);
+    let on_deselect = use_callback(
+        |item: AttrValue, on_deselect| {
+            if let Some(evt) = on_deselect.clone() {
+                evt.emit(item)
+            };
+        },
+        props.on_deselect.clone(),
+    );
+    let on_select = use_callback(
+        |item, (on_select, search_state, flyout_open_state, is_multiple)| {
+            search_state.set("".into());
+            flyout_open_state.set(*is_multiple);
 
-        on_select.emit(item);
-    }, (props.on_select.clone(), search_state.clone(), flyout_open_state.clone(), is_multiple));
-    let on_filter = use_callback(|evt: InputEvent, (on_filter, search_state)| {
-        let search = AttrValue::from(evt.target_unchecked_into::<HtmlInputElement>().value());
-        search_state.set(search.clone());
+            on_select.emit(item);
+        },
+        (
+            props.on_select.clone(),
+            search_state.clone(),
+            flyout_open_state.clone(),
+            is_multiple,
+        ),
+    );
+    let on_filter = use_callback(
+        |evt: InputEvent, (on_filter, search_state)| {
+            let search = AttrValue::from(evt.target_unchecked_into::<HtmlInputElement>().value());
+            search_state.set(search.clone());
 
-        if let Some(on) = on_filter.clone() { on.emit(search) }
-    }, (props.on_filter.clone(), search_state.clone()));
+            if let Some(on) = on_filter.clone() {
+                on.emit(search)
+            }
+        },
+        (props.on_filter.clone(), search_state.clone()),
+    );
 
     let selected_items = props.items.iter().filter(|item| item.selected);
-    let available_items = props.items.iter().filter(|item| !is_multiple || !item.selected);
+    let available_items = props
+        .items
+        .iter()
+        .filter(|item| !is_multiple || !item.selected);
 
     use_click_away(select_node.clone(), move |_: Event| {
         on_close_flyout.emit(());
     });
 
     let (label_style, _) = use_input_styling(props.width.clone());
-    let input_style = use_style!(r#"
+    let input_style = use_style!(
+        r#"
 min-width: ${width};
 min-height: 28px;
 padding: 4px 0 4px 8px;
@@ -859,11 +1027,15 @@ position: relative;
     border-color: var(--primary-color);
 }
 "#,
-    width = props.width.to_string());
-    let invalid_style = use_style!(r#"
+        width = props.width.to_string()
+    );
+    let invalid_style = use_style!(
+        r#"
 border-color: var(--negative-color);
-    "#);
-    let chip_style = use_style!(r#"
+    "#
+    );
+    let chip_style = use_style!(
+        r#"
 flex: 0 1 auto;
 display: block;
 font-size: 12px;
@@ -872,13 +1044,17 @@ border: 1px solid var(--primary-color);
 position: relative;
 padding: 0 4px;
 white-space: nowrap;
-    "#);
-    let chip_close_style = use_style!(r#"
+    "#
+    );
+    let chip_close_style = use_style!(
+        r#"
 cursor: pointer;
 text-decoration: none;
 margin-left: 2px;
-    "#);
-    let holder_style = use_style!(r#"
+    "#
+    );
+    let holder_style = use_style!(
+        r#"
 font-size: 16px;
 color: var(--primary-color);
 background: var(--white);
@@ -894,8 +1070,10 @@ background-image: var(--dropdown-background);
 background-repeat: no-repeat;
 background-position-x: right;
 background-position-y: center;
-    "#);
-    let search_style = use_style!(r#"
+    "#
+    );
+    let search_style = use_style!(
+        r#"
 flex: 1 1 auto;
 padding: 0;
 margin: 0;
@@ -906,8 +1084,10 @@ font-family: var(--font-family);
 background: none;
 outline: none;
 width: auto;
-    "#);
-    let flyout_style = use_style!(r#"
+    "#
+    );
+    let flyout_style = use_style!(
+        r#"
 position: absolute;
 display: flex;
 width: 100%;
@@ -919,11 +1099,15 @@ max-height: 150px;
 overflow-y: auto;
 flex-flow: row wrap;
 z-index: 1000;
-    "#);
-    let flyout_up_style = use_style!(r#"
+    "#
+    );
+    let flyout_up_style = use_style!(
+        r#"
 top: 0;
-"#);
-    let flyout_item_style = use_style!(r#"
+"#
+    );
+    let flyout_item_style = use_style!(
+        r#"
 flex: 0 0 100%;
 min-width: 100%;
 padding: 4px 8px;
@@ -936,7 +1120,8 @@ cursor: pointer;
     background: var(--primary-color);
     color: var(--white);
 }
-    "#);
+    "#
+    );
 
     let classes = if props.required && selected_items.clone().count() == 0 {
         classes!(input_style, invalid_style)
@@ -1014,20 +1199,26 @@ pub struct CosmoRadiosProps {
 
 #[styled_component(CosmoRadios)]
 pub fn radio_group(props: &CosmoRadiosProps) -> Html {
-    let onchange = use_callback(|evt: MouseEvent, on_change| {
-        let val = evt.target_unchecked_into::<HtmlInputElement>().value();
-        on_change.emit(AttrValue::from(val))
-    }, props.on_change.clone());
+    let onchange = use_callback(
+        |evt: MouseEvent, on_change| {
+            let val = evt.target_unchecked_into::<HtmlInputElement>().value();
+            on_change.emit(AttrValue::from(val))
+        },
+        props.on_change.clone(),
+    );
 
     let (label_style, _input_style) = use_input_styling(CosmoInputWidth::Full);
     let label_additional_style = use_style!("align-self: baseline;");
 
-    let group_style = use_style!(r#"
+    let group_style = use_style!(
+        r#"
 display: grid;
 grid-template-columns: auto 1fr;
 grid-template-rows: auto auto;
-    "#);
-    let radio_style = use_style!(r#"
+    "#
+    );
+    let radio_style = use_style!(
+        r#"
 appearance: none;
 margin: 0;
 
@@ -1053,11 +1244,14 @@ margin: 0;
     left: 4px;
     top: 4px;
 }
-    "#);
-    let radio_label_style = use_style!(r#"
+    "#
+    );
+    let radio_label_style = use_style!(
+        r#"
 display: flex;
 position: relative;
-    "#);
+    "#
+    );
 
     let name = uuid::Uuid::new_v4().to_string();
 
@@ -1107,7 +1301,8 @@ pub struct CosmoSliderProps {
 
 #[styled_component(CosmoSlider)]
 pub fn slider(props: &CosmoSliderProps) -> Html {
-    let style = use_style!(r#"
+    let style = use_style!(
+        r#"
 --range-border-color: #CCCCCC;
 --range-thumb-color: #CCCCCC;
 padding: 0;
@@ -1158,10 +1353,23 @@ width: ${width};
 &:active {
     --range-thumb-color: var(--primary-color);
 }
-    "#, width = props.width.to_string());
+    "#,
+        width = props.width.to_string()
+    );
 
     let id = use_id(props.id.clone());
-    let oninput = use_callback(|evt: InputEvent, props| props.on_input.emit(evt.target_unchecked_into::<HtmlInputElement>().value().as_str().parse::<i64>().unwrap_or(props.value)), props.clone());
+    let oninput = use_callback(
+        |evt: InputEvent, props| {
+            props.on_input.emit(
+                evt.target_unchecked_into::<HtmlInputElement>()
+                    .value()
+                    .as_str()
+                    .parse::<i64>()
+                    .unwrap_or(props.value),
+            )
+        },
+        props.clone(),
+    );
 
     let (label_style, _input_style) = use_input_styling(CosmoInputWidth::Full);
 
@@ -1181,21 +1389,25 @@ pub struct CosmoFieldsetProps {
 
 #[styled_component(CosmoFieldset)]
 pub fn fieldset(props: &CosmoFieldsetProps) -> Html {
-    let fieldset_style = use_style!(r#"
+    let fieldset_style = use_style!(
+        r#"
 min-width: 0;
 padding: 0;
 margin: 0;
 border: 0;
 grid-column: span 2;
-    "#);
-    let legend_style = use_style!(r#"
+    "#
+    );
+    let legend_style = use_style!(
+        r#"
 font-size: 24px;
 height: 24px;
 font-weight: var(--font-weight-light);
 text-transform: uppercase;
 margin-top: 10px;
 margin-bottom: 10px;
-    "#);
+    "#
+    );
 
     html!(
         <fieldset class={fieldset_style}>
@@ -1218,10 +1430,13 @@ pub struct CosmoFormProps {
 
 #[styled_component(CosmoForm)]
 pub fn form(props: &CosmoFormProps) -> Html {
-    let on_submit = use_callback(|evt: SubmitEvent, props| {
-        evt.prevent_default();
-        props.on_submit.emit(());
-    }, props.clone());
+    let on_submit = use_callback(
+        |evt: SubmitEvent, props| {
+            evt.prevent_default();
+            props.on_submit.emit(());
+        },
+        props.clone(),
+    );
 
     html!(
         <form onsubmit={on_submit.clone()}>

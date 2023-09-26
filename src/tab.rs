@@ -5,14 +5,14 @@ use yew::virtual_dom::VChild;
 
 #[derive(Clone, derive_more::From, PartialEq)]
 pub enum CosmoTabControlChildren {
-    CosmoTabItem(VChild<CosmoTabItem>)
+    CosmoTabItem(VChild<CosmoTabItem>),
 }
 
 #[allow(clippy::from_over_into)]
 impl Into<Html> for CosmoTabControlChildren {
     fn into(self) -> Html {
         match self {
-            CosmoTabControlChildren::CosmoTabItem(child) => child.into()
+            CosmoTabControlChildren::CosmoTabItem(child) => child.into(),
         }
     }
 }
@@ -29,37 +29,53 @@ pub struct CosmoTabControlProps {
 
 #[styled_component(CosmoTabControl)]
 pub fn tab_control(props: &CosmoTabControlProps) -> Html {
-    let tab_style = use_style!(r#"
+    let tab_style = use_style!(
+        r#"
 display: grid;
 grid-template-rows: [tablist] 20px [tabcontent] 1fr;
 max-height: 100%;
 gap: 10px;
-    "#);
-    let tabs_style = use_style!(r#"
+    "#
+    );
+    let tabs_style = use_style!(
+        r#"
 grid-row: tablist;
 display: flex;
 width: 100%;
 justify-content: flex-end;
 gap: 20px;
-"#);
-    let tab_content_style = use_style!(r#"
+"#
+    );
+    let tab_content_style = use_style!(
+        r#"
 max-height: 100%;
 overflow-y: auto;
 grid-row: tabcontent;
-    "#);
-    let item_style = use_style!(r#"
+    "#
+    );
+    let item_style = use_style!(
+        r#"
 text-transform: uppercase;
 color: var(--menu-text-color);
 font-size: 20px;
 font-weight: var(--font-weight-bold);
 height: 20px;
 cursor: pointer;
-    "#);
-    let item_active_style = use_style!(r#"
+    "#
+    );
+    let item_active_style = use_style!(
+        r#"
 color: var(--black);
-    "#);
+    "#
+    );
 
-    let selected_item_state = use_state_eq(|| if !props.children.is_empty() { Some(0) } else { None });
+    let selected_item_state = use_state_eq(|| {
+        if !props.children.is_empty() {
+            Some(0)
+        } else {
+            None
+        }
+    });
     let selected_idx = if let Some(selected_idx) = props.selected_index {
         selected_idx
     } else {
@@ -131,9 +147,12 @@ impl CosmoTabItem {
     }
 
     pub fn from_label_and_children(label: AttrValue, children: Html) -> VChild<Self> {
-        VChild::new(CosmoTabItemProps {
-            label,
-            children: ChildrenRenderer::new(vec![children]),
-        }, None)
+        VChild::new(
+            CosmoTabItemProps {
+                label,
+                children: ChildrenRenderer::new(vec![children]),
+            },
+            None,
+        )
     }
 }

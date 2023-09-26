@@ -26,7 +26,8 @@ pub struct CosmoModalProps {
 pub fn modal(props: &CosmoModalProps) -> Html {
     let modal_id = use_state_eq(|| uuid::Uuid::new_v4().to_string());
 
-    let modal_container_style = use_style!(r#"
+    let modal_container_style = use_style!(
+        r#"
 display: flex;
 z-index: 999;
 position: fixed;
@@ -43,8 +44,10 @@ min-height: 100%;
 border: 0;
 background-color: var(--modal-backdrop);
 color: var(--black);
-    "#);
-    let modal_style = use_style!(r#"
+    "#
+    );
+    let modal_style = use_style!(
+        r#"
 border: 1px solid var(--primary-color);
 background: linear-gradient(to top, var(--white) 0%, var(--white) 80%, var(--gradient-top-color) 100%);
 padding: 24px 32px;
@@ -58,8 +61,10 @@ box-sizing: border-box;
     height: 8px;
     background: var(--primary-color);
 }
-    "#);
-    let modal_title_style = use_style!(r#"
+    "#
+    );
+    let modal_title_style = use_style!(
+        r#"
 padding: 0;
 margin: 18px 0 10px;
 text-transform: uppercase;
@@ -69,37 +74,46 @@ height: 36px;
 vertical-align: text-top;
 font-weight: var(--font-weight-normal);
 font-family: var(--font-family);
-    "#);
-    let modal_content_style = use_style!(r#"
+    "#
+    );
+    let modal_content_style = use_style!(
+        r#"
 font-weight: var(--font-weight-normal);
 font-family: var(--font-family);
 padding: 0;
 margin: 0;
-    "#);
-    let modal_button_bar_style = use_style!(r#"
+    "#
+    );
+    let modal_button_bar_style = use_style!(
+        r#"
 display: flex;
 justify-content: flex-end;
 width: 100%;
 margin-top: 10px;
 gap: 16px;
-    "#);
+    "#
+    );
 
-    let on_submit = props.on_form_submit.clone().map(move |on_submit| Callback::from(move |evt: SubmitEvent| {
-        evt.prevent_default();
-        on_submit.emit(());
-    }));
-    let tag = if props.is_form {
-        "form"
-    } else {
-        "div"
-    };
+    let on_submit = props.on_form_submit.clone().map(move |on_submit| {
+        Callback::from(move |evt: SubmitEvent| {
+            evt.prevent_default();
+            on_submit.emit(());
+        })
+    });
+    let tag = if props.is_form { "form" } else { "div" };
 
-    let modal_host = if let Some(modal_host) = gloo::utils::document().get_element_by_id((*modal_id).clone().as_str()) {
+    let modal_host = if let Some(modal_host) =
+        gloo::utils::document().get_element_by_id((*modal_id).clone().as_str())
+    {
         modal_host
     } else {
-        let modal_host = gloo::utils::document().create_element("div").expect("Failed to create div");
+        let modal_host = gloo::utils::document()
+            .create_element("div")
+            .expect("Failed to create div");
         modal_host.set_id((*modal_id).clone().as_str());
-        gloo::utils::body().append_child(&modal_host).expect("Failed to append child");
+        gloo::utils::body()
+            .append_child(&modal_host)
+            .expect("Failed to append child");
         modal_host
     };
     {
@@ -143,7 +157,8 @@ impl CosmoAlertType {
             CosmoAlertType::Warning => "var(--warning-color)",
             CosmoAlertType::Positive => "var(--positive-color)",
             CosmoAlertType::Negative => "var(--negative-color)",
-        }.to_string()
+        }
+        .to_string()
     }
 
     pub fn get_gradient(&self) -> String {
@@ -153,7 +168,8 @@ impl CosmoAlertType {
             CosmoAlertType::Warning => "var(--warning-light-color)",
             CosmoAlertType::Positive => "var(--positive-light-color)",
             CosmoAlertType::Negative => "var(--negative-light-color)",
-        }.to_string()
+        }
+        .to_string()
     }
 }
 
@@ -165,7 +181,8 @@ impl ToString for CosmoAlertType {
             CosmoAlertType::Warning => "warning",
             CosmoAlertType::Positive => "positive",
             CosmoAlertType::Negative => "negative",
-        }.into()
+        }
+        .into()
     }
 }
 
@@ -208,7 +225,8 @@ pub struct CosmoAlertProps {
 #[styled_component(CosmoAlert)]
 pub fn alert(props: &CosmoAlertProps) -> Html {
     let on_close = use_callback(|_, on_close| on_close.emit(()), props.on_close.clone());
-    let style = use_style!(r#"
+    let style = use_style!(
+        r#"
 --primary-color: ${modal_color};
 --gradient-top-color: ${modal_light_color};
     "#,
@@ -218,12 +236,14 @@ pub fn alert(props: &CosmoAlertProps) -> Html {
 
     let classes = match props.alert_type {
         CosmoAlertType::Primary => classes!(),
-        _ => classes!(style)
+        _ => classes!(style),
     };
 
-    let message_style = use_style!(r#"
+    let message_style = use_style!(
+        r#"
 white-space: pre-wrap;
-    "#);
+    "#
+    );
 
     html!(
         <CosmoModal classes={classes} theme={props.theme.clone()} title={props.title.clone()} buttons={html!(<CosmoButton on_click={on_close} label={props.close_label.clone()} />)}>
@@ -249,9 +269,11 @@ pub fn confirm(props: &CosmoConfirmProps) -> Html {
     let on_confirm = use_callback(|_, callback| callback.emit(()), props.on_confirm.clone());
     let on_decline = use_callback(|_, callback| callback.emit(()), props.on_decline.clone());
 
-    let message_style = use_style!(r#"
+    let message_style = use_style!(
+        r#"
 white-space: pre-wrap;
-    "#);
+    "#
+    );
 
     html!(
         <CosmoModal theme={props.theme.clone()} title={props.title.clone()} buttons={html!(

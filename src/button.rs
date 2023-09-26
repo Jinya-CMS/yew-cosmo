@@ -1,5 +1,5 @@
-use stylist::Style;
 use stylist::yew::{styled_component, use_style};
+use stylist::Style;
 use yew::prelude::*;
 #[cfg(feature = "with-yew-router")]
 use yew_router::history::{BrowserHistory, History};
@@ -17,7 +17,8 @@ pub struct CosmoBackButtonProps {
 
 #[styled_component(CosmoBackButton)]
 pub fn back_button(_props: &CosmoBackButtonProps) -> Html {
-    let back_button_style = use_style!(r#"
+    let back_button_style = use_style!(
+        r#"
 grid-column: backbutton;
 border: 4px solid var(--control-border-color);
 border-radius: 50%;
@@ -72,23 +73,31 @@ cursor: pointer;
 &:disabled::before {
     border-color: var(--control-border-color);
 }
-    "#);
+    "#
+    );
 
     #[cfg(feature = "with-yew-router")]
-        let navigator = use_navigator();
+    let navigator = use_navigator();
 
     #[cfg(feature = "with-yew-router")]
-        let disabled_state = use_state_eq(|| navigator.is_none() || BrowserHistory::default().is_empty());
+    let disabled_state =
+        use_state_eq(|| navigator.is_none() || BrowserHistory::default().is_empty());
 
     #[cfg(feature = "with-yew-router")]
-        let on_click = use_callback(|_: MouseEvent, (navigator, disabled_state)| {
-        if let Some(navigator) = navigator {
-            navigator.back();
-            disabled_state.set(BrowserHistory::default().is_empty());
-        }
-    }, (navigator.clone(), disabled_state.clone()));
+    let on_click = use_callback(
+        |_: MouseEvent, (navigator, disabled_state)| {
+            if let Some(navigator) = navigator {
+                navigator.back();
+                disabled_state.set(BrowserHistory::default().is_empty());
+            }
+        },
+        (navigator.clone(), disabled_state.clone()),
+    );
     #[cfg(not(feature = "with-yew-router"))]
-        let on_click = use_callback(|_: MouseEvent, on_click| on_click.emit(()), _props.on_click.clone());
+    let on_click = use_callback(
+        |_: MouseEvent, on_click| on_click.emit(()),
+        _props.on_click.clone(),
+    );
 
     #[cfg(feature = "with-yew-router")]
     return html!(
@@ -102,7 +111,8 @@ cursor: pointer;
 
 #[hook]
 fn use_cosmo_button_style(is_full_width: bool) -> Classes {
-    let button_style = use_style!(r#"
+    let button_style = use_style!(
+        r#"
 cursor: pointer;
 font-family: var(--font-family);
 font-size: 16px;
@@ -141,13 +151,16 @@ font-weight: normal;
     outline: none;
     box-shadow: none;
 }
-    "#);
+    "#
+    );
 
-    let mut full_width_style: Option<Style> = Some(use_style!(r#"
+    let mut full_width_style: Option<Style> = Some(use_style!(
+        r#"
 width: 100%;
 text-align: center;
 margin-top: auto;
-        "#));
+        "#
+    ));
     if !is_full_width {
         full_width_style = None;
     }
@@ -173,7 +186,10 @@ pub fn button(props: &CosmoButtonProps) -> Html {
     let style = use_cosmo_button_style(props.is_full_width);
 
     let button_type = if props.is_submit { "submit" } else { "button" };
-    let on_click = props.on_click.clone().map(|on_click| Callback::from(move |_| on_click.emit(())));
+    let on_click = props
+        .on_click
+        .clone()
+        .map(|on_click| Callback::from(move |_| on_click.emit(())));
 
     html!(
         <button disabled={!props.enabled} type={button_type} onclick={on_click} class={style}>{props.label.clone()}</button>
@@ -182,7 +198,10 @@ pub fn button(props: &CosmoButtonProps) -> Html {
 
 #[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
-pub struct CosmoButtonLinkProps<Route> where Route: Routable + 'static {
+pub struct CosmoButtonLinkProps<Route>
+where
+    Route: Routable + 'static,
+{
     pub label: String,
     pub to: Route,
     #[prop_or(false)]
@@ -193,7 +212,10 @@ pub struct CosmoButtonLinkProps<Route> where Route: Routable + 'static {
 
 #[cfg(feature = "with-yew-router")]
 #[function_component(CosmoButtonLink)]
-pub fn button_link<Route>(props: &CosmoButtonLinkProps<Route>) -> Html where Route: Routable + 'static {
+pub fn button_link<Route>(props: &CosmoButtonLinkProps<Route>) -> Html
+where
+    Route: Routable + 'static,
+{
     let style = use_cosmo_button_style(props.is_full_width);
 
     html!(
@@ -209,12 +231,14 @@ pub struct CosmoButtonContainerProps {
 
 #[function_component(CosmoButtonContainer)]
 pub fn button_container(props: &CosmoButtonContainerProps) -> Html {
-    let button_container_style = use_style!(r#"
+    let button_container_style = use_style!(
+        r#"
 display: flex;
 justify-content: flex-end;
 margin-top: 10px;
 gap: 16px;
-    "#);
+    "#
+    );
 
     html!(
         <div class={button_container_style}>
@@ -257,7 +281,8 @@ pub fn circle_button(props: &CosmoCircleButtonProps) -> Html {
         CosmoCircleButtonSize::Medium => "24px",
         CosmoCircleButtonSize::Large => "32px",
     };
-    let button_style = use_style!(r#"
+    let button_style = use_style!(
+        r#"
 border-radius: 100%;
 border: 2px solid var(--control-border-color);
 height: ${size};
@@ -297,9 +322,18 @@ align-items: center;
     outline: none;
     box-shadow: none;
 }
-    "#, size = size);
+    "#,
+        size = size
+    );
 
-    let on_click = use_callback(|_: MouseEvent, on_click| if let Some(on_click) = on_click { on_click.emit(()) }, props.on_click.clone());
+    let on_click = use_callback(
+        |_: MouseEvent, on_click| {
+            if let Some(on_click) = on_click {
+                on_click.emit(())
+            }
+        },
+        props.on_click.clone(),
+    );
 
     html!(
         <button class={button_style} title={props.title.clone()} onclick={on_click}>

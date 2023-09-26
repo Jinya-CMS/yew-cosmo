@@ -9,10 +9,12 @@ pub struct CosmoToolbarProps {
 
 #[styled_component(CosmoToolbar)]
 pub fn toolbar(props: &CosmoToolbarProps) -> Html {
-    let toolbar_style = use_style!(r#"
+    let toolbar_style = use_style!(
+        r#"
 display: flex;
 gap: 16px;
-    "#);
+    "#
+    );
 
     html!(
         <div class={toolbar_style}>
@@ -29,14 +31,16 @@ pub struct CosmoToolbarGroupProps {
 
 #[styled_component(CosmoToolbarGroup)]
 pub fn toolbar(props: &CosmoToolbarGroupProps) -> Html {
-    let toolbar_group_style = use_style!(r#"
+    let toolbar_group_style = use_style!(
+        r#"
 display: flex;
 align-items: center;
 
 .cosmo-button:not(:first-child) {
     border-left-width: 0px;
 }
-    "#);
+    "#
+    );
 
     html!(
         <div class={toolbar_group_style}>

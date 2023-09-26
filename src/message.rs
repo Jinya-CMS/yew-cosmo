@@ -41,7 +41,8 @@ pub struct CosmoMessageProps {
 
 #[styled_component(CosmoMessage)]
 pub fn message(props: &CosmoMessageProps) -> Html {
-    let container_style = use_style!(r#"
+    let container_style = use_style!(
+        r#"
 width: 100%;
 background: ${background};
 color: var(--black);
@@ -55,9 +56,11 @@ box-sizing: border-box;
     color: var(--white);
 }
     "#,
-    background = props.message_type.get_background(),
-    border_color = props.message_type.get_border());
-    let header_style = use_style!(r#"
+        background = props.message_type.get_background(),
+        border_color = props.message_type.get_border()
+    );
+    let header_style = use_style!(
+        r#"
 margin: 0;
 color: var(--black);
 font-weight: var(--font-weight-light);
@@ -69,8 +72,10 @@ display: block;
     color: var(--white);
 }
     "#,
-    border_color = props.message_type.get_border());
-    let message_style = use_style!(r#"
+        border_color = props.message_type.get_border()
+    );
+    let message_style = use_style!(
+        r#"
 margin: 0;
 
 &::selection {
@@ -78,7 +83,8 @@ margin: 0;
     color: var(--white);
 }
     "#,
-    border_color = props.message_type.get_border());
+        border_color = props.message_type.get_border()
+    );
 
     html!(
         <div class={container_style}>

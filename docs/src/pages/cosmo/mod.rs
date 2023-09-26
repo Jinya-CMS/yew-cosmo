@@ -1,4 +1,4 @@
 pub mod about;
-pub mod typography;
-pub mod theme;
 pub mod customize;
+pub mod theme;
+pub mod typography;

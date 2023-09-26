@@ -3,8 +3,8 @@ pub mod prelude {
     pub use chrono::Local;
     pub use chrono::NaiveDate;
     pub use chrono::NaiveTime;
-    pub use color_art::Color;
     pub use color_art::color;
+    pub use color_art::Color;
     use yew::Classes;
     #[cfg(feature = "with-icons")]
     pub use yew_icons::IconId;
@@ -47,16 +47,15 @@ pub mod prelude {
     }
 }
 
-mod modal;
-mod menu;
-mod loader;
-mod layout;
-mod form;
-mod list;
-mod toolbar;
 mod button;
-mod typography;
-mod table;
-mod tab;
+mod form;
+mod layout;
+mod list;
+mod loader;
+mod menu;
 mod message;
-
+mod modal;
+mod tab;
+mod table;
+mod toolbar;
+mod typography;

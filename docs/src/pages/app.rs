@@ -26,7 +26,10 @@ fn format_title(s: AttrValue) -> AttrValue {
     }
 }
 
-fn render_sub_menu_entry<Route>(label: impl ToString, to: Route) -> impl Fn(Route) -> Html where Route: Routable + 'static {
+fn render_sub_menu_entry<Route>(label: impl ToString, to: Route) -> impl Fn(Route) -> Html
+where
+    Route: Routable + 'static,
+{
     move |route| {
         let is_active = route.eq(&to.clone());
 
@@ -71,7 +74,14 @@ fn switch_sub_menu(route: DocsRoute) -> Html {
     }
 }
 
-fn render_main_menu_entry<Route>(label: impl ToString, to: Route, active: Route) -> impl Fn(Route) -> Html where Route: Routable + 'static {
+fn render_main_menu_entry<Route>(
+    label: impl ToString,
+    to: Route,
+    active: Route,
+) -> impl Fn(Route) -> Html
+where
+    Route: Routable + 'static,
+{
     move |route| {
         let is_active = route.eq(&active.clone());
 
@@ -114,7 +124,7 @@ fn switch_cosmo(route: CosmoRoute) -> Html {
                 </Helmet>
                 <Customize />
             </>
-        )
+        ),
     }
 }
 
@@ -194,13 +204,27 @@ fn switch_layout(route: LayoutRoute) -> Html {
 
 fn switch_app(route: DocsRoute) -> Html {
     match route {
-        DocsRoute::Home => { html!(<Redirect<DocsRoute> to={DocsRoute::CosmoRoot} />) }
-        DocsRoute::CosmoRoot => { html!(<Redirect<CosmoRoute> to={CosmoRoute::About} />) }
-        DocsRoute::Cosmo => { html!(<Switch<CosmoRoute> render={switch_cosmo} />) }
-        DocsRoute::ControlsRoot => { html!(<Redirect<ControlsRoute> to={ControlsRoute::Html} />) }
-        DocsRoute::Controls => { html!(<Switch<ControlsRoute> render={switch_controls} />) }
-        DocsRoute::LayoutRoot => { html!(<Redirect<LayoutRoute> to={LayoutRoute::Base} />) }
-        DocsRoute::Layout => { html!(<Switch<LayoutRoute> render={switch_layout} />) }
+        DocsRoute::Home => {
+            html!(<Redirect<DocsRoute> to={DocsRoute::CosmoRoot} />)
+        }
+        DocsRoute::CosmoRoot => {
+            html!(<Redirect<CosmoRoute> to={CosmoRoute::About} />)
+        }
+        DocsRoute::Cosmo => {
+            html!(<Switch<CosmoRoute> render={switch_cosmo} />)
+        }
+        DocsRoute::ControlsRoot => {
+            html!(<Redirect<ControlsRoute> to={ControlsRoute::Html} />)
+        }
+        DocsRoute::Controls => {
+            html!(<Switch<ControlsRoute> render={switch_controls} />)
+        }
+        DocsRoute::LayoutRoot => {
+            html!(<Redirect<LayoutRoute> to={LayoutRoute::Base} />)
+        }
+        DocsRoute::Layout => {
+            html!(<Switch<LayoutRoute> render={switch_layout} />)
+        }
     }
 }
 
@@ -219,7 +243,9 @@ fn switch_bottom_bar(route: DocsRoute) -> Html {
                 </CosmoBottomBar>
             )
         }
-        _ => { html!() }
+        _ => {
+            html!()
+        }
     }
 }
 

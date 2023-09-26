@@ -18,7 +18,10 @@ pub fn dialog() -> Html {
     let close_confirm = use_callback(|_, state| state.set(false), confirm_open_state.clone());
     let open_modal = use_callback(|_, state| state.set(true), modal_open_state.clone());
     let close_modal = use_callback(|_, state| state.set(false), modal_open_state.clone());
-    let on_alert_type_select = use_callback(|val: Option<AttrValue>, state| state.set(val.unwrap().into()), alert_type_state.clone());
+    let on_alert_type_select = use_callback(
+        |val: Option<AttrValue>, state| state.set(val.unwrap().into()),
+        alert_type_state.clone(),
+    );
 
     let textbox_state = use_state_eq(|| AttrValue::from("I like Cosmo"));
     let modern_single_select_state = use_state_eq(|| AttrValue::from("1"));
@@ -26,10 +29,22 @@ pub fn dialog() -> Html {
     let numberbox_state = use_state_eq(|| 25);
     let decimalbox_state = use_state_eq(|| 25.03);
 
-    let on_textbox_input = use_callback(|value: AttrValue, state| state.set(value), textbox_state.clone());
-    let on_numberbox_input = use_callback(|value: i64, state| state.set(value), numberbox_state.clone());
-    let on_decimalbox_input = use_callback(|value: f64, state| state.set(value), decimalbox_state.clone());
-    let on_modern_single_select_select = use_callback(|value: AttrValue, state| state.set(value), modern_single_select_state.clone());
+    let on_textbox_input = use_callback(
+        |value: AttrValue, state| state.set(value),
+        textbox_state.clone(),
+    );
+    let on_numberbox_input = use_callback(
+        |value: i64, state| state.set(value),
+        numberbox_state.clone(),
+    );
+    let on_decimalbox_input = use_callback(
+        |value: f64, state| state.set(value),
+        decimalbox_state.clone(),
+    );
+    let on_modern_single_select_select = use_callback(
+        |value: AttrValue, state| state.set(value),
+        modern_single_select_state.clone(),
+    );
 
     html!(
         <>

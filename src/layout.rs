@@ -1,7 +1,8 @@
-use bounce::BounceRoot;
+use std::str::FromStr;
 use bounce::helmet::{Helmet, HelmetBridge};
-use stylist::{GlobalStyle, Style};
+use bounce::BounceRoot;
 use stylist::yew::{styled_component, use_style};
+use stylist::{GlobalStyle, Style};
 use yew::html::ChildrenRenderer;
 use yew::prelude::*;
 use yew::virtual_dom::VChild;
@@ -19,7 +20,8 @@ pub struct CosmoTitleProps {
 
 #[styled_component(CosmoTitle)]
 pub fn title(props: &CosmoTitleProps) -> Html {
-    let title_style = use_style!(r#"
+    let title_style = use_style!(
+        r#"
 font-weight: var(--font-weight-light);
 margin: 0;
 vertical-align: text-top;
@@ -35,7 +37,8 @@ font-size: 36px;
 small {
     margin-left: 16px;
 }
-    "#);
+    "#
+    );
 
     html!(
         <h1 class={classes!(title_style, "cosmo-title")}>
@@ -47,7 +50,6 @@ small {
     )
 }
 
-
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoPageBodyProps {
     #[prop_or_default]
@@ -58,17 +60,21 @@ pub struct CosmoPageBodyProps {
 
 #[styled_component(CosmoPageBody)]
 pub fn page_body(props: &CosmoPageBodyProps) -> Html {
-    let page_body_style = use_style!(r#"
+    let page_body_style = use_style!(
+        r#"
 grid-row: content;
 height: calc(100vh - 64px - 32px - 80px - 28px - 68px);
 display: grid;
 grid-template-columns: 164px [content] 1fr 164px;
-    "#);
-    let page_body_content_style = use_style!(r#"
+    "#
+    );
+    let page_body_content_style = use_style!(
+        r#"
 grid-column: content;
 overflow-y: auto;
 height: calc(100vh - 64px - 32px - 80px - 28px - 68px);
-    "#);
+    "#
+    );
 
     html!(
         <div class={page_body_style}>
@@ -85,11 +91,11 @@ pub type CosmoPageLayoutFormatTitle = Callback<AttrValue, AttrValue>;
 pub struct CosmoPageLayoutProps {
     #[prop_or_default]
     pub children: Children,
-    #[prop_or(AttrValue::from("#514B57"))]
+    #[prop_or(AttrValue::from("#19324c"))]
     pub primary_color: AttrValue,
-    #[prop_or(AttrValue::from("#966554"))]
+    #[prop_or(AttrValue::from("#1a4f75"))]
     pub primary_color_dark: AttrValue,
-    #[prop_or(Callback::from(|_| AttrValue::from("")))]
+    #[prop_or(Callback::from(| _ | AttrValue::from("")))]
     pub format_title: CosmoPageLayoutFormatTitle,
     #[prop_or_default]
     pub default_title: AttrValue,
@@ -99,6 +105,17 @@ pub struct CosmoPageLayoutProps {
 pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
     let primary_color = props.primary_color.to_string();
     let primary_color_dark = props.primary_color_dark.to_string();
+
+    let gradient_top_color_dark = if let Ok(color) = Color::from_str(primary_color_dark.as_str()) {
+        color.darken(0.6)
+    } else {
+        Color::new(0, 0, 0, 0.0)
+    };
+    let gradient_top_color_light = if let Ok(color) = Color::from_str(primary_color.as_str()) {
+        color.lighten(0.6)
+    } else {
+        Color::new(0, 0, 0, 0.0)
+    };
 
     let style = GlobalStyle::new(css!(r#"
 /* firefox scroll bars */
@@ -144,16 +161,16 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
 	--menu-text-selected-color: var(--black);
 	--menu-text-color: #00000040;
 	--disabled-color: var(--menu-text-color);
-	--negative-color: #e2180d;
-	--negative-light-color: #f8bab8;
-	--positive-color: #146621;
-	--positive-light-color: #cdecd3;
-	--information-color: #182b70;
-	--information-light-color: #dde3f8;
-	--warning-color: #dfa700;
-	--warning-light-color: #ffedb8;
+	--negative-color: #db504a;
+	--negative-light-color: #E6827F;
+	--positive-color: #4c9f70;
+	--positive-light-color: #7DC09A;
+	--information-color: #2c87c9;
+	--information-light-color: #67ACDE;
+	--warning-color: #e6af2e;
+	--warning-light-color: #EEC76C;
 	--code-color: #182b70;
-	--gradient-top-color: #ededee;
+	--gradient-top-color: ${gradient_top_color_light};
 	--gradient-bottom-color: var(--white);
 	--modal-backdrop: #ffffff4d;
 	--table-stripe-color: #eeeeee;
@@ -175,16 +192,16 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
 		--menu-text-selected-color: var(--black);
 		--menu-text-color: #ffffff40;
 		--disabled-color: var(--menu-text-color);
-		--negative-color: #290403;
-		--negative-light-color: #600a06;
-		--positive-color: #041406;
-		--positive-light-color: #0a3511;
-		--information-color: #070c20;
-		--information-light-color: #0e1840;
-        --warning-color: #7d5e00;
-        --warning-light-color: #564000;
+		--negative-color: #771B18;
+		--negative-light-color: #531311;
+		--positive-color: #2E6044;
+		--positive-light-color: #204330;
+		--information-color: #1A4F75;
+		--information-light-color: #123752;
+        --warning-color: #B78615;
+        --warning-light-color: #805E0F;
 		--code-color: #1e368f;
-		--gradient-top-color: #121212;
+		--gradient-top-color: ${gradient_top_color_dark};
 		--gradient-bottom-color: var(--white);
 		--modal-backdrop: rgba(0, 0, 0, 0.3);
 		--table-stripe-color: #1c1b1b;
@@ -201,47 +218,49 @@ pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
 	--menu-text-selected-color: var(--black);
 	--menu-text-color: #00000040;
 	--disabled-color: var(--menu-text-color);
-	--negative-color: #e2180d;
-	--negative-light-color: #f8bab8;
-	--positive-color: #146621;
-	--positive-light-color: #cdecd3;
-	--information-color: #182b70;
-	--information-light-color: #dde3f8;
-	--warning-color: #dfa700;
-	--warning-light-color: #ffedb8;
+	--negative-color: #db504a;
+	--negative-light-color: #E6827F;
+	--positive-color: #4c9f70;
+	--positive-light-color: #7DC09A;
+	--information-color: #2c87c9;
+	--information-light-color: #67ACDE;
+	--warning-color: #e6af2e;
+	--warning-light-color: #EEC76C;
 	--code-color: #182b70;
-	--gradient-top-color: #ededee;
+	--gradient-top-color: ${gradient_top_color_light};
 	--gradient-bottom-color: var(--white);
 	--modal-backdrop: #ffffff4d;
 	--table-stripe-color: #eeeeee;
 
-	--dropdown-background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
+	--font-weight-bold: bold;
+	--font-weight-normal: normal;
+	--font-weight-light: 300;
+	--font-family: Lato, sans-serif;
 
-	background: var(--white);
-	color: var(--black);
+	--dropdown-background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
 }
 
 .cosmo--dark-theme {
-	--control-border-color: #333333;
-	--primary-color: ${primary_color_dark};
-	--white: #000000;
-	--black: #cccccc;
-	--menu-text-selected-color: var(--black);
-	--menu-text-color: #ffffff40;
-	--disabled-color: var(--menu-text-color);
-	--negative-color: #290403;
-	--negative-light-color: #600a06;
-	--positive-color: #041406;
-	--positive-light-color: #0a3511;
-	--information-color: #070c20;
-	--information-light-color: #0e1840;
-	--warning-color: #7d5e00;
-	--warning-light-color: #564000;
-	--code-color: #1e368f;
-	--gradient-top-color: #121212;
-	--gradient-bottom-color: var(--white);
-	--modal-backdrop: rgba(0, 0, 0, 0.3);
-	--table-stripe-color: #1c1b1b;
+    --control-border-color: #333333;
+    --primary-color: ${primary_color_dark};
+    --white: #000000;
+    --black: #cccccc;
+    --menu-text-selected-color: var(--black);
+    --menu-text-color: #ffffff40;
+    --disabled-color: var(--menu-text-color);
+    --negative-color: #771B18;
+    --negative-light-color: #531311;
+    --positive-color: #2E6044;
+    --positive-light-color: #204330;
+    --information-color: #1A4F75;
+    --information-light-color: #123752;
+    --warning-color: #B78615;
+    --warning-light-color: #805E0F;
+    --code-color: #1e368f;
+    --gradient-top-color: ${gradient_top_color_dark};
+    --gradient-bottom-color: var(--white);
+    --modal-backdrop: rgba(0, 0, 0, 0.3);
+    --table-stripe-color: #1c1b1b;
 
     --dropdown-background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI2IiB2aWV3Qm94PSIwIDAgMC4wMDAzMiA2ZS0wNSIgdmVyc2lvbj0iMS4xIj4KICAgIDxnPgogICAgICAgIDxwYXRoIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojZmZmZmZmO2ZpbGwtb3BhY2l0eToxO3N0cm9rZS13aWR0aDowLjI2NDk5OTtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZSIKICAgICAgICAgICAgICBkPSJtIDQuODg5MDY2MSw0LjIzNDA1NTQgLTIuNDQ0NTMzLDFlLTcgTCA3Ljg1NTk1NjZlLTgsNC4yMzQwNTU0IDEuMjIyMjY2NSwyLjExNzAyNzcgMi40NDQ1MzMxLDAgMy42NjY3OTk3LDIuMTE3MDI3NiBaIgogICAgICAgICAgICAgIHRyYW5zZm9ybT0ibWF0cml4KDIuNDU0NDU2NWUtNSwwLDAsLTEuNDE3MDgxMWUtNSw5Ljk5OTk5OThlLTUsNi4wMDAwMDAxZS01KSIvPgogICAgPC9nPgo8L3N2Zz4=");
 
@@ -259,12 +278,16 @@ body {
     "#,
     primary_color = primary_color,
     primary_color_dark = primary_color_dark,
+    gradient_top_color_dark = gradient_top_color_dark,
+    gradient_top_color_light = gradient_top_color_light,
     )).expect("Should insert global styles");
 
-    let page_layout_style = use_style!(r#"
+    let page_layout_style = use_style!(
+        r#"
 display: grid;
 grid-template-rows: [top-menu] 64px [main-menu] 80px [top-spacing] 32px [content] 1fr [bottom-spacing] 28px [bottom-bar] 68px;
-    "#);
+    "#
+    );
 
     html!(
         <BounceRoot>
@@ -283,7 +306,6 @@ grid-template-rows: [top-menu] 64px [main-menu] 80px [top-spacing] 32px [content
     )
 }
 
-
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoTopBarProps {
     #[prop_or_default]
@@ -300,25 +322,31 @@ pub struct CosmoTopBarProps {
 
 #[styled_component(CosmoTopBar)]
 pub fn top_bar(props: &CosmoTopBarProps) -> Html {
-    let top_bar_style = use_style!(r#"
+    let top_bar_style = use_style!(
+        r#"
 display: grid;
 grid-template-columns: [left-column] 164px [content] 1fr [profilepicture] 64px [right-column] 164px;
 grid-row: top-menu;
 background: linear-gradient(to top, var(--gradient-bottom-color) 0%, var(--gradient-top-color) 100%);
-    "#);
+    "#
+    );
 
     let top_bar_item_style = use_top_bar_item_style();
-    let top_bar_item_right_style = use_style!(r#"
+    let top_bar_item_right_style = use_style!(
+        r#"
 margin-left: 16px;
-    "#);
-    let profile_picture_style = use_style!(r#"
+    "#
+    );
+    let profile_picture_style = use_style!(
+        r#"
 display: block;
 width: 64px;
 height: 64px;
 background: var(--primary-color);
 grid-column: profilepicture;
 object-fit: cover;
-    "#);
+    "#
+    );
 
     let on_click = props.right_item_on_click.clone();
     html!(
@@ -340,7 +368,8 @@ object-fit: cover;
 
 #[hook]
 fn use_top_bar_item_style() -> Style {
-    use_style!(r#"
+    use_style!(
+        r#"
 display: flex;
 height: 100%;
 align-items: center;
@@ -364,7 +393,8 @@ margin-right: 16px;
 &:last-child:after {
     content: unset;
 }
-    "#)
+    "#
+    )
 }
 
 #[derive(PartialEq, Clone, Properties)]
@@ -378,7 +408,10 @@ pub struct CosmoTopBarItemProps {
 pub fn top_bar_item(props: &CosmoTopBarItemProps) -> Html {
     let style = use_top_bar_item_style();
 
-    let on_click = use_callback(|_: MouseEvent, on_click| on_click.emit(()), props.on_click.clone());
+    let on_click = use_callback(
+        |_: MouseEvent, on_click| on_click.emit(()),
+        props.on_click.clone(),
+    );
 
     html!(
         <a class={style} onclick={on_click}>{props.label.clone()}</a>
@@ -402,21 +435,26 @@ pub fn top_bar_item_external(props: &CosmoTopBarItemExternalProps) -> Html {
 
 #[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
-pub struct CosmoTopBarItemLinkProps<Route> where Route: Routable + 'static {
+pub struct CosmoTopBarItemLinkProps<Route>
+    where
+        Route: Routable + 'static,
+{
     pub label: AttrValue,
     pub to: Route,
 }
 
 #[cfg(feature = "with-yew-router")]
 #[styled_component(CosmoTopBarItemLink)]
-pub fn top_bar_item<Route>(props: &CosmoTopBarItemLinkProps<Route>) -> Html where Route: Routable + 'static {
+pub fn top_bar_item<Route>(props: &CosmoTopBarItemLinkProps<Route>) -> Html
+    where
+        Route: Routable + 'static,
+{
     let style = use_top_bar_item_style();
 
     html!(
         <Link<Route> to={props.to.clone()} classes={style}>{props.label.clone()}</Link<Route>>
     )
 }
-
 
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoBottomBarItemProps {
@@ -486,7 +524,8 @@ pub struct CosmoBottomBarProps {
 
 #[styled_component(CosmoBottomBar)]
 pub fn bottom_bar(props: &CosmoBottomBarProps) -> Html {
-    let bottom_bar_style = use_style!(r#"
+    let bottom_bar_style = use_style!(
+        r#"
 grid-row: bottom-bar;
 align-items: center;
 display: grid;
@@ -494,38 +533,49 @@ grid-template-columns: [left] 1fr [center] 1fr [right] 1fr;
 gap: 1rem;
 padding-left: 164px;
 padding-right: 164px;
-"#);
+"#
+    );
 
-    let bottom_bar_item_left = use_style!(r#"
+    let bottom_bar_item_left = use_style!(
+        r#"
 grid-column: left;
 justify-self: left;
 display: flex;
 gap: 16px;
 align-items: center;
-    "#);
-    let bottom_bar_item_center = use_style!(r#"
+    "#
+    );
+    let bottom_bar_item_center = use_style!(
+        r#"
 grid-column: center;
 justify-self: center;
 display: grid;
 justify-items: center;
-    "#);
-    let bottom_bar_item_right = use_style!(r#"
+    "#
+    );
+    let bottom_bar_item_right = use_style!(
+        r#"
 grid-column: right;
 justify-self: right;
 display: flex;
 gap: 16px;
 align-items: center;
-    "#);
-    let progress_bar_top_label = use_style!(r#"
+    "#
+    );
+    let progress_bar_top_label = use_style!(
+        r#"
 font-size: 16px;
 color: var(--black);
 display: block;
-    "#);
-    let progress_bar_bottom_label = use_style!(r#"
+    "#
+    );
+    let progress_bar_bottom_label = use_style!(
+        r#"
 font-size: 13px;
 color: var(--black);
 display: block;
-    "#);
+    "#
+    );
 
     let left = props.children.iter().find(|item| item.is_left());
     let right = props.children.iter().find(|item| item.is_right());

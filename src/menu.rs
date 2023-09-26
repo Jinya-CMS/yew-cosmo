@@ -13,9 +13,11 @@ pub struct CosmoMainMenuProps {
 
 #[styled_component(CosmoMainMenu)]
 pub fn main_menu(props: &CosmoMainMenuProps) -> Html {
-    let main_menu_style = use_style!(r#"
+    let main_menu_style = use_style!(
+        r#"
 grid-row: main-menu;
-    "#);
+    "#
+    );
 
     html!(
         <div class={main_menu_style}>
@@ -32,12 +34,14 @@ pub struct CosmoMenuBarProps {
 
 #[styled_component(CosmoMenuBar)]
 pub fn menu_bar(props: &CosmoMenuBarProps) -> Html {
-    let menu_bar_style = use_style!(r#"
+    let menu_bar_style = use_style!(
+        r#"
 grid-row: main-menu;
 display: grid;
 grid-template-columns: [spacing1] 18px [backbutton] 48px [spacing2] 74px [content] 1fr;
 border-left: 24px solid var(--primary-color);
-    "#);
+    "#
+    );
 
     html!(
         <div class={menu_bar_style}>
@@ -49,7 +53,6 @@ border-left: 24px solid var(--primary-color);
     )
 }
 
-
 #[derive(PartialEq, Clone, Properties)]
 struct CosmoMenuCollectionProps {
     #[prop_or_default]
@@ -58,12 +61,14 @@ struct CosmoMenuCollectionProps {
 
 #[styled_component(CosmoMenuCollection)]
 fn menu_collection(props: &CosmoMenuCollectionProps) -> Html {
-    let menu_collection_style = use_style!(r#"
+    let menu_collection_style = use_style!(
+        r#"
 display: grid;
 grid-column: content;
 grid-template-rows: [main-menu] 48px [sub-menu] 16px;
 grid-row-gap: 16px;
-    "#);
+    "#
+    );
 
     html!(
         <nav class={menu_collection_style}>
@@ -72,10 +77,12 @@ grid-row-gap: 16px;
     )
 }
 
-
 #[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
-pub struct CosmoMainMenuItemLinkProps<Route> where Route: Routable + 'static {
+pub struct CosmoMainMenuItemLinkProps<Route>
+where
+    Route: Routable + 'static,
+{
     pub label: AttrValue,
     pub to: Route,
     pub is_active: bool,
@@ -83,7 +90,8 @@ pub struct CosmoMainMenuItemLinkProps<Route> where Route: Routable + 'static {
 
 #[hook]
 fn use_main_menu_item_style(is_active: bool) -> Classes {
-    let item_style = use_style!(r#"
+    let item_style = use_style!(
+        r#"
 text-transform: lowercase;
 font-size: 48px;
 font-weight: var(--font-weight-light);
@@ -92,10 +100,13 @@ vertical-align: text-top;
 color: var(--menu-text-color);
 text-decoration: none;
 margin-right: 24px;
-    "#);
-    let mut active_style = Some(use_style!(r#"
+    "#
+    );
+    let mut active_style = Some(use_style!(
+        r#"
 color: var(--menu-text-selected-color);
-    "#));
+    "#
+    ));
     if !is_active {
         active_style = None;
     }
@@ -105,7 +116,10 @@ color: var(--menu-text-selected-color);
 
 #[cfg(feature = "with-yew-router")]
 #[styled_component(CosmoMainMenuItemLink)]
-pub fn main_menu_item_link<Route>(props: &CosmoMainMenuItemLinkProps<Route>) -> Html where Route: Routable + 'static {
+pub fn main_menu_item_link<Route>(props: &CosmoMainMenuItemLinkProps<Route>) -> Html
+where
+    Route: Routable + 'static,
+{
     let style = use_main_menu_item_style(props.is_active);
 
     html!(
@@ -128,7 +142,6 @@ pub fn main_menu_item(props: &CosmoMainMenuItemProps) -> Html {
     )
 }
 
-
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoSubMenuBarProps {
     #[prop_or_default]
@@ -137,9 +150,11 @@ pub struct CosmoSubMenuBarProps {
 
 #[styled_component(CosmoSubMenuBar)]
 pub fn sub_menu_bar(props: &CosmoSubMenuBarProps) -> Html {
-    let sub_menu_style = use_style!(r#"
+    let sub_menu_style = use_style!(
+        r#"
 grid-row: sub-menu;
-    "#);
+    "#
+    );
 
     html!(
         <div class={sub_menu_style}>
@@ -150,7 +165,8 @@ grid-row: sub-menu;
 
 #[hook]
 fn use_sub_menu_item_style(is_active: bool) -> Classes {
-    let item_style = use_style!(r#"
+    let item_style = use_style!(
+        r#"
 text-transform: uppercase;
 font-size: 16px;
 font-weight: var(--font-weight-light);
@@ -159,10 +175,13 @@ vertical-align: text-top;
 margin-right: 16px;
 text-decoration: none;
 color: var(--black);
-    "#);
-    let mut active_style = Some(use_style!(r#"
+    "#
+    );
+    let mut active_style = Some(use_style!(
+        r#"
 font-weight: var(--font-weight-bold);
-    "#));
+    "#
+    ));
     if !is_active {
         active_style = None;
     }
@@ -172,7 +191,10 @@ font-weight: var(--font-weight-bold);
 
 #[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
-pub struct CosmoSubMenuItemLinkProps<Route> where Route: Routable + 'static {
+pub struct CosmoSubMenuItemLinkProps<Route>
+where
+    Route: Routable + 'static,
+{
     pub label: AttrValue,
     pub to: Route,
     pub is_active: bool,
@@ -180,7 +202,10 @@ pub struct CosmoSubMenuItemLinkProps<Route> where Route: Routable + 'static {
 
 #[cfg(feature = "with-yew-router")]
 #[styled_component(CosmoSubMenuItemLink)]
-pub fn sub_menu_item_link<Route>(props: &CosmoSubMenuItemLinkProps<Route>) -> Html where Route: Routable + 'static {
+pub fn sub_menu_item_link<Route>(props: &CosmoSubMenuItemLinkProps<Route>) -> Html
+where
+    Route: Routable + 'static,
+{
     let style = use_sub_menu_item_style(props.is_active);
 
     html!(
@@ -203,7 +228,6 @@ pub fn sub_menu_item(props: &CosmoSubMenuItemProps) -> Html {
     )
 }
 
-
 #[derive(PartialEq, Clone, Properties)]
 pub(crate) struct CosmoTopBarMenuProps {
     #[prop_or_default]
@@ -212,12 +236,14 @@ pub(crate) struct CosmoTopBarMenuProps {
 
 #[styled_component(CosmoTopBarMenu)]
 pub(crate) fn top_bar_menu(props: &CosmoTopBarMenuProps) -> Html {
-    let menu_style = use_style!(r#"
+    let menu_style = use_style!(
+        r#"
 display: flex;
 justify-content: flex-end;
 flex-flow: row nowrap;
 grid-column: content;
-    "#);
+    "#
+    );
 
     html!(
         <div class={menu_style}>
