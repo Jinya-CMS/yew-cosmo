@@ -43,7 +43,7 @@ uuid = { version = "1.*", features = ["js", "v4"] }
 yew = "0.20.0"
 yew-router = { version = "0.17.0" }
 yew-hooks = "0.2.0"
-yew_icons = { version = "0.*" }
+yew_icons = "0.7.3"
 web-sys = { version = "0.*", features = ["HtmlSelectElement", "Element", "DomRect"] }
 
 [features]
