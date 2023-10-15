@@ -408,10 +408,7 @@ pub struct CosmoTopBarItemProps {
 pub fn top_bar_item(props: &CosmoTopBarItemProps) -> Html {
     let style = use_top_bar_item_style();
 
-    let on_click = use_callback(
-        |_: MouseEvent, on_click| on_click.emit(()),
-        props.on_click.clone(),
-    );
+    let on_click = use_callback(props.on_click.clone(),|_: MouseEvent, on_click| on_click.emit(()));
 
     html!(
         <a class={style} onclick={on_click}>{props.label.clone()}</a>
@@ -583,7 +580,9 @@ display: block;
     html!(
         <div class={bottom_bar_style}>
             <div class={bottom_bar_item_left}>
-                {left.clone()}
+                if let Some(left) = left.clone() {
+                    {left}
+                }
             </div>
             if matches!(props.progress_state, CosmoBottomBarProgressState::Visible | CosmoBottomBarProgressState::Indeterminate) {
                 <div class={bottom_bar_item_center}>
@@ -593,7 +592,9 @@ display: block;
                 </div>
             }
             <div class={bottom_bar_item_right}>
-                {right.clone()}
+                if let Some(right) = right.clone() {
+                    {right}
+                }
             </div>
         </div>
     )

@@ -29,21 +29,21 @@ members = [
 ]
 
 [workspace.package]
-version = "0.15.22"
+version = "0.15.24"
 edition = "2021"
 
 [workspace.dependencies]
-bounce = { version = "0.*", features = ["helmet"] }
+bounce = { version = "0.9.0", features = ["helmet"] }
 chrono = "0.*"
 color-art = "0.*"
 derive_more = "0.*"
 gloo = "0.*"
-stylist = { version = "0.*", features = ["yew", "yew_use_style"] }
+stylist = { version = "0.13.0", features = ["yew", "yew_use_style"] }
 uuid = { version = "1.*", features = ["js", "v4"] }
-yew = "0.20.0"
-yew-router = { version = "0.17.0" }
-yew-hooks = "0.2.0"
-yew_icons = "0.7.3"
+yew = "0.21.0"
+yew-router = { version = "0.18.0" }
+yew-hooks = "0.3.0"
+yew_icons = "0.8.0"
 web-sys = { version = "0.*", features = ["HtmlSelectElement", "Element", "DomRect"] }
 
 [features]

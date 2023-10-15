@@ -10,27 +10,18 @@ pub fn theme() -> Html {
 
     let theme_state = use_state_eq(|| CosmoTheme::Auto);
 
-    let on_open_light_theme_dialog = use_callback(
-        |_: (), state| state.set(true),
-        light_theme_alert_state.clone(),
-    );
-    let on_open_dark_theme_dialog = use_callback(
-        |_: (), state| state.set(true),
-        dark_theme_alert_state.clone(),
-    );
-    let on_toggle_theme = use_callback(
-        |value: Option<AttrValue>, state| match value {
-            None => state.set(CosmoTheme::Auto),
-            Some(val) => {
-                if val == "dark" {
-                    state.set(CosmoTheme::Dark)
-                } else {
-                    state.set(CosmoTheme::Light)
-                }
+    let on_open_light_theme_dialog = use_callback(light_theme_alert_state.clone(),|_: (), state| state.set(true));
+    let on_open_dark_theme_dialog = use_callback(dark_theme_alert_state.clone(),|_: (), state| state.set(true));
+    let on_toggle_theme = use_callback(theme_state.clone(),|value: Option<AttrValue>, state| match value {
+        None => state.set(CosmoTheme::Auto),
+        Some(val) => {
+            if val == "dark" {
+                state.set(CosmoTheme::Dark)
+            } else {
+                state.set(CosmoTheme::Light)
             }
-        },
-        theme_state.clone(),
-    );
+        }
+    });
 
     html!(
         <>

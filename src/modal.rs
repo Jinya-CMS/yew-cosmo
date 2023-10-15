@@ -158,7 +158,7 @@ impl CosmoAlertType {
             CosmoAlertType::Positive => "var(--positive-color)",
             CosmoAlertType::Negative => "var(--negative-color)",
         }
-        .to_string()
+            .to_string()
     }
 
     pub fn get_gradient(&self) -> String {
@@ -169,7 +169,7 @@ impl CosmoAlertType {
             CosmoAlertType::Positive => "var(--positive-light-color)",
             CosmoAlertType::Negative => "var(--negative-light-color)",
         }
-        .to_string()
+            .to_string()
     }
 }
 
@@ -182,7 +182,7 @@ impl ToString for CosmoAlertType {
             CosmoAlertType::Positive => "positive",
             CosmoAlertType::Negative => "negative",
         }
-        .into()
+            .into()
     }
 }
 
@@ -224,7 +224,7 @@ pub struct CosmoAlertProps {
 
 #[styled_component(CosmoAlert)]
 pub fn alert(props: &CosmoAlertProps) -> Html {
-    let on_close = use_callback(|_, on_close| on_close.emit(()), props.on_close.clone());
+    let on_close = use_callback(props.on_close.clone(), |_, on_close| on_close.emit(()));
     let style = use_style!(
         r#"
 --primary-color: ${modal_color};
@@ -266,8 +266,8 @@ pub struct CosmoConfirmProps {
 
 #[styled_component(CosmoConfirm)]
 pub fn confirm(props: &CosmoConfirmProps) -> Html {
-    let on_confirm = use_callback(|_, callback| callback.emit(()), props.on_confirm.clone());
-    let on_decline = use_callback(|_, callback| callback.emit(()), props.on_decline.clone());
+    let on_confirm = use_callback(props.on_confirm.clone(), |_, callback| callback.emit(()));
+    let on_decline = use_callback(props.on_decline.clone(), |_, callback| callback.emit(()));
 
     let message_style = use_style!(
         r#"

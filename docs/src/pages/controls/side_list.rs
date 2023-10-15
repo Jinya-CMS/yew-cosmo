@@ -16,10 +16,7 @@ fn with_size(size: usize) -> Vec<i32> {
 #[function_component(SideList)]
 pub fn side_list() -> Html {
     let additional_items_state = use_state_eq(|| vec![1]);
-    let on_click = use_callback(
-        |_, state| state.set(with_size((*state).len() + 1)),
-        additional_items_state.clone(),
-    );
+    let on_click = use_callback(additional_items_state.clone(),|_, state| state.set(with_size((*state).len() + 1)));
 
     html!(
         <CosmoSideList has_add_button={true} add_button_label="Add item" add_button_on_click={on_click}>

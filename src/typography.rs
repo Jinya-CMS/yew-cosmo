@@ -129,15 +129,12 @@ pub struct CosmoAnchorProps {
 #[styled_component(CosmoAnchor)]
 pub fn anchor(props: &CosmoAnchorProps) -> Html {
     let style = use_anchor_style();
-    let on_click = use_callback(
-        |evt: MouseEvent, callback| {
-            if let Some(callback) = callback {
-                evt.prevent_default();
-                callback.emit(());
-            }
-        },
-        props.on_click.clone(),
-    );
+    let on_click = use_callback(props.on_click.clone(),|evt: MouseEvent, callback| {
+        if let Some(callback) = callback {
+            evt.prevent_default();
+            callback.emit(());
+        }
+    });
 
     html!(
         <a href={props.href.clone()} onclick={on_click} class={style}>{for props.children.iter()}</a>

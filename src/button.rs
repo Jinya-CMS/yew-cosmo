@@ -84,20 +84,14 @@ cursor: pointer;
         use_state_eq(|| navigator.is_none() || BrowserHistory::default().is_empty());
 
     #[cfg(feature = "with-yew-router")]
-    let on_click = use_callback(
-        |_: MouseEvent, (navigator, disabled_state)| {
-            if let Some(navigator) = navigator {
-                navigator.back();
-                disabled_state.set(BrowserHistory::default().is_empty());
-            }
-        },
-        (navigator.clone(), disabled_state.clone()),
-    );
+    let on_click = use_callback((navigator.clone(), disabled_state.clone()),|_: MouseEvent, (navigator, disabled_state)| {
+        if let Some(navigator) = navigator {
+            navigator.back();
+            disabled_state.set(BrowserHistory::default().is_empty());
+        }
+    });
     #[cfg(not(feature = "with-yew-router"))]
-    let on_click = use_callback(
-        |_: MouseEvent, on_click| on_click.emit(()),
-        _props.on_click.clone(),
-    );
+    let on_click = use_callback(_props.on_click.clone(), |_: MouseEvent, on_click| on_click.emit(()));
 
     #[cfg(feature = "with-yew-router")]
     return html!(
@@ -326,14 +320,11 @@ align-items: center;
         size = size
     );
 
-    let on_click = use_callback(
-        |_: MouseEvent, on_click| {
-            if let Some(on_click) = on_click {
-                on_click.emit(())
-            }
-        },
-        props.on_click.clone(),
-    );
+    let on_click = use_callback(props.on_click.clone(),|_: MouseEvent, on_click| {
+        if let Some(on_click) = on_click {
+            on_click.emit(())
+        }
+    });
 
     html!(
         <button class={button_style} title={props.title.clone()} onclick={on_click}>
