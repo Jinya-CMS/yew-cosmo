@@ -24,26 +24,26 @@ pub fn html() -> Html {
     let modern_single_select_state = use_state_eq(|| AttrValue::from("1"));
     let modern_multiple_select_state = use_state_eq(|| vec![String::from("1")]);
 
-    let on_textbox_input = use_callback(textbox_state.clone(),|value: AttrValue, state| state.set(value));
-    let on_numberbox_input = use_callback(numberbox_state.clone(),|value: i64, state| state.set(value));
-    let on_decimalbox_input = use_callback(decimalbox_state.clone(),|value: f64, state| state.set(value));
-    let on_date_time_input = use_callback(date_time_state.clone(),|value: DateTime<Local>, state| state.set(value));
-    let on_date_input = use_callback(date_state.clone(),|value: NaiveDate, state| state.set(value));
-    let on_time_input = use_callback(time_state.clone(),|value: NaiveTime, state| state.set(value));
+    let on_textbox_input = use_callback(textbox_state.clone(), |value: AttrValue, state| state.set(value));
+    let on_numberbox_input = use_callback(numberbox_state.clone(), |value: i64, state| state.set(value));
+    let on_decimalbox_input = use_callback(decimalbox_state.clone(), |value: f64, state| state.set(value));
+    let on_date_time_input = use_callback(date_time_state.clone(), |value: DateTime<Local>, state| state.set(value));
+    let on_date_input = use_callback(date_state.clone(), |value: NaiveDate, state| state.set(value));
+    let on_time_input = use_callback(time_state.clone(), |value: NaiveTime, state| state.set(value));
     let on_color_input = use_callback(color_state.clone(), |value: Color, state| state.set(value));
-    let on_checkbox_check = use_callback(checkbox_state.clone(),|value: bool, state| state.set(value));
+    let on_checkbox_check = use_callback(checkbox_state.clone(), |value: bool, state| state.set(value));
     let on_switch_check = use_callback(switch_state.clone(), |value: bool, state| state.set(value));
-    let on_radios_change = use_callback(radios_state.clone(),|value: AttrValue, state| state.set(value));
-    let on_dropdown_select = use_callback(dropdown_state.clone(),|value: Option<AttrValue>, state| state.set(value));
+    let on_radios_change = use_callback(radios_state.clone(), |value: AttrValue, state| state.set(value));
+    let on_dropdown_select = use_callback(dropdown_state.clone(), |value: Option<AttrValue>, state| state.set(value));
     let on_slider_input = use_callback(slider_state.clone(), |value: i64, state| state.set(value));
-    let on_textarea_input = use_callback(textarea_state.clone(),|value: AttrValue, state| state.set(value));
-    let on_modern_single_select_select = use_callback(modern_single_select_state.clone(),|value: AttrValue, state| state.set(value));
-    let on_modern_multiple_select_select = use_callback(modern_multiple_select_state.clone(),|value: AttrValue, state| {
+    let on_textarea_input = use_callback(textarea_state.clone(), |value: AttrValue, state| state.set(value));
+    let on_modern_single_select_select = use_callback(modern_single_select_state.clone(), |value: AttrValue, state| state.set(value));
+    let on_modern_multiple_select_select = use_callback(modern_multiple_select_state.clone(), |value: AttrValue, state| {
         let mut data = (**state).clone();
         data.push(value.to_string());
         state.set(data);
     });
-    let on_modern_multiple_select_deselect = use_callback(modern_multiple_select_state.clone(),|value: AttrValue, state| {
+    let on_modern_multiple_select_deselect = use_callback(modern_multiple_select_state.clone(), |value: AttrValue, state| {
         let mut data = (**state).clone();
         data.iter()
             .position(move |val| value.to_string().eq(val))
@@ -166,23 +166,60 @@ pub fn html() -> Html {
 </CosmoForm>"#}</CosmoDocsCodeSample>
             <CosmoHeader level={CosmoHeaderLevel::H2} header="Buttons" />
             <CosmoParagraph>
-                {"Cosmo provides two different button styles."}
+                {"Cosmo provides two different button types and five different button styles."}
             </CosmoParagraph>
             <CosmoHeader level={CosmoHeaderLevel::H3} header="Normal buttons" />
-            <CosmoDemo>
-                <CosmoButton label="Normal button" />
+            <CosmoDemo flex={true}>
+                <CosmoButton label="Normal default button" />
+                <CosmoButton label="Normal primary button" state={CosmoButtonType::Primary} />
+                <CosmoButton label="Normal positive button" state={CosmoButtonType::Positive} />
+                <CosmoButton label="Normal negative button" state={CosmoButtonType::Negative} />
+                <CosmoButton label="Normal information button" state={CosmoButtonType::Information} />
+                <CosmoButton label="Normal warning button" state={CosmoButtonType::Warning} />
             </CosmoDemo>
-            <CosmoDocsCodeSample>{r#"<CosmoButton label="Normal button" on_click={on_click} />
-    <CosmoButtonLink<Route> to={Route::Home} label="Normal button" />"#}</CosmoDocsCodeSample>
+            <CosmoDocsCodeSample>{r#"<>
+    <CosmoButton label="Normal default button" on_click={on_click} />
+    <CosmoButton label="Normal primary button" state={CosmoButtonType::Primary} on_click={on_click} />
+    <CosmoButton label="Normal positive button" state={CosmoButtonType::Positive} on_click={on_click} />
+    <CosmoButton label="Normal negative button" state={CosmoButtonType::Negative} on_click={on_click} />
+    <CosmoButton label="Normal information button" state={CosmoButtonType::Information} on_click={on_click} />
+    <CosmoButton label="Normal warning button" state={CosmoButtonType::Warning} on_click={on_click} />
+
+    <CosmoButtonLink<Route> to={Route::Home} label="Normal default button" />
+    <CosmoButtonLink<Route> to={Route::Home} label="Normal primary button" state={CosmoButtonType::Primary} />
+    <CosmoButtonLink<Route> to={Route::Home} label="Normal positive button" state={CosmoButtonType::Positive} />
+    <CosmoButtonLink<Route> to={Route::Home} label="Normal negative button" state={CosmoButtonType::Negative} />
+    <CosmoButtonLink<Route> to={Route::Home} label="Normal information button" state={CosmoButtonType::Information} />
+    <CosmoButtonLink<Route> to={Route::Home} label="Normal warning button" state={CosmoButtonType::Warning} />
+</>"#}</CosmoDocsCodeSample>
             <CosmoHeader level={CosmoHeaderLevel::H3} header="Circular buttons" />
+            <CosmoHeader level={CosmoHeaderLevel::H4} header="Size variations" />
             <CosmoDemo>
                 <CosmoCircleButton icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Small} title="Small circular button" />
                 <CosmoCircleButton icon={IconId::LucideVideo} title="Medium circular button" />
                 <CosmoCircleButton icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Large} title="Large circular button" />
             </CosmoDemo>
-            <CosmoDocsCodeSample>{r#"<CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Small} title="Small circular button" />
-<CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} title="Medium circular button" />
-<CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Large} title="Large circular button" />"#}</CosmoDocsCodeSample>
+            <CosmoHeader level={CosmoHeaderLevel::H4} header="Type variations" />
+            <CosmoDemo flex={true}>
+                <CosmoCircleButton icon={IconId::LucideVideo} title="Default button circular button" />
+                <CosmoCircleButton icon={IconId::LucideVideo} title="Primary button circular button" state={CosmoButtonType::Primary} />
+                <CosmoCircleButton icon={IconId::LucideVideo} title="Positive button circular button" state={CosmoButtonType::Positive} />
+                <CosmoCircleButton icon={IconId::LucideVideo} title="Negative button circular button" state={CosmoButtonType::Negative} />
+                <CosmoCircleButton icon={IconId::LucideVideo} title="Information button circular button" state={CosmoButtonType::Information} />
+                <CosmoCircleButton icon={IconId::LucideVideo} title="Warning button circular button" state={CosmoButtonType::Warning} />
+            </CosmoDemo>
+            <CosmoDocsCodeSample>{r#"<>
+    <CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Small} title="Small circular button" />
+    <CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} title="Medium circular button" />
+    <CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Large} title="Large circular button" />
+
+    <CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} title="Default button circular button" />
+    <CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} title="Primary button circular button" state={CosmoButtonType::Primary} />
+    <CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} title="Positive button circular button" state={CosmoButtonType::Positive} />
+    <CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} title="Negative button circular button" state={CosmoButtonType::Negative} />
+    <CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} title="Information button circular button" state={CosmoButtonType::Information} />
+    <CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} title="Warning button circular button" state={CosmoButtonType::Warning} />
+</>"#}</CosmoDocsCodeSample>
             <CosmoHeader level={CosmoHeaderLevel::H2} header="Loaders" />
             <CosmoParagraph>
                 {"Cosmo provides a progress bar and a progress ring, the progress bar can be easily be integrated into the bottom bar. The progress ring is perfect to indicate that you are loading data and can be easily integrated with a suspense."}

@@ -15,6 +15,17 @@ pub struct CosmoBackButtonProps {
     pub is_enabled: bool,
 }
 
+#[derive(PartialEq, Clone, Default)]
+pub enum CosmoButtonType {
+    #[default]
+    Default,
+    Primary,
+    Positive,
+    Negative,
+    Information,
+    Warning,
+}
+
 #[styled_component(CosmoBackButton)]
 pub fn back_button(_props: &CosmoBackButtonProps) -> Html {
     let back_button_style = use_style!(
@@ -75,21 +86,21 @@ cursor: pointer;
     );
 
     #[cfg(feature = "with-yew-router")]
-    let navigator = use_navigator();
+        let navigator = use_navigator();
 
     #[cfg(feature = "with-yew-router")]
-    let disabled_state =
+        let disabled_state =
         use_state_eq(|| navigator.is_none() || BrowserHistory::default().is_empty());
 
     #[cfg(feature = "with-yew-router")]
-    let on_click = use_callback((navigator.clone(), disabled_state.clone()),|_: MouseEvent, (navigator, disabled_state)| {
+        let on_click = use_callback((navigator.clone(), disabled_state.clone()), |_: MouseEvent, (navigator, disabled_state)| {
         if let Some(navigator) = navigator {
             navigator.back();
             disabled_state.set(BrowserHistory::default().is_empty());
         }
     });
     #[cfg(not(feature = "with-yew-router"))]
-    let on_click = use_callback(_props.on_click.clone(), |_: MouseEvent, on_click| on_click.emit(()));
+        let on_click = use_callback(_props.on_click.clone(), |_: MouseEvent, on_click| on_click.emit(()));
 
     #[cfg(feature = "with-yew-router")]
     return html!(
@@ -102,20 +113,24 @@ cursor: pointer;
 }
 
 #[hook]
-fn use_cosmo_button_style(is_full_width: bool) -> Classes {
+fn use_cosmo_button_style(is_full_width: bool, is_circle: bool, button_type: CosmoButtonType) -> Classes {
+    let (color, background, border_color, hover_color, active_color) = match button_type {
+        CosmoButtonType::Default => ("var(--black)", "var(--white)", "var(--control-border-color)", "var(--control-border-color-dark)", "var(--control-border-color-darker)"),
+        CosmoButtonType::Primary => ("var(--white)", "var(--primary-color)", "var(--primary-color)", "var(--primary-color-dark)", "var(--primary-color-darker)"),
+        CosmoButtonType::Positive => ("var(--white)", "var(--positive-color)", "var(--positive-color)", "var(--positive-color-dark)", "var(--positive-color-darker)"),
+        CosmoButtonType::Negative => ("var(--white)", "var(--negative-color)", "var(--negative-color)", "var(--negative-color-dark)", "var(--negative-color-darker)"),
+        CosmoButtonType::Information => ("var(--white)", "var(--information-color)", "var(--information-color)", "var(--information-color-dark)", "var(--information-color-darker)"),
+        CosmoButtonType::Warning => ("var(--white)", "var(--warning-color)", "var(--warning-color)", "var(--warning-color-dark)", "var(--warning-color-darker)"),
+    };
+
     let button_style = use_style!(
         r#"
 cursor: pointer;
 font-family: var(--font-family);
 font-size: var(--font-size);
-padding: var(--button-padding-top) var(--button-padding-right) var(--button-padding-bottom)
-    var(--button-padding-left);
 box-sizing: border-box;
-border: var(--button-border-width) solid var(--button-border-color);
-background: var(--button-background);
-color: var(--button-color);
+border: var(--button-border-width) solid ${border_color};
 line-height: var(--line-height);
-height: var(--control-height);
 text-decoration: none;
 font-weight: var(--font-weight-normal);
 border-radius: var(--border-radius);
@@ -137,18 +152,27 @@ transition:
 
 &:not(:disabled):hover,
 &:not(:disabled):focus {
-	--button-background: var(--control-border-color-dark);
-	--button-border-color: var(--control-border-color-dark);
+	--button-background: ${hover_color};
+	--button-border-color: ${hover_color};
+}
+
+&:not(:disabled):active {
+	--button-border-color: ${active_color};
+	--button-background: ${active_color};
+}
+
+&:not(:disabled):hover,
+&:not(:disabled):focus,
+&:not(:disabled):active {
+	--button-color: var(--white);
 
 	outline: none;
 	box-shadow: none;
 }
-
-&:not(:disabled):active {
-	--button-border-color: var(--control-border-color-darker);
-	--button-background: var(--control-border-color-darker);
-}
-    "#
+    "#,
+        border_color = border_color,
+        hover_color = hover_color,
+        active_color = active_color,
     );
 
     let mut full_width_style: Option<Style> = Some(use_style!(
@@ -160,8 +184,21 @@ text-align: center;
     if !is_full_width {
         full_width_style = None;
     }
+    let mut non_circle_style: Option<Style> = Some(use_style!(r#"
+padding: var(--button-padding-top) var(--button-padding-right) var(--button-padding-bottom)
+    var(--button-padding-left);
+background: ${background};
+height: var(--control-height);
+color: ${color};
+    "#,
+        color = color,
+        background = background,
+    ));
+    if is_circle {
+        non_circle_style = None;
+    }
 
-    classes!(button_style, full_width_style, "cosmo-button")
+    classes!(button_style, full_width_style, non_circle_style, "cosmo-button")
 }
 
 #[derive(PartialEq, Clone, Properties)]
@@ -175,11 +212,13 @@ pub struct CosmoButtonProps {
     pub is_full_width: bool,
     #[prop_or(true)]
     pub enabled: bool,
+    #[prop_or_default]
+    pub state: CosmoButtonType,
 }
 
 #[function_component(CosmoButton)]
 pub fn button(props: &CosmoButtonProps) -> Html {
-    let style = use_cosmo_button_style(props.is_full_width);
+    let style = use_cosmo_button_style(props.is_full_width, false, props.state.clone());
 
     let button_type = if props.is_submit { "submit" } else { "button" };
     let on_click = props
@@ -195,8 +234,8 @@ pub fn button(props: &CosmoButtonProps) -> Html {
 #[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoButtonLinkProps<Route>
-where
-    Route: Routable + 'static,
+    where
+        Route: Routable + 'static,
 {
     pub label: String,
     pub to: Route,
@@ -204,15 +243,17 @@ where
     pub is_full_width: bool,
     #[prop_or(true)]
     pub enabled: bool,
+    #[prop_or_default]
+    pub state: CosmoButtonType,
 }
 
 #[cfg(feature = "with-yew-router")]
 #[function_component(CosmoButtonLink)]
 pub fn button_link<Route>(props: &CosmoButtonLinkProps<Route>) -> Html
-where
-    Route: Routable + 'static,
+    where
+        Route: Routable + 'static,
 {
-    let style = use_cosmo_button_style(props.is_full_width);
+    let style = use_cosmo_button_style(props.is_full_width, false, props.state.clone());
 
     html!(
         <Link<Route> disabled={!props.enabled} to={props.to.clone()} classes={style}>{props.label.clone()}</Link<Route>>
@@ -262,6 +303,8 @@ pub struct CosmoCircleButtonProps {
     pub enabled: bool,
     #[prop_or(CosmoCircleButtonSize::Medium)]
     pub size: CosmoCircleButtonSize,
+    #[prop_or_default]
+    pub state: CosmoButtonType,
 }
 
 #[cfg(feature = "with-icons")]
@@ -272,7 +315,7 @@ pub fn circle_button(props: &CosmoCircleButtonProps) -> Html {
         CosmoCircleButtonSize::Medium => "var(--button-circle-size-regular)",
         CosmoCircleButtonSize::Large => "var(--button-circle-size-large)",
     };
-    let button_style = use_cosmo_button_style(false);
+    let button_style = use_cosmo_button_style(false, true, props.state.clone());
     let circle_style = use_style!(
         r#"
 --border-radius: calc(var(--size) / 2);
@@ -285,11 +328,18 @@ min-width: var(--size);
 padding: var(--button-circle-padding);
 background: var(--button-circle-background);
 color: var(--button-border-color);
+
+&:not(:disabled):hover,
+&:not(:disabled):focus,
+&:not(:disabled):active {
+	background: var(--button-background);
+	color: var(--button-color);
+}
     "#,
         size = size
     );
 
-    let on_click = use_callback(props.on_click.clone(),|_: MouseEvent, on_click| {
+    let on_click = use_callback(props.on_click.clone(), |_: MouseEvent, on_click| {
         if let Some(on_click) = on_click {
             on_click.emit(())
         }
@@ -297,7 +347,7 @@ color: var(--button-border-color);
 
     html!(
         <button class={classes!(button_style, circle_style)} title={props.title.clone()} onclick={on_click}>
-            <yew_icons::Icon icon_id={props.icon} width="auto" height="auto" />
+            <yew_icons::Icon style="stroke: currentColor;" icon_id={props.icon} width="auto" height="auto" />
         </button>
     )
 }

@@ -34,7 +34,7 @@ pub fn theme() -> Html {
             </CosmoParagraph>
             <CosmoHeader level={CosmoHeaderLevel::H2} header="Force a theme" />
             <CosmoParagraph>
-                {"To force the light theme apply the "}<CosmoCode>{"cosmo--light-theme"}</CosmoCode>{" to the HTML tag of your document. On the other hand, you need to apply the "}<CosmoCode>{"cosmo--dark-theme"}</CosmoCode>{" class to the HTML tag to force the dark theme. "}
+                {"To force the light theme apply the "}<CosmoCode>{"is--light"}</CosmoCode>{" to the HTML tag of your document. On the other hand, you need to apply the "}<CosmoCode>{"is--dark"}</CosmoCode>{" class to the HTML tag to force the dark theme. "}
             </CosmoParagraph>
             <CosmoParagraph>
                 <CosmoDropdown value={match (*theme_state).clone() {
@@ -48,8 +48,12 @@ pub fn theme() -> Html {
                 {"It is also possible to force a theme on modal dialogs, by applying setting the theme prop to either Light or Dark."}
             </CosmoParagraph>
             <CosmoParagraph>
-                <CosmoButton label="Open light theme dialog" on_click={on_open_light_theme_dialog} />
-                <CosmoButton label="Open dark theme dialog" on_click={on_open_dark_theme_dialog} />
+                <CosmoToolbar>
+                    <CosmoToolbarGroup>
+                        <CosmoButton label="Open light theme dialog" on_click={on_open_light_theme_dialog} />
+                        <CosmoButton label="Open dark theme dialog" on_click={on_open_dark_theme_dialog} />
+                    </CosmoToolbarGroup>
+                </CosmoToolbar>
             </CosmoParagraph>
             if *light_theme_alert_state {
                 <CosmoAlert theme={CosmoTheme::Light} title="Light theme" message="I am a light theme dialog" close_label="Close" on_close={move |_| light_theme_alert_state.set(false)} />

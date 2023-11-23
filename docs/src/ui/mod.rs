@@ -4,6 +4,8 @@ use yew::prelude::*;
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoDemoProps {
     pub children: Children,
+    #[prop_or(false)]
+    pub flex: bool,
 }
 
 #[styled_component(CosmoDemo)]
@@ -29,8 +31,16 @@ border-radius: var(--border-radius);
     "#
     );
 
+    let mut flex_style = Some(use_style!(r#"
+display: flex;
+gap: 0.5rem;
+"#));
+    if !props.flex {
+        flex_style = None;
+    }
+
     html!(
-        <div class={style}>{for props.children.iter()}</div>
+        <div class={classes!(flex_style, style)}>{for props.children.iter()}</div>
     )
 }
 
@@ -50,6 +60,7 @@ margin: 1rem 0;
 border-radius: var(--border-radius);
 margin: unset;
 overflow: auto;
+font-family: var(--font-family-code);
 
 ::before {
 	content: 'Code';

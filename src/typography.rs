@@ -14,7 +14,7 @@ pub struct CosmoCodeProps {
 pub fn code(props: &CosmoCodeProps) -> Html {
     let style = use_style!(
         r#"
-font-family: var(--code-font-family);
+font-family: var(--font-family-code);
     "#
     );
 

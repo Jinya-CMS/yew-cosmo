@@ -22,7 +22,7 @@ fn format_title(s: AttrValue) -> AttrValue {
     if s.is_empty() {
         AttrValue::from("Cosmo Yew")
     } else {
-        AttrValue::from(format!("{s} – Cosmo Yew"))
+        AttrValue::from(format!("Cosmo Yew – {s}"))
     }
 }
 
