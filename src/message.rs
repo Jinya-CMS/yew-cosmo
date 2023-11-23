@@ -13,10 +13,10 @@ pub enum CosmoMessageType {
 impl CosmoMessageType {
     pub(crate) fn get_background(&self) -> AttrValue {
         AttrValue::from(match self {
-            CosmoMessageType::Information => "var(--information-light-color)",
-            CosmoMessageType::Warning => "var(--warning-light-color)",
-            CosmoMessageType::Positive => "var(--positive-light-color)",
-            CosmoMessageType::Negative => "var(--negative-light-color)",
+            CosmoMessageType::Information => "var(--information-color-alpha-25)",
+            CosmoMessageType::Warning => "var(--warning-color-alpha-25)",
+            CosmoMessageType::Positive => "var(--positive-color-alpha-25)",
+            CosmoMessageType::Negative => "var(--negative-color-alpha-25)",
         })
     }
 
@@ -43,17 +43,22 @@ pub struct CosmoMessageProps {
 pub fn message(props: &CosmoMessageProps) -> Html {
     let container_style = use_style!(
         r#"
-width: 100%;
-background: ${background};
-color: var(--black);
-border-top: 4px solid ${border_color};
-padding: 8px 16px;
-margin-bottom: 16px;
-box-sizing: border-box;
+--message-background: ${background};
+--message-border: ${border_color};
 
-&::selection {
-    background: ${border_color};
-    color: var(--white);
+width: 100%;
+background: var(--message-background);
+color: var(--black);
+border-top: var(--message-border-top-width) solid var(--message-border);
+padding: var(--message-padding-top) var(--message-padding-right) var(--message-padding-bottom)
+    var(--message-padding-left);
+margin-bottom: var(--message-margin-bottom);
+box-sizing: border-box;
+border-radius: var(--border-radius);
+
+&:selection {
+	background: var(--message-border);
+	color: var(--white);
 }
     "#,
         background = props.message_type.get_background(),
@@ -64,26 +69,25 @@ box-sizing: border-box;
 margin: 0;
 color: var(--black);
 font-weight: var(--font-weight-light);
-font-size: 24px;
+font-family: var(--font-family-heading);
+font-size: var(--message-header-font-size);
 display: block;
 
 &::selection {
-    background: ${border_color};
-    color: var(--white);
+	background: var(--message-border);
+	color: var(--white);
 }
-    "#,
-        border_color = props.message_type.get_border()
+    "#
     );
     let message_style = use_style!(
         r#"
 margin: 0;
 
 &::selection {
-    background: ${border_color};
-    color: var(--white);
+	background: var(--message-border);
+	color: var(--white);
 }
-    "#,
-        border_color = props.message_type.get_border()
+    "#
     );
 
     html!(

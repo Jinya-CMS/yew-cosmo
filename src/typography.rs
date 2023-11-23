@@ -14,7 +14,7 @@ pub struct CosmoCodeProps {
 pub fn code(props: &CosmoCodeProps) -> Html {
     let style = use_style!(
         r#"
-font-family: "Source Code Pro", monospace;
+font-family: var(--code-font-family);
     "#
     );
 
@@ -43,18 +43,20 @@ pub struct CosmoHeaderProps {
 #[styled_component(CosmoHeader)]
 pub fn header(props: &CosmoHeaderProps) -> Html {
     let (font_size, tag) = match props.level {
-        CosmoHeaderLevel::H1 => ("32px", "h1"),
-        CosmoHeaderLevel::H2 => ("28px", "h2"),
-        CosmoHeaderLevel::H3 => ("24px", "h3"),
-        CosmoHeaderLevel::H4 => ("22px", "h4"),
-        CosmoHeaderLevel::H5 => ("20px", "h5"),
-        CosmoHeaderLevel::H6 => ("16px", "h6"),
+        CosmoHeaderLevel::H1 => ("2rem", "h1"),
+        CosmoHeaderLevel::H2 => ("1.75rem", "h2"),
+        CosmoHeaderLevel::H3 => ("1.5rem", "h3"),
+        CosmoHeaderLevel::H4 => ("1.375rem", "h4"),
+        CosmoHeaderLevel::H5 => ("1.25rem", "h5"),
+        CosmoHeaderLevel::H6 => ("1rem", "h6"),
     };
 
     let style = use_style!(
         r#"
-font-weight: var(--font-weight-light);
+font-weight: var(--font-weight-heading);
+font-family: var(--font-family-heading);
 font-size: ${font_size};
+margin-bottom: 0;
     "#,
         font_size = font_size
     );
@@ -74,7 +76,7 @@ pub struct CosmoPreProps {
 pub fn pre(props: &CosmoPreProps) -> Html {
     let style = use_style!(
         r#"
-font-family: "Source Code Pro", monospace;
+font-family: var(--code-font-family);
     "#
     );
 
@@ -87,7 +89,7 @@ font-family: "Source Code Pro", monospace;
 fn use_anchor_style() -> Style {
     use_style!(
         r#"
-color: var(--primary-color);
+color: var(--a-color);
     "#
     )
 }
@@ -152,7 +154,7 @@ pub fn paragraph(props: &CosmoParagraphProps) -> Html {
     let style = use_style!(
         r#"
 font-family: var(--font-family);
-font-size: 16px;
+font-size: var(--font-size);
     "#
     );
 
@@ -166,9 +168,9 @@ pub fn hr() -> Html {
     let style = use_style!(
         r#"
 background: radial-gradient(circle, var(--primary-color) 0%, var(--white) 100%);
-height: 2px;
+height: var(--hr-height);
 border: 0;
-margin: 32px 0;
+margin: var(--hr-margin-side) 0;
     "#
     );
 
@@ -247,13 +249,14 @@ pub fn key_value_list(props: &CosmoKeyValueListItemProps) -> Html {
 font-weight: var(--font-weight-normal);
 margin: 0;
 padding: 0;
+font-family: var(--font-family-heading);
     "#
     );
     let key_value_list_value = use_style!(
         r#"
 font-weight: var(--font-weight-light);
 padding: 0;
-margin: 0 0 8px;
+margin: 0 0 var(--dd-margin-bottom);
     "#
     );
 

@@ -32,9 +32,9 @@ pub fn tab_control(props: &CosmoTabControlProps) -> Html {
     let tab_style = use_style!(
         r#"
 display: grid;
-grid-template-rows: [tablist] 20px [tabcontent] 1fr;
+grid-template-rows: [tablist] var(--tab-links-height) [tabcontent] 1fr;
 max-height: 100%;
-gap: 10px;
+gap: var(--tab-gap);
     "#
     );
     let tabs_style = use_style!(
@@ -43,7 +43,7 @@ grid-row: tablist;
 display: flex;
 width: 100%;
 justify-content: flex-end;
-gap: 20px;
+gap: var(--tab-links-gap);
 "#
     );
     let tab_content_style = use_style!(
@@ -57,9 +57,9 @@ grid-row: tabcontent;
         r#"
 text-transform: uppercase;
 color: var(--menu-text-color);
-font-size: 20px;
+font-size: var(--tab-link-font-size);
 font-weight: var(--font-weight-bold);
-height: 20px;
+height: var(--tab-link-font-size);
 cursor: pointer;
     "#
     );

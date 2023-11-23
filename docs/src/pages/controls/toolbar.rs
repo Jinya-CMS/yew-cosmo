@@ -2,7 +2,7 @@ use yew::prelude::*;
 
 use yew_cosmo::prelude::*;
 
-use crate::ui::{CosmoDemo, CosmoDocsPre};
+use crate::ui::{CosmoDemo, CosmoDocsCodeSample};
 
 #[function_component(Toolbar)]
 pub fn toolbar() -> Html {
@@ -24,7 +24,7 @@ pub fn toolbar() -> Html {
                     </CosmoToolbarGroup>
                 </CosmoToolbar>
             </CosmoDemo>
-            <CosmoDocsPre>{r#"<CosmoToolbar>
+            <CosmoDocsCodeSample>{r#"<CosmoToolbar>
     <CosmoToolbarGroup>
         <CosmoButton label="Toolbar button 1" />
         <CosmoButton label="Toolbar button 2" />
@@ -33,7 +33,7 @@ pub fn toolbar() -> Html {
         <CosmoButton label="Toolbar button 3" />
         <CosmoButton label="Toolbar button 4" />
     </CosmoToolbarGroup>
-</CosmoToolbar>"#}</CosmoDocsPre>
+</CosmoToolbar>"#}</CosmoDocsCodeSample>
         </>
     )
 }

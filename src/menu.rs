@@ -38,8 +38,23 @@ pub fn menu_bar(props: &CosmoMenuBarProps) -> Html {
         r#"
 grid-row: main-menu;
 display: grid;
-grid-template-columns: [spacing1] 18px [backbutton] 48px [spacing2] 74px [content] 1fr;
-border-left: 24px solid var(--primary-color);
+position: relative;
+grid-template-columns:
+    [left-touch] var(--menu-left-touch-width) [spacing1] 1rem [backbutton] var(--back-button-width)
+    [spacing2] calc(
+        var(--page-side-spacing) - var(--menu-left-touch-width) - 1rem - var(--back-button-width)
+    )
+    [content] 1fr;
+
+&::before {
+	content: '';
+	position: absolute;
+	width: var(--menu-left-touch-width);
+	height: 100%;
+	background: var(--primary-color);
+	border-bottom-right-radius: var(--border-radius);
+	border-top-right-radius: var(--border-radius);
+}
     "#
     );
 
@@ -65,8 +80,8 @@ fn menu_collection(props: &CosmoMenuCollectionProps) -> Html {
         r#"
 display: grid;
 grid-column: content;
-grid-template-rows: [main-menu] 48px [sub-menu] 16px;
-grid-row-gap: 16px;
+grid-template-rows: [main-menu] var(--main-menu-height) [sub-menu] var(--sub-menu-height);
+grid-row-gap: var(--menu-gap);
     "#
     );
 
@@ -92,14 +107,15 @@ where
 fn use_main_menu_item_style(is_active: bool) -> Classes {
     let item_style = use_style!(
         r#"
+text-decoration: none;
+font-weight: var(--font-weight-menu);
+font-family: var(--font-family-menu);
 text-transform: lowercase;
-font-size: 48px;
-font-weight: var(--font-weight-light);
-line-height: 48px;
+font-size: var(--font-size-main-menu);
+line-height: var(--font-size-main-menu);
 vertical-align: text-top;
 color: var(--menu-text-color);
-text-decoration: none;
-margin-right: 24px;
+margin-right: calc(var(--font-size-main-menu) / 2);
     "#
     );
     let mut active_style = Some(use_style!(
@@ -167,19 +183,20 @@ grid-row: sub-menu;
 fn use_sub_menu_item_style(is_active: bool) -> Classes {
     let item_style = use_style!(
         r#"
-text-transform: uppercase;
-font-size: 16px;
-font-weight: var(--font-weight-light);
-line-height: 16px;
-vertical-align: text-top;
-margin-right: 16px;
 text-decoration: none;
+font-weight: var(--font-weight-menu);
+font-family: var(--font-family-menu);
+text-transform: uppercase;
+font-size: var(--font-size-sub-menu);
+line-height: var(--font-size-sub-menu);
+vertical-align: text-top;
+margin-right: var(--font-size-sub-menu);
 color: var(--black);
     "#
     );
     let mut active_style = Some(use_style!(
         r#"
-font-weight: var(--font-weight-bold);
+font-weight: var(--font-weight-sub-menu-active);
     "#
     ));
     if !is_active {
@@ -225,29 +242,5 @@ pub fn sub_menu_item(props: &CosmoSubMenuItemProps) -> Html {
 
     html!(
         <span class={style}>{props.label.clone()}</span>
-    )
-}
-
-#[derive(PartialEq, Clone, Properties)]
-pub(crate) struct CosmoTopBarMenuProps {
-    #[prop_or_default]
-    pub children: Children,
-}
-
-#[styled_component(CosmoTopBarMenu)]
-pub(crate) fn top_bar_menu(props: &CosmoTopBarMenuProps) -> Html {
-    let menu_style = use_style!(
-        r#"
-display: flex;
-justify-content: flex-end;
-flex-flow: row nowrap;
-grid-column: content;
-    "#
-    );
-
-    html!(
-        <div class={menu_style}>
-            {for props.children.iter()}
-        </div>
     )
 }

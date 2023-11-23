@@ -16,20 +16,18 @@ pub fn table(props: &CosmoTableProps) -> Html {
         r#"
 border-collapse: collapse;
 
-thead tr {
-    border-bottom: 2px solid var(--primary-color);
-}
-
 thead tr th {
-    font-weight: var(--font-weight-bold);
-    padding: 0 8px 4px;
-    text-transform: capitalize;
+	font-weight: var(--font-weight-bold);
+	padding: var(--table-th-padding-top) var(--table-th-padding-side) var(--table-th-padding-bottom);
+	text-transform: capitalize;
+	border-bottom: var(--table-th-border-bottom-width) solid var(--primary-color);
+	font-family: var(--font-family-heading);
 }
 
 tbody tr td {
-    border-bottom: 1px solid var(--control-border-color);
-    font-weight: var(--font-weight-light);
-    padding: 2px 8px;
+	border-bottom: var(--table-td-border-bottom-width) solid var(--control-border-color);
+	font-weight: var(--font-weight-light);
+	padding: var(--table-td-padding-top) var(--table-td-padding-side) var(--table-td-padding-bottom);
 }
 
 tr:nth-child(2n-1) td {

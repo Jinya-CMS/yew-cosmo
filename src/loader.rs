@@ -14,15 +14,15 @@ align-items: center;
     );
     let loader_dot_container_style = use_style!(
         r#"
-width: 128px;
-height: 128px;
+width: 8rem;
+height: 8rem;
 position: relative;
     "#
     );
     let loader_dot_style = use_style!(
         r#"
-width: 128px;
-height: 128px;
+width: 8rem;
+height: 8rem;
 animation: dwl-dot-spin 5s infinite linear both;
 animation-delay: calc(var(--i) * 1s / 8 * -1);
 rotate: calc(var(--i) * 60deg / 7);
@@ -31,8 +31,8 @@ position: absolute;
 &::before {
     content: "";
     display: block;
-    width: 12px;
-    height: 12px;
+    width: 0.75rem;
+    height: 0.75rem;
     background-color: var(--primary-color);
     border-radius: 50%;
     position: absolute;
@@ -119,48 +119,65 @@ pub struct CosmoProgressBarProps {
 pub fn progress_bar(props: &CosmoProgressBarProps) -> Html {
     let progress_style = use_style!(
         r#"
+--progress-bar-background: repeating-linear-gradient(
+    -45deg,
+    var(--primary-color),
+    var(--primary-color) var(--progress-bar-gradient-width-1),
+    var(--primary-color-light) var(--progress-bar-gradient-width-1),
+    var(--primary-color-light) var(--progress-bar-gradient-width-2)
+);
+
 display: inline-block;
 vertical-align: baseline;
 appearance: none;
-width: 380px;
-height: 8px;
+width: var(--progress-bar-width-medium);
+height: var(--progress-bar-height);
 overflow: hidden;
 border: 0;
 background-color: var(--control-border-color);
 color: var(--primary-color);
-border-radius: 0;
+border-radius: var(--border-radius);
 
 &::-webkit-progress-bar {
-    background: transparent;
+	background: transparent;
 }
 
-&[value]::-webkit-progress-value,
-::-moz-progress-bar {
-    background-color: var(--primary-color);
+&[value]::-webkit-progress-value {
+	border-radius: var(--border-radius);
+	background: var(--progress-bar-background);
 }
+
+&::-moz-progress-bar {
+	border-radius: var(--border-radius);
+	background: var(--progress-bar-background);
+}
+
 
 @media (prefers-reduced-motion: no-preference) {
-    &:indeterminate {
-        background: var(--control-border-color) linear-gradient(to right, var(--primary-color) 30%, var(--control-border-color) 30%) top left/150% 150% no-repeat;
-        animation: progressIndeterminate 1s linear infinite;
-    }
+	&:indeterminate {
+		--progress-background: var(--control-border-color)
+			linear-gradient(to right, var(--primary-color) 30%, var(--control-border-color) 30%) top
+			left/150% 150% no-repeat;
+		animation: progressIndeterminate 1s linear infinite;
+		background: var(--progress-background);
+	}
 
-    &:indeterminate[value]::-webkit-progress-value {
-        background-color: transparent;
-    }
+	&:indeterminate[value]::-webkit-progress-value {
+		background: transparent;
+	}
 
-    &:indeterminate::-moz-progress-bar {
-        background-color: transparent;
-    }
+	&:indeterminate::-moz-progress-bar {
+		background: transparent;
+	}
 }
 
 @keyframes progressIndeterminate {
-    0% {
-        background-position: 200% 0;
-    }
-    100% {
-        background-position: -200% 0;
-    }
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
 }
     "#
     );

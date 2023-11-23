@@ -20,10 +20,10 @@ pub fn back_button(_props: &CosmoBackButtonProps) -> Html {
     let back_button_style = use_style!(
         r#"
 grid-column: backbutton;
-border: 4px solid var(--control-border-color);
+border: var(--back-button-border-width) solid var(--control-border-color);
 border-radius: 50%;
-height: 48px;
-width: 48px;
+height: var(--back-button-width);
+width: var(--back-button-width);
 box-sizing: border-box;
 background: var(--white);
 position: relative;
@@ -31,30 +31,28 @@ cursor: pointer;
 
 &::before,
 &::after {
-    content: '';
-    left: 10px;
-    position: absolute;
+	content: '';
+	position: absolute;
+	display: block;
+	top: 50%;
+	left: 50%;
 }
 
 &::before {
-    border: 4px solid var(--primary-color);
-    box-sizing: border-box;
-    height: 18px;
-    width: 18px;
-    display: block;
-    border-right: 0;
-    border-bottom: 0;
-    transform: translateY(-50%) rotate(-45deg);
-    position: absolute;
-    top: 50%;
+	border: var(--back-button-arrow-stroke-width) solid var(--primary-color);
+	box-sizing: border-box;
+	height: var(--back-button-arrow-fin-width);
+	width: var(--back-button-arrow-fin-width);
+	border-right: 0;
+	border-bottom: 0;
+	transform: translateY(-50%) translateX(-50%) rotate(-45deg);
 }
 
 &::after {
-    display: block;
-    width: 20px;
-    height: 4px;
-    background: var(--primary-color);
-    top: 18px;
+	width: var(--back-button-arrow-width);
+	height: var(--back-button-arrow-stroke-width);
+	background: var(--primary-color);
+	transform: translateY(-50%) translateX(-50%);
 }
 
 &:hover {
@@ -109,41 +107,46 @@ fn use_cosmo_button_style(is_full_width: bool) -> Classes {
         r#"
 cursor: pointer;
 font-family: var(--font-family);
-font-size: 16px;
-padding: 3px 16px;
+font-size: var(--font-size);
+padding: var(--button-padding-top) var(--button-padding-right) var(--button-padding-bottom)
+    var(--button-padding-left);
 box-sizing: border-box;
-border: 1px solid var(--control-border-color);
-background: var(--white);
-color: var(--black);
-line-height: 19px;
+border: var(--button-border-width) solid var(--button-border-color);
+background: var(--button-background);
+color: var(--button-color);
+line-height: var(--line-height);
+height: var(--control-height);
 text-decoration: none;
-font-weight: normal;
+font-weight: var(--font-weight-normal);
+border-radius: var(--border-radius);
+display: inline-flex;
+justify-content: center;
+align-items: center;
+white-space: nowrap;
+transition:
+    background-color var(--transition-duration),
+    color var(--transition-duration),
+    border-color var(--transition-duration);
 
 &:disabled {
     cursor: not-allowed;
-    border: 1px solid var(--control-border-color);
-    background: var(--white);
-    color: var(--disabled-color);
-}
-
-&:hover {
-    background: var(--primary-color);
-    color: var(--white);
+    filter: var(--button-disabled-filter);
     outline: none;
     box-shadow: none;
 }
 
-&:disabled:hover {
-    background: var(--white);
-    color: var(--control-border-color);
-    outline: none;
-    box-shadow: none;
+&:not(:disabled):hover,
+&:not(:disabled):focus {
+	--button-background: var(--control-border-color-dark);
+	--button-border-color: var(--control-border-color-dark);
+
+	outline: none;
+	box-shadow: none;
 }
 
-&:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: none;
+&:not(:disabled):active {
+	--button-border-color: var(--control-border-color-darker);
+	--button-background: var(--control-border-color-darker);
 }
     "#
     );
@@ -152,7 +155,6 @@ font-weight: normal;
         r#"
 width: 100%;
 text-align: center;
-margin-top: auto;
         "#
     ));
     if !is_full_width {
@@ -227,10 +229,10 @@ pub struct CosmoButtonContainerProps {
 pub fn button_container(props: &CosmoButtonContainerProps) -> Html {
     let button_container_style = use_style!(
         r#"
-display: flex;
-justify-content: flex-end;
-margin-top: 10px;
-gap: 16px;
+	display: flex;
+	justify-content: flex-end;
+	margin-top: var(--button-container-margin-top);
+	gap: var(--button-container-gap);
     "#
     );
 
@@ -266,56 +268,23 @@ pub struct CosmoCircleButtonProps {
 #[function_component(CosmoCircleButton)]
 pub fn circle_button(props: &CosmoCircleButtonProps) -> Html {
     let size = match props.size {
-        CosmoCircleButtonSize::Small => "24px",
-        CosmoCircleButtonSize::Medium => "32px",
-        CosmoCircleButtonSize::Large => "48px",
+        CosmoCircleButtonSize::Small => "var(--button-circle-size-small)",
+        CosmoCircleButtonSize::Medium => "var(--button-circle-size-regular)",
+        CosmoCircleButtonSize::Large => "var(--button-circle-size-large)",
     };
-    let icon_size = match props.size {
-        CosmoCircleButtonSize::Small => "16px",
-        CosmoCircleButtonSize::Medium => "24px",
-        CosmoCircleButtonSize::Large => "32px",
-    };
-    let button_style = use_style!(
+    let button_style = use_cosmo_button_style(false);
+    let circle_style = use_style!(
         r#"
-border-radius: 100%;
-border: 2px solid var(--control-border-color);
-height: ${size};
-width: ${size};
-background: var(--white);
-color: var(--primary-color);
-cursor: pointer;
-text-decoration: none;
-font-weight: normal;
-display: inline-flex;
-justify-content: center;
-align-items: center;
+--border-radius: calc(var(--size) / 2);
+--size: ${size};
+--button-border-color: var(--button-color);
+--button-border-width: var(--button-circle-border-width);
 
-&:disabled {
-    cursor: not-allowed;
-    background: var(--white);
-    color: var(--disabled-color);
-}
-
-&:hover {
-    background: var(--primary-color);
-    color: var(--white);
-    outline: none;
-    box-shadow: none;
-    border-color: var(--primary-color);
-}
-
-&:disabled:hover {
-    background: var(--white);
-    color: var(--control-border-color);
-    outline: none;
-    box-shadow: none;
-}
-
-&:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: none;
-}
+height: var(--size);
+min-width: var(--size);
+padding: var(--button-circle-padding);
+background: var(--button-circle-background);
+color: var(--button-border-color);
     "#,
         size = size
     );
@@ -327,8 +296,8 @@ align-items: center;
     });
 
     html!(
-        <button class={button_style} title={props.title.clone()} onclick={on_click}>
-            <yew_icons::Icon icon_id={props.icon} width={icon_size} height={icon_size} />
+        <button class={classes!(button_style, circle_style)} title={props.title.clone()} onclick={on_click}>
+            <yew_icons::Icon icon_id={props.icon} width="auto" height="auto" />
         </button>
     )
 }

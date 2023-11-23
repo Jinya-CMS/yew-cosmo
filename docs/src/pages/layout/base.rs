@@ -2,7 +2,7 @@ use yew::prelude::*;
 
 use yew_cosmo::prelude::*;
 
-use crate::ui::CosmoDocsPre;
+use crate::ui::CosmoDocsCodeSample;
 
 #[function_component(BaseLayout)]
 pub fn base_layout() -> Html {
@@ -29,7 +29,7 @@ pub fn base_layout() -> Html {
                 bottom bar. Even though the main usage of the bottom bar is to show progress, it can
                 also be used to display buttons that should work on all pages the same."}
             </CosmoParagraph>
-            <CosmoDocsPre>{r#"<BrowserRouter>
+            <CosmoDocsCodeSample>{r#"<BrowserRouter>
     <BounceRoot>
         <CosmoPageLayout>
             <HelmetBridge default_title="Cosmo Yew" format_title={format_title} />
@@ -66,7 +66,7 @@ pub fn base_layout() -> Html {
             </CosmoBottomBar>
         </CosmoPageLayout>
     </BounceRoot>
-</BrowserRouter>"#}</CosmoDocsPre>
+</BrowserRouter>"#}</CosmoDocsCodeSample>
         </>
     )
 }

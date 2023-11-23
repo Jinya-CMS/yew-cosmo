@@ -34,8 +34,8 @@ pub mod prelude {
         fn to_string(&self) -> String {
             match self {
                 CosmoTheme::Auto => "".to_string(),
-                CosmoTheme::Light => "cosmo--light-theme".to_string(),
-                CosmoTheme::Dark => "cosmo--dark-theme".to_string(),
+                CosmoTheme::Light => "is--light".to_string(),
+                CosmoTheme::Dark => "is--dark".to_string(),
             }
         }
     }

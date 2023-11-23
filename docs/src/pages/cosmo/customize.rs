@@ -2,7 +2,7 @@ use yew::prelude::*;
 
 use yew_cosmo::prelude::*;
 
-use crate::ui::CosmoDocsPre;
+use crate::ui::CosmoDocsCodeSample;
 
 #[function_component(Customize)]
 pub fn customize() -> Html {
@@ -16,7 +16,7 @@ pub fn customize() -> Html {
                 {"For the customized variables to take effect they need to be applied on the body element in your custom CSS file."}
             </CosmoParagraph>
             <CosmoHeader level={CosmoHeaderLevel::H2} header="Cosmo variables" />
-            <CosmoDocsPre>{r#"--control-border-color: #CCCCCC;            /** The border color for input and button controls **/
+            <CosmoDocsCodeSample>{r#"--control-border-color: #CCCCCC;            /** The border color for input and button controls **/
 --primary-color: #514B57;                   /** The primary color used for the highlights and accents **/
 --white: #FFFFFF;                           /** The color that represents white, for dark mode setups this needs to be the darkest color **/
 --black: #333333;                           /** The color that represents black, for dark mode setups this needs to be the lightest color **/
@@ -28,7 +28,7 @@ pub fn customize() -> Html {
 --gradient-bottom-color: var(--white);      /** The color of the lower part of the gradient that is above the menu and on the top border of modals **/
 --modal-backdrop: #FFFFFF4D;                /** The backdrop color for modals **/
 
---font-family: Lato, sans-serif;            /** The font family used across the application **/"#}</CosmoDocsPre>
+--font-family: Lato, sans-serif;            /** The font family used across the application **/"#}</CosmoDocsCodeSample>
         </>
     )
 }

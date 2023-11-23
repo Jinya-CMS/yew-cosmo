@@ -3,7 +3,7 @@ use yew::prelude::*;
 use yew_cosmo::prelude::*;
 
 use crate::ui::CosmoDemo;
-use crate::ui::CosmoDocsPre;
+use crate::ui::CosmoDocsCodeSample;
 
 #[function_component(HtmlControls)]
 pub fn html() -> Html {
@@ -115,7 +115,7 @@ pub fn html() -> Html {
                     </CosmoFieldset>
                 </CosmoForm>
             </CosmoDemo>
-            <CosmoDocsPre>{r#"<CosmoForm on_submit={on_form_submit} buttons={html!(
+            <CosmoDocsCodeSample>{r#"<CosmoForm on_submit={on_form_submit} buttons={html!(
     <>
         <CosmoButton label="Cancel" />
         <CosmoButton label="Submit" is_submit={true} />
@@ -163,7 +163,7 @@ pub fn html() -> Html {
             CosmoModernSelectItem::new("Item 9", "9", (*modern_multiple_select_state).clone().contains(&String::from("9"))),
         ]} label="Modern multiple select" />
     </CosmoFieldset>
-</CosmoForm>"#}</CosmoDocsPre>
+</CosmoForm>"#}</CosmoDocsCodeSample>
             <CosmoHeader level={CosmoHeaderLevel::H2} header="Buttons" />
             <CosmoParagraph>
                 {"Cosmo provides two different button styles."}
@@ -172,17 +172,17 @@ pub fn html() -> Html {
             <CosmoDemo>
                 <CosmoButton label="Normal button" />
             </CosmoDemo>
-            <CosmoDocsPre>{r#"<CosmoButton label="Normal button" on_click={on_click} />
-    <CosmoButtonLink<Route> to={Route::Home} label="Normal button" />"#}</CosmoDocsPre>
+            <CosmoDocsCodeSample>{r#"<CosmoButton label="Normal button" on_click={on_click} />
+    <CosmoButtonLink<Route> to={Route::Home} label="Normal button" />"#}</CosmoDocsCodeSample>
             <CosmoHeader level={CosmoHeaderLevel::H3} header="Circular buttons" />
             <CosmoDemo>
                 <CosmoCircleButton icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Small} title="Small circular button" />
                 <CosmoCircleButton icon={IconId::LucideVideo} title="Medium circular button" />
                 <CosmoCircleButton icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Large} title="Large circular button" />
             </CosmoDemo>
-            <CosmoDocsPre>{r#"<CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Small} title="Small circular button" />
+            <CosmoDocsCodeSample>{r#"<CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Small} title="Small circular button" />
 <CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} title="Medium circular button" />
-<CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Large} title="Large circular button" />"#}</CosmoDocsPre>
+<CosmoCircleButton on_click={on_click} icon={IconId::LucideVideo} size={CosmoCircleButtonSize::Large} title="Large circular button" />"#}</CosmoDocsCodeSample>
             <CosmoHeader level={CosmoHeaderLevel::H2} header="Loaders" />
             <CosmoParagraph>
                 {"Cosmo provides a progress bar and a progress ring, the progress bar can be easily be integrated into the bottom bar. The progress ring is perfect to indicate that you are loading data and can be easily integrated with a suspense."}
@@ -193,14 +193,14 @@ pub fn html() -> Html {
                 <CosmoBr />
                 <CosmoProgressBar is_indeterminate={true} />
             </CosmoDemo>
-            <CosmoDocsPre>{r#"<CosmoProgressBar value={15} max={45} />
+            <CosmoDocsCodeSample>{r#"<CosmoProgressBar value={15} max={45} />
 <CosmoBr />
-<CosmoProgressBar is_indeterminate={true} />"#}</CosmoDocsPre>
+<CosmoProgressBar is_indeterminate={true} />"#}</CosmoDocsCodeSample>
             <CosmoHeader level={CosmoHeaderLevel::H3} header="Progress ring" />
             <CosmoDemo>
                 <CosmoProgressRing />
             </CosmoDemo>
-            <CosmoDocsPre>{r#"<CosmoProgressRing />"#}</CosmoDocsPre>
+            <CosmoDocsCodeSample>{r#"<CosmoProgressRing />"#}</CosmoDocsCodeSample>
         </>
     )
 }

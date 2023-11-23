@@ -2,7 +2,7 @@ use yew::prelude::*;
 
 use yew_cosmo::prelude::*;
 
-use crate::ui::{CosmoDemo, CosmoDocsPre};
+use crate::ui::{CosmoDemo, CosmoDocsCodeSample};
 
 #[function_component(TabControl)]
 pub fn tab_control() -> Html {
@@ -31,7 +31,7 @@ pub fn tab_control() -> Html {
                     </CosmoTabItem>
                 </CosmoTabControl>
             </CosmoDemo>
-            <CosmoDocsPre>{r#"<CosmoTabControl>
+            <CosmoDocsCodeSample>{r#"<CosmoTabControl>
     <CosmoTabItem label="Page 1">
         <CosmoParagraph>
             {"This is the first page."}
@@ -47,7 +47,7 @@ pub fn tab_control() -> Html {
             {"This is the third page."}
         </CosmoParagraph>
     </CosmoTabItem>
-</CosmoTabControl>"#}</CosmoDocsPre>
+</CosmoTabControl>"#}</CosmoDocsCodeSample>
         </>
     )
 }

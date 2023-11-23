@@ -6,6 +6,90 @@ use yew_hooks::use_unmount;
 use crate::button::CosmoButton;
 use crate::prelude::CosmoTheme;
 
+#[derive(PartialEq, Clone, Default)]
+pub enum CosmoModalType {
+    #[default]
+    Primary,
+    Information,
+    Warning,
+    Positive,
+    Negative,
+}
+
+pub type CosmoAlertType = CosmoModalType;
+
+impl CosmoModalType {
+    pub fn get_modal_accent_color(&self) -> String {
+        match self {
+            CosmoModalType::Primary => "var(--primary-color)",
+            CosmoModalType::Information => "var(--information-color)",
+            CosmoModalType::Warning => "var(--warning-color)",
+            CosmoModalType::Positive => "var(--positive-color)",
+            CosmoModalType::Negative => "var(--negative-color)",
+        }
+            .to_string()
+    }
+
+    pub fn get_modal_accent_color_light(&self) -> String {
+        match self {
+            CosmoModalType::Primary => "var(--primary-color-light)",
+            CosmoModalType::Information => "var(--information-color-light)",
+            CosmoModalType::Warning => "var(--warning-color-light)",
+            CosmoModalType::Positive => "var(--positive-color-light)",
+            CosmoModalType::Negative => "var(--negative-color-light)",
+        }
+            .to_string()
+    }
+
+    pub fn get_modal_accent_color_lighter(&self) -> String {
+        match self {
+            CosmoModalType::Primary => "var(--primary-color-lighter)",
+            CosmoModalType::Information => "var(--information-color-lighter)",
+            CosmoModalType::Warning => "var(--warning-color-lighter)",
+            CosmoModalType::Positive => "var(--positive-color-lighter)",
+            CosmoModalType::Negative => "var(--negative-color-lighter)",
+        }
+            .to_string()
+    }
+}
+
+impl ToString for CosmoModalType {
+    fn to_string(&self) -> String {
+        match self {
+            CosmoModalType::Primary => "primary",
+            CosmoModalType::Information => "information",
+            CosmoModalType::Warning => "warning",
+            CosmoModalType::Positive => "positive",
+            CosmoModalType::Negative => "negative",
+        }
+            .into()
+    }
+}
+
+impl From<CosmoModalType> for AttrValue {
+    fn from(value: CosmoModalType) -> Self {
+        value.to_string().into()
+    }
+}
+
+impl From<String> for CosmoModalType {
+    fn from(value: String) -> Self {
+        match value.as_str() {
+            "information" => Self::Information,
+            "warning" => Self::Warning,
+            "positive" => Self::Positive,
+            "negative" => Self::Negative,
+            _ => Self::Primary,
+        }
+    }
+}
+
+impl From<AttrValue> for CosmoModalType {
+    fn from(value: AttrValue) -> Self {
+        Self::from(value.to_string())
+    }
+}
+
 #[derive(Properties, PartialEq, Clone)]
 pub struct CosmoModalProps {
     #[prop_or_default]
@@ -20,6 +104,8 @@ pub struct CosmoModalProps {
     pub theme: CosmoTheme,
     #[prop_or_default]
     pub classes: Classes,
+    #[prop_or_default]
+    pub modal_type: CosmoModalType
 }
 
 #[styled_component(CosmoModal)]
@@ -28,52 +114,64 @@ pub fn modal(props: &CosmoModalProps) -> Html {
 
     let modal_container_style = use_style!(
         r#"
-display: flex;
-z-index: 999;
 position: fixed;
 top: 0;
+left: 0;
 right: 0;
 bottom: 0;
-left: 0;
-align-items: center;
+background: var(--modal-backdrop);
+height: 100vh;
+width: 100vw;
+backdrop-filter: var(--modal-container-backdrop-filter);
+display: flex;
 justify-content: center;
-width: inherit;
-min-width: 100%;
-height: inherit;
-min-height: 100%;
-border: 0;
-background-color: var(--modal-backdrop);
+align-items: center;
+z-index: 9999;
+border: none;
 color: var(--black);
     "#
     );
     let modal_style = use_style!(
         r#"
-border: 1px solid var(--primary-color);
-background: linear-gradient(to top, var(--white) 0%, var(--white) 80%, var(--gradient-top-color) 100%);
-padding: 24px 32px;
-min-width: 274px;
+border: var(--modal-border-width) solid var(--modal-accent-color);
+padding: var(--modal-padding-top) var(--modal-padding-right) var(--modal-padding-bottom) var(--modal-padding-left);
+min-width: var(--modal-min-width);
 box-sizing: border-box;
+border-radius: var(--border-radius);
+backdrop-filter: var(--modal-backdrop-filter);
+background: var(--modal-background);
 
 &::before {
     content: '';
     position: absolute;
-    width: 208px;
-    height: 8px;
-    background: var(--primary-color);
+    width: var(--modal-bar-width);
+    height: var(--modal-bar-height);
+    background: var(--modal-accent-color);
+    border-radius: var(--border-radius);
 }
     "#
+    );
+    let accent_style = use_style!(
+        r#"
+--modal-accent-color: ${modal_accent_color};
+--modal-accent-color-light: ${modal_accent_color_light};
+--modal-accent-color-lighter: ${modal_accent_color_lighter};
+    "#,
+        modal_accent_color = props.modal_type.get_modal_accent_color(),
+        modal_accent_color_light = props.modal_type.get_modal_accent_color_light(),
+        modal_accent_color_lighter = props.modal_type.get_modal_accent_color_lighter(),
     );
     let modal_title_style = use_style!(
         r#"
 padding: 0;
-margin: 18px 0 10px;
+margin: var(--modal-title-margin-top) var(--modal-title-margin-right) var(--modal-title-margin-bottom) var(--modal-title-margin-left);
 text-transform: uppercase;
-font-size: 36px;
-line-height: 36px;
-height: 36px;
+font-size: var(--modal-title-font-size);
+line-height: var(--modal-title-font-size);
+height: var(--modal-title-font-size);
 vertical-align: text-top;
 font-weight: var(--font-weight-normal);
-font-family: var(--font-family);
+font-family: var(--font-family-modal-title);
     "#
     );
     let modal_content_style = use_style!(
@@ -89,8 +187,46 @@ margin: 0;
 display: flex;
 justify-content: flex-end;
 width: 100%;
-margin-top: 10px;
-gap: 16px;
+margin-top: var(--modal-button-bar-margin-top);
+gap: var(--button-container-gap);
+
+> .cosmo-button {
+    border-left-width: var(--button-border-width);
+}
+
+.cosmo-button:last-of-type {
+    --button-color: var(--white);
+    --button-background: var(--modal-accent-color);
+    --button-border-color: var(--modal-accent-color);
+}
+
+.cosmo-button:last-of-type:not(:disabled):hover,
+.cosmo-button:last-of-type:not(:disabled):focus {
+    --button-border-color: var(--modal-accent-color-light);
+    --button-background: var(--modal-accent-color-light);
+}
+
+.cosmo-button:last-of-type:not(:disabled):active {
+    --button-border-color: var(--modal-accent-color-lighter);
+    --button-background: var(--modal-accent-color-lighter);
+}
+
+@media screen and (prefers-color-scheme: dark) {
+    .cosmo-button:last-of-type {
+        --button-color: var(--black);
+    }
+
+    .cosmo-button:last-of-type:not(:disabled):hover,
+    .cosmo-button:last-of-type:not(:disabled):focus {
+        --button-border-color: var(--primary-color-dark);
+        --button-background: var(--primary-color-dark);
+    }
+
+    .cosmo-button:last-of-type:not(:disabled):active {
+        --button-border-color: var(--primary-color-darker);
+        --button-background: var(--primary-color-darker);
+    }
+}
     "#
     );
 
@@ -123,7 +259,7 @@ gap: 16px;
 
     create_portal(
         html!(
-            <dialog class={classes!(modal_container_style, props.theme.clone(), props.classes.clone())} open={true}>
+            <dialog class={classes!(modal_container_style, accent_style, props.theme.clone(), props.classes.clone())} open={true}>
                 <@{tag} class={modal_style} onsubmit={on_submit}>
                     <h1 class={modal_title_style}>{props.title.clone()}</h1>
                     <div class={modal_content_style}>
@@ -139,77 +275,6 @@ gap: 16px;
     )
 }
 
-#[derive(PartialEq, Clone, Default)]
-pub enum CosmoAlertType {
-    #[default]
-    Primary,
-    Information,
-    Warning,
-    Positive,
-    Negative,
-}
-
-impl CosmoAlertType {
-    pub fn get_primary(&self) -> String {
-        match self {
-            CosmoAlertType::Primary => "var(--primary-color)",
-            CosmoAlertType::Information => "var(--information-color)",
-            CosmoAlertType::Warning => "var(--warning-color)",
-            CosmoAlertType::Positive => "var(--positive-color)",
-            CosmoAlertType::Negative => "var(--negative-color)",
-        }
-            .to_string()
-    }
-
-    pub fn get_gradient(&self) -> String {
-        match self {
-            CosmoAlertType::Primary => "var(--gradient-top-color)",
-            CosmoAlertType::Information => "var(--information-light-color)",
-            CosmoAlertType::Warning => "var(--warning-light-color)",
-            CosmoAlertType::Positive => "var(--positive-light-color)",
-            CosmoAlertType::Negative => "var(--negative-light-color)",
-        }
-            .to_string()
-    }
-}
-
-impl ToString for CosmoAlertType {
-    fn to_string(&self) -> String {
-        match self {
-            CosmoAlertType::Primary => "primary",
-            CosmoAlertType::Information => "information",
-            CosmoAlertType::Warning => "warning",
-            CosmoAlertType::Positive => "positive",
-            CosmoAlertType::Negative => "negative",
-        }
-            .into()
-    }
-}
-
-impl From<CosmoAlertType> for AttrValue {
-    fn from(value: CosmoAlertType) -> Self {
-        value.to_string().into()
-    }
-}
-
-impl From<String> for CosmoAlertType {
-    fn from(value: String) -> Self {
-        match value.as_str() {
-            "information" => Self::Information,
-            "warning" => Self::Warning,
-            "positive" => Self::Positive,
-            "negative" => Self::Negative,
-            _ => Self::Primary,
-        }
-    }
-}
-
-impl From<AttrValue> for CosmoAlertType {
-    fn from(value: AttrValue) -> Self {
-        Self::from(value.to_string())
-    }
-}
-
 #[derive(Properties, PartialEq, Clone)]
 pub struct CosmoAlertProps {
     pub title: AttrValue,
@@ -219,25 +284,12 @@ pub struct CosmoAlertProps {
     #[prop_or_default]
     pub theme: CosmoTheme,
     #[prop_or_default]
-    pub alert_type: CosmoAlertType,
+    pub alert_type: CosmoModalType,
 }
 
 #[styled_component(CosmoAlert)]
 pub fn alert(props: &CosmoAlertProps) -> Html {
     let on_close = use_callback(props.on_close.clone(), |_, on_close| on_close.emit(()));
-    let style = use_style!(
-        r#"
---primary-color: ${modal_color};
---gradient-top-color: ${modal_light_color};
-    "#,
-        modal_color = props.alert_type.get_primary(),
-        modal_light_color = props.alert_type.get_gradient()
-    );
-
-    let classes = match props.alert_type {
-        CosmoAlertType::Primary => classes!(),
-        _ => classes!(style),
-    };
 
     let message_style = use_style!(
         r#"
@@ -246,7 +298,7 @@ white-space: pre-wrap;
     );
 
     html!(
-        <CosmoModal classes={classes} theme={props.theme.clone()} title={props.title.clone()} buttons={html!(<CosmoButton on_click={on_close} label={props.close_label.clone()} />)}>
+        <CosmoModal modal_type={props.alert_type.clone()} theme={props.theme.clone()} title={props.title.clone()} buttons={html!(<CosmoButton on_click={on_close} label={props.close_label.clone()} />)}>
             <div class={message_style}>{props.message.clone()}</div>
         </CosmoModal>
     )
@@ -262,6 +314,8 @@ pub struct CosmoConfirmProps {
     pub on_decline: Callback<()>,
     #[prop_or_default]
     pub theme: CosmoTheme,
+    #[prop_or_default]
+    pub confirm_type: CosmoModalType,
 }
 
 #[styled_component(CosmoConfirm)]
@@ -276,7 +330,7 @@ white-space: pre-wrap;
     );
 
     html!(
-        <CosmoModal theme={props.theme.clone()} title={props.title.clone()} buttons={html!(
+        <CosmoModal modal_type={props.confirm_type.clone()} theme={props.theme.clone()} title={props.title.clone()} buttons={html!(
             <>
                 <CosmoButton on_click={on_decline} label={props.decline_label.clone()} />
                 <CosmoButton on_click={on_confirm} label={props.confirm_label.clone()} />

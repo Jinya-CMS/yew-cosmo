@@ -12,7 +12,7 @@ pub fn toolbar(props: &CosmoToolbarProps) -> Html {
     let toolbar_style = use_style!(
         r#"
 display: flex;
-gap: 16px;
+gap: var(--toolbar-gap);
     "#
     );
 
@@ -36,8 +36,22 @@ pub fn toolbar(props: &CosmoToolbarGroupProps) -> Html {
 display: flex;
 align-items: center;
 
+.cosmo-button {
+    border-radius: 0;
+}
+
+.cosmo-button:first-child {
+	border-top-left-radius: var(--border-radius);
+	border-bottom-left-radius: var(--border-radius);
+}
+
+.cosmo-button:last-child {
+	border-top-right-radius: var(--border-radius);
+	border-bottom-right-radius: var(--border-radius);
+}
+
 .cosmo-button:not(:first-child) {
-    border-left-width: 0px;
+    border-left-width: 0;
 }
     "#
     );

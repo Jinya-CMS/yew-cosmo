@@ -66,7 +66,9 @@ pub fn input_group(props: &CosmoInputGroupProps) -> Html {
 display: grid;
 align-items: center;
 grid-template-columns: [label] auto [input] 1fr;
-grid-row-gap: 10px;
+grid-auto-rows: auto;
+grid-auto-flow: row;
+gap: var(--input-group-gap);
     "#
     );
 
@@ -91,12 +93,12 @@ impl ToString for CosmoInputWidth {
     fn to_string(&self) -> String {
         match self {
             CosmoInputWidth::Auto => "auto",
-            CosmoInputWidth::Small => "240px",
-            CosmoInputWidth::Medium => "480px",
-            CosmoInputWidth::Large => "720px",
+            CosmoInputWidth::Small => "var(--input-width-small)",
+            CosmoInputWidth::Medium => "var(--input-width-medium)",
+            CosmoInputWidth::Large => "var(--input-width-large)",
             CosmoInputWidth::Full => "100%",
         }
-        .to_string()
+            .to_string()
     }
 }
 
@@ -104,34 +106,49 @@ impl ToString for CosmoInputWidth {
 fn use_input_styling(width: CosmoInputWidth) -> (Classes, Classes) {
     let label_style = use_style!(
         r#"
-font-size: 16px;
-margin-right: 10px;
-min-width: 150px;
+font-size: var(--font-size);
+min-width: 10rem;
     "#
     );
     let input_style = use_style!(
         r#"
-min-width: 240px;
-height: 28px;
-padding: 4px 8px;
+--border-indicator-color: var(--control-border-color);
+
+transition: border-color var(--transition-duration);
+min-width: ${width};
+width: ${width};
+height: var(--control-height);
 box-sizing: border-box;
 font-family: var(--font-family);
-font-size: 16px;
-border: 1px solid var(--control-border-color);
+font-size: var(--font-size);
 background: var(--white);
 color: var(--black);
-width: ${width};
+border-radius: var(--border-radius);
+line-height: var(--line-height);
+border: var(--input-border-width) solid var(--control-border-color);
+padding: var(--input-padding-top) var(--input-padding-right) var(--input-padding-bottom)
+    var(--input-padding-left);
+border-bottom: var(--input-border-bottom-width) solid var(--border-indicator-color);
+
+&:active,
+&:invalid,
+&:focus {
+	outline: none;
+	box-shadow: none;
+}
 
 &:focus {
-    outline: none;
-    box-shadow: none;
-    border-color: var(--primary-color);
+	--border-indicator-color: var(--primary-color);
 }
 
 &:invalid {
-    border-color: var(--negative-color);
-    outline: none;
-    box-shadow: none;
+	--border-indicator-color: var(--negative-color);
+}
+
+&:disabled {
+   	--border-indicator-color: var(--disabled-color);
+
+	cursor: not-allowed;
 }
     "#,
         width = width.to_string()
@@ -169,14 +186,14 @@ pub struct CosmoDateTimePickerProps {
 #[styled_component(CosmoDateTimePicker)]
 pub fn date_time_picker(props: &CosmoDateTimePickerProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(props.clone(),|evt: InputEvent, props| {
+    let oninput = use_callback(props.clone(), |evt: InputEvent, props| {
         let naive = NaiveDateTime::parse_from_str(
             evt.target_unchecked_into::<HtmlInputElement>()
                 .value()
                 .as_str(),
             "%FT%R",
         );
-    
+
         if let Ok(naive) = naive {
             let local = Local {};
             props
@@ -219,7 +236,7 @@ pub struct CosmoDatePickerProps {
 #[styled_component(CosmoDatePicker)]
 pub fn date_picker(props: &CosmoDatePickerProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(props.clone(),|evt: InputEvent, props| {
+    let oninput = use_callback(props.clone(), |evt: InputEvent, props| {
         props.on_input.emit(
             NaiveDate::parse_from_str(
                 evt.target_unchecked_into::<HtmlInputElement>()
@@ -227,7 +244,7 @@ pub fn date_picker(props: &CosmoDatePickerProps) -> Html {
                     .as_str(),
                 "%F",
             )
-            .unwrap_or(props.value),
+                .unwrap_or(props.value),
         )
     });
 
@@ -265,7 +282,7 @@ pub struct CosmoTimePickerProps {
 #[styled_component(CosmoTimePicker)]
 pub fn time_picker(props: &CosmoTimePickerProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(props.clone(),|evt: InputEvent, props| {
+    let oninput = use_callback(props.clone(), |evt: InputEvent, props| {
         props.on_input.emit(
             NaiveTime::parse_from_str(
                 evt.target_unchecked_into::<HtmlInputElement>()
@@ -273,7 +290,7 @@ pub fn time_picker(props: &CosmoTimePickerProps) -> Html {
                     .as_str(),
                 "%R",
             )
-            .unwrap_or(props.value),
+                .unwrap_or(props.value),
         )
     });
 
@@ -310,7 +327,7 @@ impl ToString for CosmoTextBoxType {
             CosmoTextBoxType::Text => "text",
             CosmoTextBoxType::Url => "url",
         }
-        .to_string()
+            .to_string()
     }
 }
 
@@ -334,7 +351,7 @@ pub struct CosmoTextBoxProps {
 #[styled_component(CosmoTextBox)]
 pub fn textbox(props: &CosmoTextBoxProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(props.clone(),|evt: InputEvent, props| {
+    let oninput = use_callback(props.clone(), |evt: InputEvent, props| {
         props.on_input.emit(
             evt.target_unchecked_into::<HtmlInputElement>()
                 .value()
@@ -371,7 +388,7 @@ pub struct CosmoFilePickerProps {
 #[styled_component(CosmoFilePicker)]
 pub fn file_picker(props: &CosmoFilePickerProps) -> Html {
     let id = use_id(props.id.clone());
-    let onchange = use_callback(props.clone(),|evt: Event, props| {
+    let onchange = use_callback(props.clone(), |evt: Event, props| {
         if let Some(files) = evt.target_unchecked_into::<HtmlInputElement>().files() {
             if let Some(file) = files.get(0) {
                 props.on_select.emit(file);
@@ -386,52 +403,67 @@ padding: 0;
 
 &::file-selector-button,
 &::-webkit-file-upload-button {
-    cursor: pointer;
-    font-family: var(--font-family);
-    font-size: 16px;
-    padding: 3px 16px;
-    box-sizing: border-box;
-    border: 1px solid var(--control-border-color);
-    background: var(--white);
-    color: var(--black);
-    line-height: 19px;
-    text-decoration: none;
-    font-weight: normal;
-    border-top: 0;
-    border-left: 0;
-    border-bottom: 0;
-    padding-top: 4px;
+	--button-border-color: var(--control-border-color);
+	--button-background: var(--white);
+	--button-color: var(--black);
+
+	border-top: 0;
+	border-left: 0;
+	border-bottom: 0;
+	cursor: pointer;
+	font-family: var(--font-family);
+	font-size: var(--font-size);
+	padding: var(--button-padding-top) var(--button-padding-right) var(--button-padding-bottom)
+		var(--button-padding-left);
+	box-sizing: border-box;
+	border: none;
+	border-right: var(--button-border-width) solid var(--button-border-color);
+	background: var(--button-background);
+	color: var(--button-color);
+	line-height: var(--line-height);
+	text-decoration: none;
+	font-weight: normal;
+	border-radius: 0;
+	height: var(--control-height);
+	transition:
+		background-color var(--transition-duration),
+		color var(--transition-duration);
+}
+
+&:disabled {
+	cursor: not-allowed;
 }
 
 &:disabled::file-selector-button,
 &:disabled::-webkit-file-upload-button {
-    cursor: not-allowed;
-    border: 1px solid var(--control-border-color);
-    background: var(--white);
-    color: var(--disabled-color);
+	--button-background: var(--disabled-color);
+	--button-color: var(--white);
+
+	cursor: not-allowed;
 }
 
-&:hover::file-selector-button,
-&:hover::-webkit-file-upload-button {
-    background: var(--primary-color);
-    color: var(--white);
-    outline: none;
-    box-shadow: none;
+&:not(:disabled):hover::file-selector-button,
+&:not(:disabled):hover::-webkit-file-upload-button {
+	--button-background: var(--control-border-color);
+
+	outline: none;
+	box-shadow: none;
 }
 
-&:disabled:hover::file-selector-button,
-&:disabled:hover::-webkit-file-upload-button {
-    background: var(--white);
-    color: var(--control-border-color);
-    outline: none;
-    box-shadow: none;
+&:not(:disabled):focus::file-selector-button,
+&:not(:disabled):focus::-webkit-file-upload-button {
+	--button-border-color: var(--control-border-color-dark);
 }
 
-&:focus::file-selector-button,
-&:focus::-webkit-file-upload-button {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: none;
+&:not(:disabled):active::file-selector-button,
+&:not(:disabled):active::-webkit-file-upload-button {
+	--button-border-color: var(--control-border-color-darker);
+	--button-background: var(--control-border-color-darker);
+	--button-color: var(--white);
+}
+
+&:not(:disabled):active {
+	border-bottom-color: var(--control-border-color-darker);
 }
     "#
     );
@@ -462,7 +494,7 @@ pub struct CosmoNumberBoxProps {
 #[styled_component(CosmoNumberBox)]
 pub fn number_box(props: &CosmoNumberBoxProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(props.clone(),|evt: InputEvent, props| {
+    let oninput = use_callback(props.clone(), |evt: InputEvent, props| {
         props.on_input.emit(
             evt.target_unchecked_into::<HtmlInputElement>()
                 .value()
@@ -501,7 +533,7 @@ pub struct CosmoDecimalBoxProps {
 #[styled_component(CosmoDecimalBox)]
 pub fn decimal_box(props: &CosmoDecimalBoxProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(props.clone(),|evt: InputEvent, props| {
+    let oninput = use_callback(props.clone(), |evt: InputEvent, props| {
         props.on_input.emit(
             evt.target_unchecked_into::<HtmlInputElement>()
                 .value()
@@ -550,7 +582,7 @@ pub struct CosmoTextAreaProps {
 #[styled_component(CosmoTextArea)]
 pub fn textarea(props: &CosmoTextAreaProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(props.clone(),|evt: InputEvent, props| {
+    let oninput = use_callback(props.clone(), |evt: InputEvent, props| {
         props.on_input.emit(
             evt.target_unchecked_into::<HtmlTextAreaElement>()
                 .value()
@@ -571,7 +603,7 @@ height: unset;
     );
     let mut textarea_monospace_style = Some(use_style!(
         r#"
-font-family: "Source Code Pro", monospace;
+font-family: var(--font-family-code);
     "#
     ));
     if !props.is_monospace {
@@ -611,7 +643,7 @@ fn rgb2hex(color: Color) -> String {
 #[styled_component(CosmoColorPicker)]
 pub fn color_picker(props: &CosmoColorPickerProps) -> Html {
     let id = use_id(props.id.clone());
-    let oninput = use_callback(props.on_input.clone(),|evt: InputEvent, on_input| {
+    let oninput = use_callback(props.on_input.clone(), |evt: InputEvent, on_input| {
         if let Ok(color) = Color::from_hex(
             evt.target_unchecked_into::<HtmlInputElement>()
                 .value()
@@ -630,6 +662,46 @@ pub fn color_picker(props: &CosmoColorPickerProps) -> Html {
     )
 }
 
+#[hook]
+fn use_radio_check_switch_style() -> Classes {
+    let style = use_style!(r#"
+--border-indicator-color: var(--control-border-color);
+
+appearance: none;
+margin: 0;
+display: flex;
+position: relative;
+outline: none;
+border: none;
+box-shadow: none;
+
+&:invalid {
+	--border-indicator-color: var(--negative-color);
+
+	outline: none;
+	box-shadow: none;
+}
+"#);
+
+    classes!(style)
+}
+
+#[hook]
+fn use_radio_check_switch_group_style() -> Classes {
+    let style = use_style!(r#"
+grid-column: 2/3;
+row-gap: var(--input-group-special-gap);
+column-gap: 0;
+display: grid;
+align-items: center;
+grid-template-columns: [label] auto [input] 1fr;
+grid-auto-rows: auto;
+grid-auto-flow: row;
+"#);
+
+    classes!(style)
+}
+
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoCheckboxProps {
     pub on_check: Callback<bool>,
@@ -645,63 +717,76 @@ pub struct CosmoCheckboxProps {
 
 #[function_component(CosmoCheckbox)]
 pub fn checkbox(props: &CosmoCheckboxProps) -> Html {
-    let group_style = use_style!(
-        r#"
-display: grid;
-grid-template-columns: auto 1fr;
-grid-template-rows: auto auto;
-grid-column: 2/3;
-    "#
-    );
+    let group_style = use_radio_check_switch_group_style();
+    let base_style = use_radio_check_switch_style();
     let checkbox_style = use_style!(
         r#"
-appearance: none;
-margin: 0;
-
-&:checked + label::after {
-    content: "";
-    position: absolute;
-    display: block;
-    height: 2px;
-    width: 8px;
-    border-right: 1px solid var(--white);
-    border-top: 1px solid var(--white);
-    transform: rotate(135deg);
-    top: 7px;
-    left: 5px;
+&:disabled {
+    --border-indicator-color: var(--disabled-color);
 }
 
-&:checked + label::before {
-    background: var(--primary-color);
-    color: var(--white);
+&:disabled + label {
+    cursor: not-allowed;
 }
-    "#
-    );
-    let label_style = use_style!(
-        r#"
-display: flex;
-position: relative;
+
+&::after,
+&::before {
+	transition:
+		border-color var(--transition-duration),
+		background-color var(--transition-duration);
+}
 
 &::before {
-    content: '';
-    display: inline-block;
-    border: 1px solid var(--control-border-color);
-    height: 16px;
-    width: 16px;
-    margin-right: 8px;
+	content: '';
+	display: inline-block;
+	border: var(--input-border-width) solid var(--border-indicator-color);
+	height: var(--checkbox-size);
+	width: var(--checkbox-size);
+	margin-right: calc(var(--checkbox-size) / 2);
+	border-radius: var(--border-radius);
+	background: var(--white);
+}
+
+&:checked::after {
+	content: '';
+	position: absolute;
+	display: block;
+	height: var(--checkbox-mark-shortarm);
+	width: var(--checkbox-mark-longarm);
+	border-right: var(--checkbox-mark-stroke-width) solid var(--white);
+	border-top: var(--checkbox-mark-stroke-width) solid var(--white);
+	transform: rotate(135deg);
+	top: calc(var(--checkbox-mark-longarm) - var(--checkbox-mark-shortarm));
+	left: calc(var(--checkbox-mark-longarm) / 2);
+	box-sizing: content-box;
+}
+
+&:checked::before {
+	--border-indicator-color: var(--primary-color);
+
+	background: var(--border-indicator-color);
+	color: var(--white);
+
+    @media screen and (prefers-color-scheme: dark) {
+        --border-indicator-color: var(--primary-color-dark);
+    }
+}
+
+&:disabled:checked::before {
+	--border-indicator-color: var(--disabled-color);
 }
     "#
     );
 
     let id = use_id(props.id.clone());
-    let onclick = use_callback(props.on_check.clone(),|evt: MouseEvent, on_check_change| {
+    let onclick = use_callback(props.on_check.clone(), |evt: MouseEvent, on_check_change| {
         on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked())
     });
 
     html!(
         <div class={group_style}>
-            <input type="checkbox" required={props.required} checked={props.checked} id={id.clone()} onclick={onclick} readonly={props.readonly} class={checkbox_style} />
-            <label for={id.clone()} class={label_style}>{props.label.clone()}</label>
+            <input type="checkbox" required={props.required} checked={props.checked} id={id.clone()} onclick={onclick} readonly={props.readonly} class={classes!(base_style, checkbox_style)} />
+            <label for={id.clone()}>{props.label.clone()}</label>
         </div>
     )
 }
@@ -721,67 +806,79 @@ pub struct CosmoSwitchProps {
 
 #[function_component(CosmoSwitch)]
 pub fn switch(props: &CosmoSwitchProps) -> Html {
-    let group_style = use_style!(
-        r#"
-display: grid;
-grid-template-columns: auto 1fr;
-grid-template-rows: auto auto;
-grid-column: 2/3;
-    "#
-    );
+    let group_style = use_radio_check_switch_group_style();
+    let base_style = use_radio_check_switch_style();
     let switch_style = use_style!(
         r#"
-appearance: none;
-margin: 0;
+&:not(:checked):invalid::after {
+	--border-indicator-color: var(--negative-color);
 
-&:checked + label::after {
-    margin-left: 18px;
-    background: var(--white);
+	outline: none;
+	box-shadow: none;
 }
 
-&:checked + label::before {
-    background: var(--primary-color);
+&:disabled:not(:checked)::after {
+	--border-indicator-color: var(--disabled-color);
 }
-    "#
-    );
-    let label_style = use_style!(
-        r#"
-display: flex;
-position: relative;
+
+&:checked::before,
+&:not(:checked)::after {
+	--border-indicator-color: var(--primary-color);
+
+	background: var(--border-indicator-color);
+	color: var(--white);
+
+    @media screen and (prefers-color-scheme: dark) {
+		--border-indicator-color: var(--primary-color-dark);
+    }
+}
+
+&:disabled:checked::before {
+	--border-indicator-color: var(--disabled-color);
+}
+
+&::after,
+&::before {
+	content: '';
+	display: inline-block;
+	border-radius: var(--border-radius);
+	transition: all calc(var(--transition-duration) / 3);
+}
 
 &::after {
-    content: '';
-    position: absolute;
-    display: inline-block;
-    height: 14px;
-    width: 14px;
-    background: var(--primary-color);
-    margin-top: 2px;
-    margin-left: 2px;
-    transition: all 0.1s;
+	position: absolute;
+	height: var(--switch-thumb-size);
+	width: var(--switch-thumb-size);
+	background: var(--border-indicator-color);
+	margin-top: var(--switch-thumb-margin);
+	margin-left: var(--switch-thumb-margin);
 }
 
 &::before {
-    content: '';
-    display: inline-block;
-    transition: all 0.1s;
-    border: 1px solid var(--control-border-color);
-    height: 16px;
-    width: 32px;
-    margin-right: 8px;
+	display: inline-block;
+	border: var(--switch-rail-border-width) solid var(--border-indicator-color);
+	height: var(--switch-rail-height);
+	width: var(--switch-rail-width);
+	margin-right: calc(var(--switch-rail-height) / 2);
+}
+
+&:checked::after,
+&:disabled:checked::after {
+	margin-left: calc((var(--switch-thumb-margin) * 3) + var(--switch-thumb-size));
+	background: var(--white);
 }
     "#
     );
 
     let id = use_id(props.id.clone());
-    let onclick = use_callback(props.on_check.clone(),|evt: MouseEvent, on_check_change| {
+    let onclick = use_callback(props.on_check.clone(), |evt: MouseEvent, on_check_change| {
         on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked())
     });
 
     html!(
         <div class={group_style}>
-            <input type="checkbox" required={props.required} checked={props.checked} id={id.clone()} onclick={onclick} readonly={props.readonly} class={switch_style} />
-            <label for={id.clone()} class={label_style}>{props.label.clone()}</label>
+            <input type="checkbox" required={props.required} checked={props.checked} id={id.clone()} onclick={onclick} readonly={props.readonly} class={classes!(base_style, switch_style)} />
+            <label for={id.clone()}>{props.label.clone()}</label>
         </div>
     )
 }
@@ -806,7 +903,7 @@ pub struct CosmoDropdownProps {
 #[styled_component(CosmoDropdown)]
 pub fn dropdown(props: &CosmoDropdownProps) -> Html {
     let id = use_id(props.id.clone());
-    let onchange = use_callback(props.clone(),|evt: Event, props| {
+    let onchange = use_callback(props.clone(), |evt: Event, props| {
         let val = evt.target_unchecked_into::<HtmlSelectElement>().value();
         if val == *"None" {
             props.on_select.emit(None)
@@ -815,42 +912,25 @@ pub fn dropdown(props: &CosmoDropdownProps) -> Html {
         }
     });
 
-    let (label_style, _input_style) = use_input_styling(props.width.clone());
+    let (label_style, input_style) = use_input_styling(props.width.clone());
     let select_style = use_style!(
         r#"
-min-width: 240px;
-font-size: 16px;
-border: 1px solid var(--control-border-color);
-background: var(--white);
-padding: 4px 32px 4px 8px;
-height: 28px;
+border-bottom: var(--input-border-width) solid var(--control-border-color);
 appearance: none;
-color: var(--black);
 position: relative;
 background-image: var(--dropdown-background);
 background-repeat: no-repeat;
 background-position-x: right;
 background-position-y: center;
-font-family: var(--font-family);
-width: ${width};
-
-&:focus {
-    border: 1px solid var(--primary-color);
-    outline: none;
-    box-shadow: none;
-}
-
-option {
-    font-family: var(--font-family);
-}
-    "#,
-        width = props.width.to_string()
+padding-right: calc(var(--input-padding-right) * 4);
+border-color: var(--border-indicator-color);
+    "#
     );
 
     html!(
         <>
             <label class={label_style} for={id.clone()}>{props.label.clone()}</label>
-            <select class={select_style} disabled={props.readonly} id={id.clone()} required={props.required} onchange={onchange}>
+            <select class={classes!(input_style, select_style)} disabled={props.readonly} id={id.clone()} required={props.required} onchange={onchange}>
                 {for props.items.iter().map(|(id, label)| html!(<option key={if let Some(id) = id { id.to_string() } else { uuid::Uuid::new_v4().to_string() }} selected={props.value.clone() == id.clone()} value={id.clone()}>{label.clone()}</option>))}
             </select>
         </>
@@ -906,7 +986,7 @@ pub fn modern_select(props: &CosmoModernSelectProps) -> Html {
 
     let select_node = use_node_ref();
 
-    let on_open_flyout = use_callback((flyout_open_state.clone(), flyout_up_state.clone()),|evt: MouseEvent, (flyout_open_state, flyout_up_state)| {
+    let on_open_flyout = use_callback((flyout_open_state.clone(), flyout_up_state.clone()), |evt: MouseEvent, (flyout_open_state, flyout_up_state)| {
         let is_up = if let Some(element) = evt.target_dyn_into::<HtmlElement>() {
             gloo::utils::window()
                 .inner_height()
@@ -922,26 +1002,26 @@ pub fn modern_select(props: &CosmoModernSelectProps) -> Html {
         flyout_open_state.set(true);
     });
     let on_close_flyout = use_callback(flyout_open_state.clone(), |_, state| state.set(false));
-    let on_deselect = use_callback(props.on_deselect.clone(),|item: AttrValue, on_deselect| {
+    let on_deselect = use_callback(props.on_deselect.clone(), |item: AttrValue, on_deselect| {
         if let Some(evt) = on_deselect.clone() {
             evt.emit(item)
         };
     });
     let on_select = use_callback((
-        props.on_select.clone(),
-        search_state.clone(),
-        flyout_open_state.clone(),
-        is_multiple,
-    ),|item, (on_select, search_state, flyout_open_state, is_multiple)| {
+                                     props.on_select.clone(),
+                                     search_state.clone(),
+                                     flyout_open_state.clone(),
+                                     is_multiple,
+                                 ), |item, (on_select, search_state, flyout_open_state, is_multiple)| {
         search_state.set("".into());
         flyout_open_state.set(*is_multiple);
-    
+
         on_select.emit(item);
     });
-    let on_filter = use_callback((props.on_filter.clone(), search_state.clone()),|evt: InputEvent, (on_filter, search_state)| {
+    let on_filter = use_callback((props.on_filter.clone(), search_state.clone()), |evt: InputEvent, (on_filter, search_state)| {
         let search = AttrValue::from(evt.target_unchecked_into::<HtmlInputElement>().value());
         search_state.set(search.clone());
-    
+
         if let Some(on) = on_filter.clone() {
             on.emit(search)
         }
@@ -957,57 +1037,48 @@ pub fn modern_select(props: &CosmoModernSelectProps) -> Html {
         on_close_flyout.emit(());
     });
 
-    let (label_style, _) = use_input_styling(props.width.clone());
-    let input_style = use_style!(
-        r#"
-min-width: ${width};
-min-height: 28px;
-padding: 4px 0 4px 8px;
-box-sizing: border-box;
-font-family: var(--font-family);
-font-size: 16px;
-border: 1px solid var(--control-border-color);
-background: var(--white);
-color: var(--black);
-width: 240px;
-display: flex;
-position: relative;
-
-&:focus {
-    outline: none;
-    box-shadow: none;
-    border-color: var(--primary-color);
-}
-"#,
-        width = props.width.to_string()
-    );
     let invalid_style = use_style!(
         r#"
 border-color: var(--negative-color);
     "#
     );
+    let select_style = use_style!(
+        r#"
+border-bottom-width: var(--input-border-width) !important;
+appearance: none;
+position: relative;
+padding-right: 0 !important;
+    "#
+    );
     let chip_style = use_style!(
         r#"
 flex: 0 1 auto;
-display: block;
-font-size: 12px;
-color: var(--primary-color);
-border: 1px solid var(--primary-color);
+display: flex;
+font-size: 0.75rem;
+color: var(--black);
+border: 0.0625rem solid var(--primary-color);
 position: relative;
-padding: 0 4px;
+padding: 0 0.25rem;
 white-space: nowrap;
+height: calc(var(--control-height) - var(--input-padding-top) - var(--input-padding-bottom) - 0.125rem);
+border-radius: var(--border-radius);
+align-items: center;
+
+@media screen and (prefers-color-scheme: dark) {
+    border-color: var(--primary-color-dark);
+}
     "#
     );
     let chip_close_style = use_style!(
         r#"
 cursor: pointer;
 text-decoration: none;
-margin-left: 2px;
+margin-left: 0.125rem;
     "#
     );
     let holder_style = use_style!(
         r#"
-font-size: 16px;
+font-size: var(--font-size);
 color: var(--primary-color);
 background: var(--white);
 border: none;
@@ -1016,7 +1087,7 @@ width: 100%;
 display: flex;
 align-items: center;
 flex-wrap: wrap;
-gap: 4px;
+gap: 0.25rem;
 justify-content: flex-start;
 background-image: var(--dropdown-background);
 background-repeat: no-repeat;
@@ -1030,7 +1101,7 @@ flex: 1 1 auto;
 padding: 0;
 margin: 0;
 border: 0;
-font-size: 16px;
+font-size: var(--font-size);
 color: var(--black);
 font-family: var(--font-family);
 background: none;
@@ -1044,13 +1115,15 @@ position: absolute;
 display: flex;
 width: 100%;
 background: var(--white);
-border: 1px solid var(--control-border-color);
-left: -1px;
+border: 0.0625rem solid var(--control-border-color);
+left: -0.0625rem;
 top: 26px;
-max-height: 150px;
+max-height: 10rem;
 overflow-y: auto;
 flex-flow: row wrap;
 z-index: 1000;
+border-bottom-left-radius: var(--border-radius);
+border-bottom-right-radius: var(--border-radius);
     "#
     );
     let flyout_up_style = use_style!(
@@ -1062,8 +1135,8 @@ top: 0;
         r#"
 flex: 0 0 100%;
 min-width: 100%;
-padding: 4px 8px;
-color: var(--text-color);
+padding: 0.25rem 0.5rem;
+color: var(--black);
 font-family: var(--font-family);
 box-sizing: border-box;
 cursor: pointer;
@@ -1071,14 +1144,19 @@ cursor: pointer;
 &:hover {
     background: var(--primary-color);
     color: var(--white);
+
+    @media screen and (prefers-color-scheme: dark) {
+        color: var(--black);
+    }
 }
     "#
     );
+    let (label_style, input_style) = use_input_styling(props.width.clone());
 
     let classes = if props.required && selected_items.clone().count() == 0 {
-        classes!(input_style, invalid_style)
+        classes!(input_style, select_style, invalid_style)
     } else {
-        classes!(input_style)
+        classes!(input_style, select_style)
     };
 
     let flyout_classes = if *flyout_up_state {
@@ -1151,54 +1229,66 @@ pub struct CosmoRadiosProps {
 
 #[styled_component(CosmoRadios)]
 pub fn radio_group(props: &CosmoRadiosProps) -> Html {
-    let onchange = use_callback(props.on_change.clone(),|evt: MouseEvent, on_change| {
+    let onchange = use_callback(props.on_change.clone(), |evt: MouseEvent, on_change| {
         let val = evt.target_unchecked_into::<HtmlInputElement>().value();
         on_change.emit(AttrValue::from(val))
     });
 
     let (label_style, _input_style) = use_input_styling(CosmoInputWidth::Full);
     let label_additional_style = use_style!("align-self: baseline;");
-
-    let group_style = use_style!(
-        r#"
-display: grid;
-grid-template-columns: auto 1fr;
-grid-template-rows: auto auto;
-    "#
-    );
+    let group_style = use_radio_check_switch_group_style();
+    let base_style = use_radio_check_switch_style();
     let radio_style = use_style!(
         r#"
-appearance: none;
-margin: 0;
-
-+ label::before,
-+ label::after {
-    content: '';
-    border-radius: 50%;
-    display: inline-block;
+&:active,
+&:focus {
+	outline: none;
+	border: none;
+	box-shadow: none;
 }
 
-+ label::before {
-    border: 1px solid var(--control-border-color);
-    height: 16px;
-    width: 16px;
-    margin-right: 8px;
+&::before,
+&::after {
+	content: '';
+	border-radius: 50%;
+	display: inline-block;
+	transition:
+		border-color var(--transition-duration),
+		background-color var(--transition-duration);
 }
 
-&:checked + label::after {
-    position: absolute;
-    background: var(--primary-color);
-    height: 10px;
-    width: 10px;
-    left: 4px;
-    top: 4px;
+&::before {
+	background: var(--white);
+	border: 1px solid var(--border-indicator-color);
+	height: var(--radio-size);
+	width: var(--radio-size);
+	margin-right: calc(var(--radio-size) / 2);
 }
-    "#
-    );
-    let radio_label_style = use_style!(
-        r#"
-display: flex;
-position: relative;
+
+&:checked::after {
+	position: absolute;
+	background: var(--primary-color);
+	height: calc(var(--radio-size) / 2);
+	width: calc(var(--radio-size) / 2);
+	left: calc(var(--radio-size) / 4);
+	top: calc(var(--radio-size) / 4);
+
+    @media screen and (prefers-color-scheme: dark) {
+		background: var(--primary-color-dark);
+	}
+}
+
+&:disabled:checked::after {
+	background: var(--disabled-color);
+}
+
+&:active {
+	--border-indicator-color: var(--primary-color);
+
+    @media screen and (prefers-color-scheme: dark) {
+        --border-indicator-color: var(--primary-color-dark);
+    }
+}
     "#
     );
 
@@ -1212,7 +1302,7 @@ position: relative;
                     let id = uuid::Uuid::new_v4().to_string();
                     let name = name.clone();
                     let radio_style = radio_style.clone();
-                    let radio_label_style = radio_label_style.clone();
+                    let base_style = base_style.clone();
                     let on_change = onchange.clone();
                     let readonly = props.readonly;
                     let required = props.required;
@@ -1220,8 +1310,8 @@ position: relative;
 
                     html!(
                         <>
-                            <input checked={checked} required={required} readonly={readonly} onclick={on_change.clone()} value={option.clone()} name={name.clone()} type="radio" id={id.clone()} class={radio_style.clone()} />
-                            <label for={id.clone()} class={radio_label_style.clone()}>{label.clone()}</label>
+                            <input checked={checked} required={required} readonly={readonly} onclick={on_change.clone()} value={option.clone()} name={name.clone()} type="radio" id={id.clone()} class={classes!(base_style.clone(), radio_style.clone())} />
+                            <label for={id.clone()}>{label.clone()}</label>
                         </>
                     )
                 })}
@@ -1252,62 +1342,78 @@ pub struct CosmoSliderProps {
 pub fn slider(props: &CosmoSliderProps) -> Html {
     let style = use_style!(
         r#"
---range-border-color: #CCCCCC;
---range-thumb-color: #CCCCCC;
-padding: 0;
 border: none;
+padding-left: 0;
+padding-right: 0;
 margin: 0;
-box-sizing: border-box;
-height: auto;
 appearance: none;
-min-width: 240px;
 background: transparent;
-width: ${width};
 
 &::-moz-range-track {
-    min-width: 100%;
-    height: 4px;
-    background-color: var(--range-border-color);
+	min-width: var(--range-track-min-width);
+	height: var(--range-track-height);
+	background-color: var(--range-track-background);
+	border-radius: var(--border-radius);
 }
 
 &::-webkit-slider-runnable-track {
-    min-width: 100%;
-    height: 4px;
-    background-color: var(--range-border-color);
+	min-width: var(--range-track-min-width);
+	height: var(--range-track-height);
+	background-color: var(--range-track-background);
+	border-radius: var(--border-radius);
 }
 
 &::-moz-range-thumb {
-    -webkit-appearance: none;
-    width: 6px;
-    height: 24px;
-    border: 1px solid var(--primary-color);
-    border-radius: 0;
-    background-color: var(--range-thumb-color);
-    cursor: pointer;
+	appearance: none;
+	width: var(--range-thumb-width);
+	height: var(--range-thumb-height);
+	border: var(--range-thumb-border-size) solid var(--range-thumb-border-color);
+	border-radius: var(--range-thumb-border-radius);
+	background-color: var(--range-thumb-background-color);
+	cursor: var(--range-thumb-cursor);
 }
 
-&::-webkit-slider-thumb  {
-    -webkit-appearance: none;
-    width: 6px;
-    height: 24px;
-    border: 1px solid var(--primary-color);
-    border-radius: 0;
-    background-color: var(--range-thumb-color);
-    cursor: pointer;
-    margin-top: -10px;
+&::-moz-range-thumb:hover,
+&::-moz-range-thumb:focus,
+&::-moz-range-thumb:active {
+	--range-thumb-background-color: var(--primary-color);
 }
 
-&:hover,
-&:focus,
-&:active {
-    --range-thumb-color: var(--primary-color);
+&::-webkit-slider-thumb {
+	appearance: none;
+	width: var(--range-thumb-width);
+	height: var(--range-thumb-height);
+	border: var(--range-thumb-border-size) solid var(--range-thumb-border-color);
+	border-radius: var(--range-thumb-border-radius);
+	background-color: var(--range-thumb-background-color);
+	cursor: var(--range-thumb-cursor);
+	margin-top: calc(((var(--range-thumb-height) / 2) * -1) + (var(--range-track-height) / 2));
+	box-sizing: content-box;
 }
-    "#,
-        width = props.width.to_string()
+
+&::-webkit-slider-thumb:hover,
+&::-webkit-slider-thumb:focus,
+&::-webkit-slider-thumb:active {
+	--range-thumb-background-color: var(--primary-color);
+}
+
+&:invalid {
+	--range-track-background: var(--negative-color);
+}
+
+&:disabled,
+&:disabled:hover,
+&:disabled:focus,
+&:disabled:active {
+	--range-thumb-background-color: var(--disabled-color);
+	--range-thumb-border-color: var(--disabled-color);
+	--range-track-background: var(--disabled-color);
+}
+    "#
     );
 
     let id = use_id(props.id.clone());
-    let oninput = use_callback(props.clone(),|evt: InputEvent, props| {
+    let oninput = use_callback(props.clone(), |evt: InputEvent, props| {
         props.on_input.emit(
             evt.target_unchecked_into::<HtmlInputElement>()
                 .value()
@@ -1317,12 +1423,12 @@ width: ${width};
         )
     });
 
-    let (label_style, _input_style) = use_input_styling(CosmoInputWidth::Full);
+    let (label_style, input_style) = use_input_styling(props.width.clone());
 
     html!(
         <>
             <label class={label_style} for={id.clone()}>{props.label.clone()}</label>
-            <input class={style} readonly={props.readonly} id={id.clone()} required={props.required} type="range" value={props.value.to_string()} oninput={oninput} />
+            <input class={classes!(input_style, style)} readonly={props.readonly} id={id.clone()} required={props.required} type="range" value={props.value.to_string()} oninput={oninput} />
         </>
     )
 }
@@ -1346,12 +1452,14 @@ grid-column: span 2;
     );
     let legend_style = use_style!(
         r#"
-font-size: 24px;
-height: 24px;
+font-size: var(--input-header-font-size);
+height: var(--input-header-font-size);
 font-weight: var(--font-weight-light);
+font-family: var(--font-family-heading);
 text-transform: uppercase;
-margin-top: 10px;
-margin-bottom: 10px;
+grid-column: span 2;
+margin-top: var(--input-group-gap);
+margin-bottom: var(--input-group-gap);
     "#
     );
 
@@ -1376,7 +1484,7 @@ pub struct CosmoFormProps {
 
 #[styled_component(CosmoForm)]
 pub fn form(props: &CosmoFormProps) -> Html {
-    let on_submit = use_callback(props.clone(),|evt: SubmitEvent, props| {
+    let on_submit = use_callback(props.clone(), |evt: SubmitEvent, props| {
         evt.prevent_default();
         props.on_submit.emit(());
     });

@@ -2,7 +2,7 @@ use yew::prelude::*;
 
 use yew_cosmo::prelude::*;
 
-use crate::ui::CosmoDocsPre;
+use crate::ui::CosmoDocsCodeSample;
 
 fn with_size(size: usize) -> Vec<i32> {
     let mut res: Vec<i32> = Vec::with_capacity(size);
@@ -31,7 +31,7 @@ pub fn side_list() -> Html {
             </CosmoSideListItem>
             <CosmoSideListItem label="Code sample">
                 <CosmoTitle title="Code sample" />
-                <CosmoDocsPre>{r#"<CosmoSideList has_add_button={true} add_button_label="Add item" add_button_on_click={on_click}>
+                <CosmoDocsCodeSample>{r#"<CosmoSideList has_add_button={true} add_button_label="Add item" add_button_on_click={on_click}>
     <CosmoSideListItem label="About">
         <CosmoTitle title="About the side list" />
         <CosmoParagraph>
@@ -50,7 +50,7 @@ pub fn side_list() -> Html {
             html!(<CosmoTitle title={format!("Hello World!")} subtitle={format!("From the additional page {idx}")} />)
         )
     )}
-</CosmoSideList>"#}</CosmoDocsPre>
+</CosmoSideList>"#}</CosmoDocsCodeSample>
             </CosmoSideListItem>
             {for (*additional_items_state).iter().map(|idx|
                 CosmoSideListItem::from_label_and_children(

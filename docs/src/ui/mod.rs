@@ -10,23 +10,21 @@ pub struct CosmoDemoProps {
 pub fn cosmo_demo(props: &CosmoDemoProps) -> Html {
     let style = use_style!(
         r#"
-border: 1px solid var(--primary-color);
-padding: 32px 16px 16px;
+border: 0.0625rem solid var(--primary-color);
+padding: 2rem 1rem 1rem;
 position: relative;
-margin: 16px 0;
+margin: 1rem 0;
+border-radius: var(--border-radius);
 
 ::before {
 	content: 'Demo';
 	background: var(--primary-color);
-	color: var(--white);
+	color: #ffffff;
 	position: absolute;
 	left: 0;
 	top: 0;
-	padding: 4px 8px;
-
-    @media screen and (prefers-color-scheme: dark) {
-	    color: var(--black);
-    }
+	padding: 0.25rem 0.5rem;
+	border-bottom-right-radius: var(--border-radius);
 }
     "#
     );
@@ -41,32 +39,57 @@ pub struct CosmoDocsPreProps {
     pub children: Children,
 }
 
-#[styled_component(CosmoDocsPre)]
-pub fn cosmo_docs_pre(props: &CosmoDocsPreProps) -> Html {
+#[styled_component(CosmoDocsCodeSample)]
+pub fn cosmo_docs_code_sample(props: &CosmoDocsPreProps) -> Html {
     let style = use_style!(
         r#"
 border: 1px solid var(--primary-color);
-padding: 32px 16px 16px;
+padding: 2rem 1rem 1rem;
 position: relative;
-margin: 16px 0;
-font-family: "Source Code Pro", monospace;
-overflow-x: auto;
-width: 100%;
-box-sizing: border-box;
+margin: 1rem 0;
+border-radius: var(--border-radius);
+margin: unset;
+overflow: auto;
 
 ::before {
 	content: 'Code';
 	background: var(--primary-color);
-	color: var(--black);
+	color: #ffffff;
 	position: absolute;
 	left: 0;
 	top: 0;
-	padding: 4px 8px;
+	padding: 0.25rem 0.5rem;
+	border-bottom-right-radius: var(--border-radius);
 }
     "#
     );
 
+    let details_style = use_style!(r#"
+&[open] summary::before {
+	transform: rotate(90deg);
+}
+"#);
+    let summary_style = use_style!(r#"
+font-size: 125%;
+cursor: pointer;
+list-style-type: none;
+display: flex;
+align-items: center;
+
+&::before {
+	content: '';
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggc3Ryb2tlPSJjdXJyZW50Q29sb3IiIGQ9Ik04LjU5LDE2LjU4TDEzLjE3LDEyTDguNTksNy40MUwxMCw2TDE2LDEyTDEwLDE4TDguNTksMTYuNThaIiAvPjwvc3ZnPg==");
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	transition: transform var(--transition-duration);
+}
+	"#);
+
     html!(
-        <pre class={classes!(style, "cosmo--dark-theme")}>{for props.children.iter()}</pre>
+        <details class={details_style}>
+            <summary class={summary_style}>{"Show code sample"}</summary>
+            <pre class={classes!(style, "is--dark")}>{for props.children.iter()}</pre>
+        </details>
     )
 }

@@ -26,8 +26,8 @@ pub fn side_list(props: &CosmoSideListProps) -> Html {
     let list_style = use_style!(
         r#"
 display: grid;
-grid-template-columns: [items-list] 212px 16px [content] 1fr;
-height: calc(100vh - 64px - 80px - 32px - 28px - 68px);
+grid-template-columns: [items-list] var(--list-items-width) var(--list-spacing) [content] 1fr;
+height: var(--page-height);
     "#
     );
     let list_items_style = use_style!(
@@ -35,11 +35,15 @@ height: calc(100vh - 64px - 80px - 32px - 28px - 68px);
 grid-column: items-list;
 display: flex;
 flex-flow: column;
-padding-right: 16px;
-border-right: 1px solid var(--control-border-color);
+padding-right: var(--list-items-padding-right);
+border-right: var(--list-items-border-width) solid var(--control-border-color);
 box-sizing: border-box;
-height: calc(100vh - 64px - 80px - 32px - 28px - 68px);
+height: var(--page-height);
 overflow-y: auto;
+
+.cosmo-button {
+	margin-top: auto;
+}
 "#
     );
     let list_content_style = use_style!(
@@ -52,38 +56,54 @@ overflow-y: auto;
 
     let item_style = use_style!(
         r#"
-color: var(--black);
-padding: 4px 8px;
+--list-item-color: var(--black);
+
+color: var(--list-item-color);
+padding: var(--list-item-padding-top) var(--list-item-padding-right)
+    var(--list-item-padding-bottom) var(--list-item-padding-left);
 overflow-x: hidden;
-white-space: pre;
+white-space: nowrap;
 text-overflow: ellipsis;
 width: 100%;
 box-sizing: border-box;
 cursor: pointer;
-min-height: 29px;
-text-decoration: none;
+min-height: var(--list-item-height);
+border-radius: var(--border-radius);
+background: var(--list-item-background);
+display: flex;
+align-items: center;
 
 &:hover {
-    background: var(--control-border-color);
+	--list-item-background: var(--control-border-color);
 }
     "#
     );
     let item_active_style = use_style!(
         r#"
-background: var(--primary-color);
-color: var(--white);
+--list-item-background: var(--primary-color);
+--list-item-color: var(--white);
+
 font-weight: var(--font-weight-bold);
 
+@media screen and (prefers-color-scheme: dark) {
+    color: var(--black);
+}
+
 &:hover {
-    background: var(--primary-color);
-    color: var(--white);
-    font-weight: var(--font-weight-bold);
+	--list-item-background: var(--primary-color);
+	--list-item-color: var(--white);
+
+	font-weight: var(--font-weight-bold);
+
+    @media screen and (prefers-color-scheme: dark) {
+		--list-item-color: var(--black);
+    }
 }
 
 &::selection,
 &:hover::selection {
-    background: var(--white);
-    color: var(--primary-color);
+	--list-item-background: var(--white);
+	--list-item-color: var(--primary-color);
 }
     "#
     );
