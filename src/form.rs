@@ -1078,6 +1078,7 @@ margin-left: 0.125rem;
     );
     let holder_style = use_style!(
         r#"
+height: 100%;
 font-size: var(--font-size);
 color: var(--primary-color);
 background: var(--white);
@@ -1191,7 +1192,9 @@ cursor: pointer;
                                 <div class={search_style.clone()}>{item.label.clone()}</div>
                             )
                         } else {
-                            html!()
+                            html!(
+                                <div class={search_style.clone()}></div>
+                            )
                         }
                     }}
                     if props.on_filter.is_some() {
