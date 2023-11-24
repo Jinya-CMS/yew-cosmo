@@ -129,7 +129,7 @@ cursor: pointer;
 font-family: var(--font-family);
 font-size: var(--font-size);
 box-sizing: border-box;
-border: var(--button-border-width) solid ${border_color};
+border: var(--button-border-width) solid var(--button-border-color);
 line-height: var(--line-height);
 text-decoration: none;
 font-weight: var(--font-weight-normal);
@@ -170,7 +170,6 @@ transition:
 	box-shadow: none;
 }
     "#,
-        border_color = border_color,
         hover_color = hover_color,
         active_color = active_color,
     );
@@ -187,18 +186,28 @@ text-align: center;
     let mut non_circle_style: Option<Style> = Some(use_style!(r#"
 padding: var(--button-padding-top) var(--button-padding-right) var(--button-padding-bottom)
     var(--button-padding-left);
-background: ${background};
 height: var(--control-height);
-color: ${color};
-    "#,
+background: var(--button-background);
+color: var(--button-color);
+    "#));
+    let mut coloring_style: Option<Style> = Some(use_style!(r#"
+--button-background: ${background};
+--button-color: ${color};
+--button-border-color: ${border_color};
+"#,
+        border_color = border_color,
         color = color,
-        background = background,
-    ));
+        background = background,));
+
     if is_circle {
         non_circle_style = None;
     }
 
-    classes!(button_style, full_width_style, non_circle_style, "cosmo-button")
+    if is_circle && button_type == CosmoButtonType::Default {
+        coloring_style = None;
+    }
+
+    classes!(button_style, full_width_style, non_circle_style, coloring_style, "cosmo-button")
 }
 
 #[derive(PartialEq, Clone, Properties)]
