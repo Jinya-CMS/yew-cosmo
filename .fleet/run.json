@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "command",
+            "name": "Run docs",
+            "program": "trunk",
+            "args": [
+                "serve"
+            ],
+        },
+        {
+            "type": "cargo",
+            "name": "Clippy",
+            "cargoArgs": [
+                "clippy",
+                "-p",
+                "yew-cosmo-docs"
+            ],
+        },
+    ]
+}

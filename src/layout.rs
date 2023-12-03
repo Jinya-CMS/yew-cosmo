@@ -456,7 +456,7 @@ summary {
 	--disabled-color: var(--gray-darker);
 	--code-color: var(--gray-darker);
 	--gradient-bottom-color: var(--white);
-	--table-stripe-color: var(--gray-light);
+	--table-stripe-color: rgba(var(--black-base) var(--black-base) var(--black-base) / 20%);
 
 	--message-padding-top: 0.5rem;
 	--message-padding-bottom: 0.5rem;
