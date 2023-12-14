@@ -1,6 +1,6 @@
-use std::str::FromStr;
 use bounce::helmet::{Helmet, HelmetBridge};
 use bounce::BounceRoot;
+use std::str::FromStr;
 use stylist::yew::{styled_component, use_style};
 use stylist::{GlobalStyle, Style};
 use yew::html::ChildrenRenderer;
@@ -101,16 +101,18 @@ pub struct CosmoPageLayoutProps {
 
 #[styled_component(CosmoPageLayout)]
 pub fn page_layout(props: &CosmoPageLayoutProps) -> Html {
-    let primary_color = if let Ok(color) = Color::from_str(props.primary_color.to_string().as_str()) {
+    let primary_color = if let Ok(color) = Color::from_str(props.primary_color.to_string().as_str())
+    {
         color
     } else {
         color!(#19324c)
     };
-    let primary_color_dark = if let Ok(color) = Color::from_str(props.primary_color_dark.to_string().as_str()) {
-        color
-    } else {
-        color!(#0f1e2e)
-    };
+    let primary_color_dark =
+        if let Ok(color) = Color::from_str(props.primary_color_dark.to_string().as_str()) {
+            color
+        } else {
+            color!(#0f1e2e)
+        };
 
     let primary_color_hue = primary_color.hue();
     let primary_color_saturation = primary_color.saturation() * 100.0;
@@ -468,6 +470,8 @@ summary {
 	--message-border-top-width: 0.25rem;
 
 	--message-header-font-size: 1.5rem;
+
+    --message-backdrop-filter: blur(0.5rem) saturate(90%);
 
 	--button-padding-top: 0.25rem;
 	--button-padding-bottom: 0.25rem;
@@ -1205,12 +1209,14 @@ border-bottom-left-radius: var(--border-radius);
 border-bottom-right-radius: var(--border-radius);
     "#
     );
-    let top_bar_menu_row = use_style!(r#"
+    let top_bar_menu_row = use_style!(
+        r#"
 display: flex;
 justify-content: flex-end;
 flex-flow: row nowrap;
 grid-column: content;
-    "#);
+    "#
+    );
 
     let on_click = props.right_item_on_click.clone();
     html!(
@@ -1274,7 +1280,9 @@ pub struct CosmoTopBarItemProps {
 pub fn top_bar_item(props: &CosmoTopBarItemProps) -> Html {
     let style = use_top_bar_item_style();
 
-    let on_click = use_callback(props.on_click.clone(),|_: MouseEvent, on_click| on_click.emit(()));
+    let on_click = use_callback(props.on_click.clone(), |_: MouseEvent, on_click| {
+        on_click.emit(())
+    });
 
     html!(
         <a class={style} onclick={on_click}>{props.label.clone()}</a>
@@ -1299,8 +1307,8 @@ pub fn top_bar_item_external(props: &CosmoTopBarItemExternalProps) -> Html {
 #[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoTopBarItemLinkProps<Route>
-    where
-        Route: Routable + 'static,
+where
+    Route: Routable + 'static,
 {
     pub label: AttrValue,
     pub to: Route,
@@ -1309,8 +1317,8 @@ pub struct CosmoTopBarItemLinkProps<Route>
 #[cfg(feature = "with-yew-router")]
 #[styled_component(CosmoTopBarItemLink)]
 pub fn top_bar_item<Route>(props: &CosmoTopBarItemLinkProps<Route>) -> Html
-    where
-        Route: Routable + 'static,
+where
+    Route: Routable + 'static,
 {
     let style = use_top_bar_item_style();
 

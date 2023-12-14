@@ -55,6 +55,7 @@ padding: var(--message-padding-top) var(--message-padding-right) var(--message-p
 margin-bottom: var(--message-margin-bottom);
 box-sizing: border-box;
 border-radius: var(--border-radius);
+backdrop-filter: var(--message-backdrop-filter);
 
 &:selection {
 	background: var(--message-border);
