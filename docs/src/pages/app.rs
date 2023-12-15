@@ -258,7 +258,7 @@ pub fn app() -> Html {
                     <CosmoTopBarItemExternal href="https://github.com/Jinya-CMS/cosmo-css" label="Github" />
                     <CosmoTopBarItemExternal href="https://gitlab.imanuel.dev/jinya-cms/cosmo-css" label="GitLab" />
                     <CosmoTopBarItemExternal href="https://crates.io/crates/yew-cosmo" label="Crate" />
-                    <CosmoTopBarItemLink<DocsRoute> to={DocsRoute::CosmoRoot} label="Cosmo" />
+                    <CosmoTopBarItemExternal href="https://cosmo.jinya.dev" label="Cosmo" />
                 </CosmoTopBar>
                 <CosmoMenuBar>
                     <CosmoMainMenu>
