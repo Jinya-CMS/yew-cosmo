@@ -34,7 +34,7 @@ deploy:
     - .base-cache
   stage: deploy
   script:
-    - cargo publish --token ${CARGO_REGISTRY_TOKEN}
+    - cargo publish --token ${CARGO_REGISTRY_TOKEN} --allow-dirty
   rules:
     - if: $CI_COMMIT_TAG
 
