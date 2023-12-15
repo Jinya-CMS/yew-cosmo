@@ -31,10 +31,12 @@ border-radius: var(--border-radius);
     "#
     );
 
-    let mut flex_style = Some(use_style!(r#"
+    let mut flex_style = Some(use_style!(
+        r#"
 display: flex;
 gap: 0.5rem;
-"#));
+"#
+    ));
     if !props.flex {
         flex_style = None;
     }
@@ -75,12 +77,15 @@ font-family: var(--font-family-code);
     "#
     );
 
-    let details_style = use_style!(r#"
+    let details_style = use_style!(
+        r#"
 &[open] summary::before {
 	transform: rotate(90deg);
 }
-"#);
-    let summary_style = use_style!(r#"
+"#
+    );
+    let summary_style = use_style!(
+        r#"
 font-size: 125%;
 cursor: pointer;
 list-style-type: none;
@@ -95,7 +100,8 @@ align-items: center;
 	height: 1em;
 	transition: transform var(--transition-duration);
 }
-	"#);
+	"#
+    );
 
     html!(
         <details class={details_style}>

@@ -98,7 +98,7 @@ impl ToString for CosmoInputWidth {
             CosmoInputWidth::Large => "var(--input-width-large)",
             CosmoInputWidth::Full => "100%",
         }
-            .to_string()
+        .to_string()
     }
 }
 
@@ -244,7 +244,7 @@ pub fn date_picker(props: &CosmoDatePickerProps) -> Html {
                     .as_str(),
                 "%F",
             )
-                .unwrap_or(props.value),
+            .unwrap_or(props.value),
         )
     });
 
@@ -290,7 +290,7 @@ pub fn time_picker(props: &CosmoTimePickerProps) -> Html {
                     .as_str(),
                 "%R",
             )
-                .unwrap_or(props.value),
+            .unwrap_or(props.value),
         )
     });
 
@@ -327,7 +327,7 @@ impl ToString for CosmoTextBoxType {
             CosmoTextBoxType::Text => "text",
             CosmoTextBoxType::Url => "url",
         }
-            .to_string()
+        .to_string()
     }
 }
 
@@ -664,7 +664,8 @@ pub fn color_picker(props: &CosmoColorPickerProps) -> Html {
 
 #[hook]
 fn use_radio_check_switch_style() -> Classes {
-    let style = use_style!(r#"
+    let style = use_style!(
+        r#"
 --border-indicator-color: var(--control-border-color);
 
 appearance: none;
@@ -681,14 +682,16 @@ box-shadow: none;
 	outline: none;
 	box-shadow: none;
 }
-"#);
+"#
+    );
 
     classes!(style)
 }
 
 #[hook]
 fn use_radio_check_switch_group_style() -> Classes {
-    let style = use_style!(r#"
+    let style = use_style!(
+        r#"
 grid-column: 2/3;
 row-gap: var(--input-group-special-gap);
 column-gap: 0;
@@ -697,7 +700,8 @@ align-items: center;
 grid-template-columns: [label] auto [input] 1fr;
 grid-auto-rows: auto;
 grid-auto-flow: row;
-"#);
+"#
+    );
 
     classes!(style)
 }
@@ -779,9 +783,12 @@ pub fn checkbox(props: &CosmoCheckboxProps) -> Html {
     );
 
     let id = use_id(props.id.clone());
-    let onclick = use_callback(props.on_check.clone(), |evt: MouseEvent, on_check_change| {
-        on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked())
-    });
+    let onclick = use_callback(
+        props.on_check.clone(),
+        |evt: MouseEvent, on_check_change| {
+            on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked())
+        },
+    );
 
     html!(
         <div class={group_style}>
@@ -871,9 +878,12 @@ pub fn switch(props: &CosmoSwitchProps) -> Html {
     );
 
     let id = use_id(props.id.clone());
-    let onclick = use_callback(props.on_check.clone(), |evt: MouseEvent, on_check_change| {
-        on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked())
-    });
+    let onclick = use_callback(
+        props.on_check.clone(),
+        |evt: MouseEvent, on_check_change| {
+            on_check_change.emit(evt.target_unchecked_into::<HtmlInputElement>().checked())
+        },
+    );
 
     html!(
         <div class={group_style}>
@@ -986,46 +996,55 @@ pub fn modern_select(props: &CosmoModernSelectProps) -> Html {
 
     let select_node = use_node_ref();
 
-    let on_open_flyout = use_callback((flyout_open_state.clone(), flyout_up_state.clone()), |evt: MouseEvent, (flyout_open_state, flyout_up_state)| {
-        let is_up = if let Some(element) = evt.target_dyn_into::<HtmlElement>() {
-            gloo::utils::window()
-                .inner_height()
-                .expect("No window? Then this app won't work")
-                .as_f64()
-                .expect("This should be a number")
-                - element.get_bounding_client_rect().bottom()
-                < 100.0
-        } else {
-            false
-        };
-        flyout_up_state.set(is_up);
-        flyout_open_state.set(true);
-    });
+    let on_open_flyout = use_callback(
+        (flyout_open_state.clone(), flyout_up_state.clone()),
+        |evt: MouseEvent, (flyout_open_state, flyout_up_state)| {
+            let is_up = if let Some(element) = evt.target_dyn_into::<HtmlElement>() {
+                gloo_utils::window()
+                    .inner_height()
+                    .expect("No window? Then this app won't work")
+                    .as_f64()
+                    .expect("This should be a number")
+                    - element.get_bounding_client_rect().bottom()
+                    < 100.0
+            } else {
+                false
+            };
+            flyout_up_state.set(is_up);
+            flyout_open_state.set(true);
+        },
+    );
     let on_close_flyout = use_callback(flyout_open_state.clone(), |_, state| state.set(false));
     let on_deselect = use_callback(props.on_deselect.clone(), |item: AttrValue, on_deselect| {
         if let Some(evt) = on_deselect.clone() {
             evt.emit(item)
         };
     });
-    let on_select = use_callback((
-                                     props.on_select.clone(),
-                                     search_state.clone(),
-                                     flyout_open_state.clone(),
-                                     is_multiple,
-                                 ), |item, (on_select, search_state, flyout_open_state, is_multiple)| {
-        search_state.set("".into());
-        flyout_open_state.set(*is_multiple);
+    let on_select = use_callback(
+        (
+            props.on_select.clone(),
+            search_state.clone(),
+            flyout_open_state.clone(),
+            is_multiple,
+        ),
+        |item, (on_select, search_state, flyout_open_state, is_multiple)| {
+            search_state.set("".into());
+            flyout_open_state.set(*is_multiple);
 
-        on_select.emit(item);
-    });
-    let on_filter = use_callback((props.on_filter.clone(), search_state.clone()), |evt: InputEvent, (on_filter, search_state)| {
-        let search = AttrValue::from(evt.target_unchecked_into::<HtmlInputElement>().value());
-        search_state.set(search.clone());
+            on_select.emit(item);
+        },
+    );
+    let on_filter = use_callback(
+        (props.on_filter.clone(), search_state.clone()),
+        |evt: InputEvent, (on_filter, search_state)| {
+            let search = AttrValue::from(evt.target_unchecked_into::<HtmlInputElement>().value());
+            search_state.set(search.clone());
 
-        if let Some(on) = on_filter.clone() {
-            on.emit(search)
-        }
-    });
+            if let Some(on) = on_filter.clone() {
+                on.emit(search)
+            }
+        },
+    );
 
     let selected_items = props.items.iter().filter(|item| item.selected);
     let available_items = props

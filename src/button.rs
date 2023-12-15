@@ -86,21 +86,26 @@ cursor: pointer;
     );
 
     #[cfg(feature = "with-yew-router")]
-        let navigator = use_navigator();
+    let navigator = use_navigator();
 
     #[cfg(feature = "with-yew-router")]
-        let disabled_state =
+    let disabled_state =
         use_state_eq(|| navigator.is_none() || BrowserHistory::default().is_empty());
 
     #[cfg(feature = "with-yew-router")]
-        let on_click = use_callback((navigator.clone(), disabled_state.clone()), |_: MouseEvent, (navigator, disabled_state)| {
-        if let Some(navigator) = navigator {
-            navigator.back();
-            disabled_state.set(BrowserHistory::default().is_empty());
-        }
-    });
+    let on_click = use_callback(
+        (navigator.clone(), disabled_state.clone()),
+        |_: MouseEvent, (navigator, disabled_state)| {
+            if let Some(navigator) = navigator {
+                navigator.back();
+                disabled_state.set(BrowserHistory::default().is_empty());
+            }
+        },
+    );
     #[cfg(not(feature = "with-yew-router"))]
-        let on_click = use_callback(_props.on_click.clone(), |_: MouseEvent, on_click| on_click.emit(()));
+    let on_click = use_callback(_props.on_click.clone(), |_: MouseEvent, on_click| {
+        on_click.emit(())
+    });
 
     #[cfg(feature = "with-yew-router")]
     return html!(
@@ -113,14 +118,54 @@ cursor: pointer;
 }
 
 #[hook]
-fn use_cosmo_button_style(is_full_width: bool, is_circle: bool, button_type: CosmoButtonType) -> Classes {
+fn use_cosmo_button_style(
+    is_full_width: bool,
+    is_circle: bool,
+    button_type: CosmoButtonType,
+) -> Classes {
     let (color, background, border_color, hover_color, active_color) = match button_type {
-        CosmoButtonType::Default => ("var(--black)", "var(--white)", "var(--control-border-color)", "var(--control-border-color-dark)", "var(--control-border-color-darker)"),
-        CosmoButtonType::Primary => ("var(--white)", "var(--primary-color)", "var(--primary-color)", "var(--primary-color-dark)", "var(--primary-color-darker)"),
-        CosmoButtonType::Positive => ("var(--white)", "var(--positive-color)", "var(--positive-color)", "var(--positive-color-dark)", "var(--positive-color-darker)"),
-        CosmoButtonType::Negative => ("var(--white)", "var(--negative-color)", "var(--negative-color)", "var(--negative-color-dark)", "var(--negative-color-darker)"),
-        CosmoButtonType::Information => ("var(--white)", "var(--information-color)", "var(--information-color)", "var(--information-color-dark)", "var(--information-color-darker)"),
-        CosmoButtonType::Warning => ("var(--white)", "var(--warning-color)", "var(--warning-color)", "var(--warning-color-dark)", "var(--warning-color-darker)"),
+        CosmoButtonType::Default => (
+            "var(--black)",
+            "var(--white)",
+            "var(--control-border-color)",
+            "var(--control-border-color-dark)",
+            "var(--control-border-color-darker)",
+        ),
+        CosmoButtonType::Primary => (
+            "var(--white)",
+            "var(--primary-color)",
+            "var(--primary-color)",
+            "var(--primary-color-dark)",
+            "var(--primary-color-darker)",
+        ),
+        CosmoButtonType::Positive => (
+            "var(--white)",
+            "var(--positive-color)",
+            "var(--positive-color)",
+            "var(--positive-color-dark)",
+            "var(--positive-color-darker)",
+        ),
+        CosmoButtonType::Negative => (
+            "var(--white)",
+            "var(--negative-color)",
+            "var(--negative-color)",
+            "var(--negative-color-dark)",
+            "var(--negative-color-darker)",
+        ),
+        CosmoButtonType::Information => (
+            "var(--white)",
+            "var(--information-color)",
+            "var(--information-color)",
+            "var(--information-color-dark)",
+            "var(--information-color-darker)",
+        ),
+        CosmoButtonType::Warning => (
+            "var(--white)",
+            "var(--warning-color)",
+            "var(--warning-color)",
+            "var(--warning-color-dark)",
+            "var(--warning-color-darker)",
+        ),
     };
 
     let button_style = use_style!(
@@ -183,21 +228,25 @@ text-align: center;
     if !is_full_width {
         full_width_style = None;
     }
-    let mut non_circle_style: Option<Style> = Some(use_style!(r#"
+    let mut non_circle_style: Option<Style> = Some(use_style!(
+        r#"
 padding: var(--button-padding-top) var(--button-padding-right) var(--button-padding-bottom)
     var(--button-padding-left);
 height: var(--control-height);
 background: var(--button-background);
 color: var(--button-color);
-    "#));
-    let mut coloring_style: Option<Style> = Some(use_style!(r#"
+    "#
+    ));
+    let mut coloring_style: Option<Style> = Some(use_style!(
+        r#"
 --button-background: ${background};
 --button-color: ${color};
 --button-border-color: ${border_color};
 "#,
         border_color = border_color,
         color = color,
-        background = background,));
+        background = background,
+    ));
 
     if is_circle {
         non_circle_style = None;
@@ -207,7 +256,13 @@ color: var(--button-color);
         coloring_style = None;
     }
 
-    classes!(button_style, full_width_style, non_circle_style, coloring_style, "cosmo-button")
+    classes!(
+        button_style,
+        full_width_style,
+        non_circle_style,
+        coloring_style,
+        "cosmo-button"
+    )
 }
 
 #[derive(PartialEq, Clone, Properties)]
@@ -243,8 +298,8 @@ pub fn button(props: &CosmoButtonProps) -> Html {
 #[cfg(feature = "with-yew-router")]
 #[derive(PartialEq, Clone, Properties)]
 pub struct CosmoButtonLinkProps<Route>
-    where
-        Route: Routable + 'static,
+where
+    Route: Routable + 'static,
 {
     pub label: String,
     pub to: Route,
@@ -259,8 +314,8 @@ pub struct CosmoButtonLinkProps<Route>
 #[cfg(feature = "with-yew-router")]
 #[function_component(CosmoButtonLink)]
 pub fn button_link<Route>(props: &CosmoButtonLinkProps<Route>) -> Html
-    where
-        Route: Routable + 'static,
+where
+    Route: Routable + 'static,
 {
     let style = use_cosmo_button_style(props.is_full_width, false, props.state.clone());
 

@@ -27,7 +27,7 @@ impl CosmoModalType {
             CosmoModalType::Positive => "var(--positive-color)",
             CosmoModalType::Negative => "var(--negative-color)",
         }
-            .to_string()
+        .to_string()
     }
 
     pub fn get_modal_accent_color_light(&self) -> String {
@@ -38,7 +38,7 @@ impl CosmoModalType {
             CosmoModalType::Positive => "var(--positive-color-light)",
             CosmoModalType::Negative => "var(--negative-color-light)",
         }
-            .to_string()
+        .to_string()
     }
 
     pub fn get_modal_accent_color_lighter(&self) -> String {
@@ -49,7 +49,7 @@ impl CosmoModalType {
             CosmoModalType::Positive => "var(--positive-color-lighter)",
             CosmoModalType::Negative => "var(--negative-color-lighter)",
         }
-            .to_string()
+        .to_string()
     }
 }
 
@@ -62,7 +62,7 @@ impl ToString for CosmoModalType {
             CosmoModalType::Positive => "positive",
             CosmoModalType::Negative => "negative",
         }
-            .into()
+        .into()
     }
 }
 
@@ -105,7 +105,7 @@ pub struct CosmoModalProps {
     #[prop_or_default]
     pub classes: Classes,
     #[prop_or_default]
-    pub modal_type: CosmoModalType
+    pub modal_type: CosmoModalType,
 }
 
 #[styled_component(CosmoModal)]
@@ -239,15 +239,15 @@ gap: var(--button-container-gap);
     let tag = if props.is_form { "form" } else { "div" };
 
     let modal_host = if let Some(modal_host) =
-        gloo::utils::document().get_element_by_id((*modal_id).clone().as_str())
+        gloo_utils::document().get_element_by_id((*modal_id).clone().as_str())
     {
         modal_host
     } else {
-        let modal_host = gloo::utils::document()
+        let modal_host = gloo_utils::document()
             .create_element("div")
             .expect("Failed to create div");
         modal_host.set_id((*modal_id).clone().as_str());
-        gloo::utils::body()
+        gloo_utils::body()
             .append_child(&modal_host)
             .expect("Failed to append child");
         modal_host

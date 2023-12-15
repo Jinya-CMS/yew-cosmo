@@ -131,7 +131,7 @@ pub struct CosmoAnchorProps {
 #[styled_component(CosmoAnchor)]
 pub fn anchor(props: &CosmoAnchorProps) -> Html {
     let style = use_anchor_style();
-    let on_click = use_callback(props.on_click.clone(),|evt: MouseEvent, callback| {
+    let on_click = use_callback(props.on_click.clone(), |evt: MouseEvent, callback| {
         if let Some(callback) = callback {
             evt.prevent_default();
             callback.emit(());

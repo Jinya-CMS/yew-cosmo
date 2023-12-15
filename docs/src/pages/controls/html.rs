@@ -24,32 +24,63 @@ pub fn html() -> Html {
     let modern_single_select_state = use_state_eq(|| AttrValue::from("1"));
     let modern_multiple_select_state = use_state_eq(|| vec![String::from("1")]);
 
-    let on_textbox_input = use_callback(textbox_state.clone(), |value: AttrValue, state| state.set(value));
-    let on_numberbox_input = use_callback(numberbox_state.clone(), |value: i64, state| state.set(value));
-    let on_decimalbox_input = use_callback(decimalbox_state.clone(), |value: f64, state| state.set(value));
-    let on_date_time_input = use_callback(date_time_state.clone(), |value: DateTime<Local>, state| state.set(value));
-    let on_date_input = use_callback(date_state.clone(), |value: NaiveDate, state| state.set(value));
-    let on_time_input = use_callback(time_state.clone(), |value: NaiveTime, state| state.set(value));
+    let on_textbox_input = use_callback(textbox_state.clone(), |value: AttrValue, state| {
+        state.set(value)
+    });
+    let on_numberbox_input = use_callback(numberbox_state.clone(), |value: i64, state| {
+        state.set(value)
+    });
+    let on_decimalbox_input = use_callback(decimalbox_state.clone(), |value: f64, state| {
+        state.set(value)
+    });
+    let on_date_time_input =
+        use_callback(date_time_state.clone(), |value: DateTime<Local>, state| {
+            state.set(value)
+        });
+    let on_date_input = use_callback(date_state.clone(), |value: NaiveDate, state| {
+        state.set(value)
+    });
+    let on_time_input = use_callback(time_state.clone(), |value: NaiveTime, state| {
+        state.set(value)
+    });
     let on_color_input = use_callback(color_state.clone(), |value: Color, state| state.set(value));
-    let on_checkbox_check = use_callback(checkbox_state.clone(), |value: bool, state| state.set(value));
+    let on_checkbox_check = use_callback(checkbox_state.clone(), |value: bool, state| {
+        state.set(value)
+    });
     let on_switch_check = use_callback(switch_state.clone(), |value: bool, state| state.set(value));
-    let on_radios_change = use_callback(radios_state.clone(), |value: AttrValue, state| state.set(value));
-    let on_dropdown_select = use_callback(dropdown_state.clone(), |value: Option<AttrValue>, state| state.set(value));
+    let on_radios_change = use_callback(radios_state.clone(), |value: AttrValue, state| {
+        state.set(value)
+    });
+    let on_dropdown_select =
+        use_callback(dropdown_state.clone(), |value: Option<AttrValue>, state| {
+            state.set(value)
+        });
     let on_slider_input = use_callback(slider_state.clone(), |value: i64, state| state.set(value));
-    let on_textarea_input = use_callback(textarea_state.clone(), |value: AttrValue, state| state.set(value));
-    let on_modern_single_select_select = use_callback(modern_single_select_state.clone(), |value: AttrValue, state| state.set(value));
-    let on_modern_multiple_select_select = use_callback(modern_multiple_select_state.clone(), |value: AttrValue, state| {
-        let mut data = (**state).clone();
-        data.push(value.to_string());
-        state.set(data);
+    let on_textarea_input = use_callback(textarea_state.clone(), |value: AttrValue, state| {
+        state.set(value)
     });
-    let on_modern_multiple_select_deselect = use_callback(modern_multiple_select_state.clone(), |value: AttrValue, state| {
-        let mut data = (**state).clone();
-        data.iter()
-            .position(move |val| value.to_string().eq(val))
-            .map(|item| data.swap_remove(item));
-        state.set(data);
-    });
+    let on_modern_single_select_select = use_callback(
+        modern_single_select_state.clone(),
+        |value: AttrValue, state| state.set(value),
+    );
+    let on_modern_multiple_select_select = use_callback(
+        modern_multiple_select_state.clone(),
+        |value: AttrValue, state| {
+            let mut data = (**state).clone();
+            data.push(value.to_string());
+            state.set(data);
+        },
+    );
+    let on_modern_multiple_select_deselect = use_callback(
+        modern_multiple_select_state.clone(),
+        |value: AttrValue, state| {
+            let mut data = (**state).clone();
+            data.iter()
+                .position(move |val| value.to_string().eq(val))
+                .map(|item| data.swap_remove(item));
+            state.set(data);
+        },
+    );
 
     let on_form_submit = use_callback(alert_open_state.clone(), |_: (), state| state.set(true));
     let on_alert_close = use_callback(alert_open_state.clone(), |_: (), state| state.set(false));
