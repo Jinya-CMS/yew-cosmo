@@ -1,5 +1,5 @@
 .base-cache:
-  image: harbor.ulbricht.casa/imanuel/trunk-docker-base-image:latest
+  image: registry.ulbricht.casa/docker-images/trunk-docker-base-image:latest
   variables: 
     CARGO_HOME: $CI_PROJECT_DIR/.cargo
   cache: 
@@ -30,7 +30,7 @@ build:
     - trunk build --release --dist="public"
 
 deploy:
-  image: harbor.ulbricht.casa/imanuel/trunk-docker-base-image:latest
+  image: registry.ulbricht.casa/docker-images/trunk-docker-base-image:latest
   stage: deploy
   script:
     - cargo publish --token ${CARGO_REGISTRY_TOKEN}
