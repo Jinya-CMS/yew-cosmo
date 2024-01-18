@@ -246,7 +246,7 @@ pub struct CosmoKeyValueListItemProps {
 pub fn key_value_list(props: &CosmoKeyValueListItemProps) -> Html {
     let key_value_list_key = use_style!(
         r#"
-font-weight: var(--font-weight-normal);
+font-weight: var(--font-weight-bold);
 margin: 0;
 padding: 0;
 font-family: var(--font-family-heading);
