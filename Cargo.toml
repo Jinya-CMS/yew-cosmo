@@ -34,17 +34,17 @@ edition = "2021"
 
 [workspace.dependencies]
 bounce = { version = "0.9.0", features = ["helmet"] }
-chrono = "0.4.31"
+chrono = "0.4.34"
 color-art = "0.3.7"
 derive_more = "0.99.17"
 gloo-utils = "0.2.0"
 stylist = { version = "0.13.0", features = ["yew", "yew_use_style"] }
-uuid = { version = "1.6.1", features = ["js", "v4"] }
+uuid = { version = "1.7.0", features = ["js", "v4"] }
 yew = "0.21.0"
 yew-router = { version = "0.18.0" }
 yew-hooks = "0.3.0"
 yew_icons = "0.8.0"
-web-sys = { version = "0.3.66", features = ["HtmlSelectElement", "Element", "DomRect"] }
+web-sys = { version = "0.3.68", features = ["HtmlSelectElement", "Element", "DomRect"] }
 
 [features]
 default = ["with-yew-router", "with-icons", "with-lucide-icons"]
