@@ -36,7 +36,7 @@ edition = "2021"
 bounce = { version = "0.9.0", features = ["helmet"] }
 chrono = "0.4.34"
 color-art = "0.3.7"
-derive_more = "0.99.17"
+derive_more = "1.0.0"
 gloo-utils = "0.2.0"
 stylist = { version = "0.13.0", features = ["yew", "yew_use_style"] }
 uuid = { version = "1.7.0", features = ["js", "v4"] }
